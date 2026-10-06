@@ -3,7 +3,6 @@ import os, zipfile, tempfile, json, subprocess, io, base64
 
 app = Flask(__name__)
 
-# ================= HOME =================
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -12,7 +11,7 @@ def home():
 def marketwatch():
     return render_template('marketwatch_demo.html')
 
-# ================= TOOL 01: APK BUILDER =================
+# === TOOL 01 APK ===
 @app.route('/tools/apk-builder')
 @app.route('/builder')
 def apk_builder():
@@ -25,19 +24,15 @@ def generate():
     phone = request.form.get('phone','')
     if not url.startswith('http'):
         return "URL must start with https://", 400
-
     os.makedirs("data", exist_ok=True)
     with open("data/leads.txt","a", encoding="utf-8") as f:
         f.write(f"{app_name} | {url} | {phone}\n")
-
     base_apk = os.path.join(os.getcwd(), "base.apk")
     if not os.path.exists(base_apk):
-        return "base.apk missing in root - upload it", 500
-
+        return "base.apk missing", 500
     tmpdir = tempfile.mkdtemp()
     final_path = os.path.join(tmpdir, f"{app_name.replace(' ','_')}.apk")
     config_data = json.dumps({"url": url, "app_name": app_name})
-
     with zipfile.ZipFile(base_apk, 'r') as zin, zipfile.ZipFile(final_path, 'w') as zout:
         for item in zin.infolist():
             if item.filename == "assets/config.json":
@@ -48,10 +43,9 @@ def generate():
                 zout.writestr(item, zin.read(item.filename))
         if "assets/config.json" not in zin.namelist():
             zout.writestr("assets/config.json", config_data)
-
     return send_file(final_path, as_attachment=True, download_name=f"{app_name}.apk", mimetype="application/vnd.android.package-archive")
 
-# ================= TOOL 02: RULER TERMINAL =================
+# === TOOL 02 RULER TERMINAL ===
 @app.route('/tools/ruler-terminal')
 def ruler_terminal():
     return render_template('ruler_terminal.html')
@@ -63,11 +57,11 @@ def ruler_api():
     if not cmd:
         return jsonify(output="")
     if cmd in ['help','?']:
-        return jsonify(output="Commands:\n ls - list files\n pwd - current dir\n echo [text]\n date\n whoami\n clear\n ls templates\n cat [file]\n python --version")
+        return jsonify(output="Commands: ls, pwd, echo, date, clear, ls templates, cat [file]")
     if cmd == 'clear':
         return jsonify(output="__CLEAR__")
-    if any(x in cmd for x in ["rm -rf","sudo",":(){","shutdown","mkfs", "reboot"]):
-        return jsonify(output="Blocked for safety")
+    if any(x in cmd for x in ["rm -rf","sudo",":(){","shutdown","mkfs"]):
+        return jsonify(output="Blocked")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3, cwd=os.getcwd())
         out = (result.stdout + result.stderr)[:4000]
@@ -75,30 +69,28 @@ def ruler_api():
     except Exception as e:
         return jsonify(output=str(e))
 
-# ================= TOOL 03: WA LINK + QR =================
+# === TOOL 03 WA QR ===
 @app.route('/tools/wa-qr')
 def wa_qr_tool():
     return render_template('wa_qr.html')
 
 @app.route('/api/qr', methods=['POST'])
 def api_qr():
-    try:
-        import qrcode
-    except ImportError:
-        return jsonify(qr="", error="qrcode not installed - add qrcode[pil] to requirements.txt")
-
-    data = request.get_json()
-    text = data.get('text','').strip()
+    import qrcode
+    text = request.get_json().get('text','').strip()
     if not text:
         return jsonify(qr="")
-
     img = qrcode.make(text)
     buf = io.BytesIO()
     img.save(buf, format='PNG')
     b64 = base64.b64encode(buf.getvalue()).decode()
     return jsonify(qr=f"data:image/png;base64,{b64}")
 
-# ================= RUN =================
+# === TOOL 04 INVOICE ===
+@app.route('/tools/invoice')
+def invoice_tool():
+    return render_template('invoice.html')
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port)

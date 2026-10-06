@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invoice Pro</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>body{background:#000;color:#fff;font-family:Arial;padding:15px}input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:6px 0}label{font-size:11px;color:#888}.btn{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:10px}.btn-g{background:#00ff88;color:#000}.btn-w{background:#fff;color:#000}#box{background:#fff;color:#000;padding:20px;border-radius:12px;margin-top:15px}</style>
+</head><body>
+<a href="/" style="color:#3b82f6;text-decoration:none">← System</a> <b>Tool 04 Invoice Pro</b>
+<label>Business</label><input id="biz" value="ClearCode Solutions">
+<label>Client</label><input id="client" placeholder="Alhaji Musa">
+<label>Invoice #</label><input id="no" value="INV-001">
+<label>Item</label><input id="item" value="Website Design">
+<label>Amount</label><input id="amt" type="number" value="50000">
+<button class="btn btn-g" onclick="render()">Generate</button>
+<button class="btn btn-w" onclick="dl()">Download PDF</button>
+<div id="box"><h2 id="pBiz"></h2><div id="pNo"></div><hr><div>Bill To: <b id="pClient"></b></div><div id="pItem"></div><h3 id="pAmt"></h3></div>
+<script>
+function render(){
+ document.getElementById('pBiz').textContent=document.getElementById('biz').value;
+ document.getElementById('pNo').textContent=document.getElementById('no').value;
+ document.getElementById('pClient').textContent=document.getElementById('client').value;
+ document.getElementById('pItem').textContent=document.getElementById('item').value;
+ document.getElementById('pAmt').textContent='₦'+Number(document.getElementById('amt').value).toLocaleString();
+}
+function dl(){render(); html2pdf().from(document.getElementById('box')).save('invoice.pdf')}
+render()
+</script>
+</body></html>

@@ -1,9 +1,13 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="/static/style.css"><title>Builder</title></head><body>
+<link rel="stylesheet" href="/static/style.css"><title>Builder - ClearCode</title></head><body>
 <nav><a href="/" class="logo">ClearCode System</a></nav>
 <section class="form-box"><h2>Build Your APK</h2>
-<form action="/generate" method="post">
-<input name="app_name" placeholder="App Name" required>
+<form action="/generate" method="post" enctype="multipart/form-data">
+<input name="app_name" placeholder="App Name e.g. My Shop" required>
 <input name="url" placeholder="https://yourwebsite.com" required>
-<button type="submit" class="btn primary">Generate APK</button>
-</form></section></body></html> 
+<input name="phone" placeholder="Your WhatsApp (for leads)">
+<label style="font-size:13px;margin-top:10px;display:block">App Icon (PNG, optional - extra charge)</label>
+<input type="file" name="icon" accept=".png,.jpg,.jpeg">
+<button type="submit" class="btn primary" style="margin-top:15px">Generate APK Project</button>
+</form><p style="font-size:12px;margin-top:15px;color:#aaa">You get Android Studio project. Open in Android Studio > Build > Build APK. Takes 1 minute.</p>
+</section></body></html>

@@ -89,7 +89,28 @@ def api_qr():
 # === TOOL 04 INVOICE ===
 @app.route('/tools/invoice')
 def invoice_tool():
-    return render_template('invoice.html')
+    return render_template('invoice.html') 
+    # === TOOL 05 BG REMOVER ===
+@app.route('/tools/bg-remover')
+def bg_remover_tool():
+    return render_template('bg_remover.html')
+
+@app.route('/api/remove-bg', methods=['POST'])
+def api_remove_bg():
+    try:
+        from rembg import remove
+        from PIL import Image
+        file = request.files.get('image')
+        if not file:
+            return jsonify(error="No image"), 400
+        input_img = Image.open(file.stream)
+        output_img = remove(input_img)
+        buf = io.BytesIO()
+        output_img.save(buf, format='PNG')
+        b64 = base64.b64encode(buf.getvalue()).decode()
+        return jsonify(result=f"data:image/png;base64,{b64}")
+    except Exception as e:
+        return jsonify(error=str(e)), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))

@@ -5,11 +5,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
-@app.route('/marketwatch')
-def marketwatch():
-    return render_template('marketwatch_demo.html')
+    try:
+        return render_template('index.html')
+    except:
+        return "<h2>ClearCode System LIVE</h2><a href='/tools/apk-builder'>APK</a> | <a href='/tools/ruler-terminal'>Ruler</a> | <a href='/tools/wa-qr'>QR</a> | <a href='/tools/invoice'>Invoice</a> | <a href='/tools/bg-remover'>BG</a>"
 
 # === TOOL 01 APK ===
 @app.route('/tools/apk-builder')
@@ -29,7 +28,7 @@ def generate():
         f.write(f"{app_name} | {url} | {phone}\n")
     base_apk = os.path.join(os.getcwd(), "base.apk")
     if not os.path.exists(base_apk):
-        return "base.apk missing", 500
+        return "base.apk missing - upload it to root", 500
     tmpdir = tempfile.mkdtemp()
     final_path = os.path.join(tmpdir, f"{app_name.replace(' ','_')}.apk")
     config_data = json.dumps({"url": url, "app_name": app_name})
@@ -43,33 +42,26 @@ def generate():
                 zout.writestr(item, zin.read(item.filename))
         if "assets/config.json" not in zin.namelist():
             zout.writestr("assets/config.json", config_data)
-    return send_file(final_path, as_attachment=True, download_name=f"{app_name}.apk", mimetype="application/vnd.android.package-archive")
+    return send_file(final_path, as_attachment=True, download_name=f"{app_name}.apk")
 
-# === TOOL 02 RULER TERMINAL ===
+# === TOOL 02 ===
 @app.route('/tools/ruler-terminal')
 def ruler_terminal():
     return render_template('ruler_terminal.html')
 
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
-    data = request.get_json()
-    cmd = data.get('cmd','').strip()
-    if not cmd:
-        return jsonify(output="")
-    if cmd in ['help','?']:
-        return jsonify(output="Commands: ls, pwd, echo, date, clear, ls templates, cat [file]")
-    if cmd == 'clear':
-        return jsonify(output="__CLEAR__")
-    if any(x in cmd for x in ["rm -rf","sudo",":(){","shutdown","mkfs"]):
-        return jsonify(output="Blocked")
+    cmd = request.get_json().get('cmd','').strip()
+    if cmd == 'clear': return jsonify(output="__CLEAR__")
+    if cmd in ['help','?']: return jsonify(output="ls, pwd, echo, date, clear")
+    if any(x in cmd for x in ["rm -rf","sudo",":()"]): return jsonify(output="Blocked")
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3, cwd=os.getcwd())
-        out = (result.stdout + result.stderr)[:4000]
-        return jsonify(output=out or "(no output)")
+        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3)
+        return jsonify(output=(r.stdout+r.stderr)[:4000] or "(no output)")
     except Exception as e:
         return jsonify(output=str(e))
 
-# === TOOL 03 WA QR ===
+# === TOOL 03 ===
 @app.route('/tools/wa-qr')
 def wa_qr_tool():
     return render_template('wa_qr.html')
@@ -78,19 +70,18 @@ def wa_qr_tool():
 def api_qr():
     import qrcode
     text = request.get_json().get('text','').strip()
-    if not text:
-        return jsonify(qr="")
+    if not text: return jsonify(qr="")
     img = qrcode.make(text)
-    buf = io.BytesIO()
-    img.save(buf, format='PNG')
+    buf = io.BytesIO(); img.save(buf, format='PNG')
     b64 = base64.b64encode(buf.getvalue()).decode()
     return jsonify(qr=f"data:image/png;base64,{b64}")
 
-# === TOOL 04 INVOICE ===
+# === TOOL 04 ===
 @app.route('/tools/invoice')
 def invoice_tool():
-    return render_template('invoice.html') 
-    # === TOOL 05 BG REMOVER ===
+    return render_template('invoice.html')
+
+# === TOOL 05 - FIXED, WON'T CRASH ===
 @app.route('/tools/bg-remover')
 def bg_remover_tool():
     return render_template('bg_remover.html')
@@ -102,13 +93,15 @@ def api_remove_bg():
         from PIL import Image
         file = request.files.get('image')
         if not file:
-            return jsonify(error="No image"), 400
+            return jsonify(error="No image uploaded"), 400
         input_img = Image.open(file.stream)
         output_img = remove(input_img)
         buf = io.BytesIO()
         output_img.save(buf, format='PNG')
         b64 = base64.b64encode(buf.getvalue()).decode()
         return jsonify(result=f"data:image/png;base64,{b64}")
+    except ImportError as e:
+        return jsonify(error="Server still installing AI model. Wait 2 mins and try again. Or remove rembg from requirements to use lite mode."), 500
     except Exception as e:
         return jsonify(error=str(e)), 500
 

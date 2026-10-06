@@ -21,11 +21,10 @@ def generate():
 
     base_apk = os.path.join(os.getcwd(), "base.apk")
     if not os.path.exists(base_apk):
-        return "base.apk not found. Upload it!", 500
+        return "base.apk not found! Upload it to GitHub root.", 500
 
     tmpdir = tempfile.mkdtemp()
-    final_path = os.path.join(tmpdir, f"{app_name}.apk")
-    
+    final_path = os.path.join(tmpdir, f"{app_name.replace(' ','_')}.apk")
     config_data = json.dumps({"url": url, "app_name": app_name})
 
     with zipfile.ZipFile(base_apk, 'r') as zin, zipfile.ZipFile(final_path, 'w') as zout:
@@ -33,7 +32,7 @@ def generate():
             if item.filename == "assets/config.json":
                 zout.writestr(item, config_data)
             elif item.filename.startswith("META-INF/"):
-                continue # remove old signature so Android allows install
+                continue
             else:
                 zout.writestr(item, zin.read(item.filename))
         if "assets/config.json" not in zin.namelist():
@@ -42,4 +41,4 @@ def generate():
     return send_file(final_path, as_attachment=True, download_name=f"{app_name}.apk", mimetype="application/vnd.android.package-archive")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    app.run(host='0.0.0.0', port=10000) 

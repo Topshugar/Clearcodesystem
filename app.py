@@ -69,3 +69,18 @@ def ruler_api():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+    
+# === TOOL 03: WA LINK + QR GENERATOR ===
+@app.route('/tools/wa-qr')
+def wa_qr_tool():
+    return render_template('wa_qr.html')
+
+@app.route('/api/qr', methods=['POST'])
+def api_qr():
+    import qrcode, io, base64
+    data = request.get_json().get('text','')
+    img = qrcode.make(data)
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    b64 = base64.b64encode(buf.getvalue()).decode()
+    return jsonify(qr=f"data:image/png;base64,{b64}")

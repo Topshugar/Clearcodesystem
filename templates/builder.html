@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html><head><title>APK Builder - ClearCode System</title>
-<link rel="stylesheet" href="/static/style.css"></head>
-<body>
-<nav><a href="/"><b>ClearCode System</b></a></nav>
-<section class="builder">
-<h1>URL to APK Builder</h1>
-<p>Paste your website link, get APK source code.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APK Builder - ClearCode System</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<nav><a href="/" class="logo">ClearCode System</a></nav>
+<section class="builder"><h1>Website to APK — in 10 seconds</h1>
 <form action="/generate" method="POST">
-<input name="app_name" placeholder="App Name e.g. MyShop" required>
-<input name="url" placeholder="https://yourwebsite.com" required>
-<button type="submit">Generate APK Source (ZIP)</button>
-</form>
-</section>
-</body></html> 
+<input name="app_name" placeholder="App Name (e.g. MyShop)" required>
+<input name="url" placeholder="https://example.com" required>
+<button class="btn primary" type="submit">Generate Full Project ZIP</button>
+</form><p style="margin-top:20px;color:#666">You will get a complete Android Studio project. Just Build → APK.</p></section></body></html>

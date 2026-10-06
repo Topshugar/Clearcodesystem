@@ -18,17 +18,36 @@ jobs:
           mkdir -p apk_template/app/src/main/java/com/clearcode/app
           mkdir -p apk_template/app/src/main/assets
           echo '{"url":"https://example.com","app_name":"ClearCode"}' > apk_template/app/src/main/assets/config.json
+          
           cat > apk_template/settings.gradle << 'EOF'
+          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+          dependencyResolutionManagement {
+            repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+            repositories { google(); mavenCentral() }
+          }
           include ':app'
           EOF
+          
           cat > apk_template/build.gradle << 'EOF'
-          buildscript { repositories { google(); mavenCentral() } dependencies { classpath 'com.android.tools.build:gradle:8.1.4' } }
-          allprojects { repositories { google(); mavenCentral() } }
+          plugins { id 'com.android.application' version '8.2.0' apply false }
           EOF
+          
           cat > apk_template/app/build.gradle << 'EOF'
-          apply plugin: 'com.android.application'
-          android { compileSdkVersion 34; defaultConfig { applicationId "com.clearcode.app"; minSdkVersion 21; targetSdkVersion 34; versionCode 1; versionName "1.0" }; buildTypes { release { minifyEnabled false } }; namespace 'com.clearcode.app' }
+          plugins { id 'com.android.application' }
+          android {
+            namespace 'com.clearcode.app'
+            compileSdk 34
+            defaultConfig {
+              applicationId "com.clearcode.app"
+              minSdk 21
+              targetSdk 34
+              versionCode 1
+              versionName "1.0"
+            }
+            buildTypes { release { minifyEnabled false } }
+          }
           EOF
+          
           cat > apk_template/app/src/main/AndroidManifest.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -40,6 +59,7 @@ jobs:
               </application>
           </manifest>
           EOF
+          
           cat > apk_template/app/src/main/java/com/clearcode/app/MainActivity.java << 'EOF'
           package com.clearcode.app;
           import android.app.Activity; import android.os.Bundle; import android.webkit.WebView; import android.webkit.WebViewClient;
@@ -50,8 +70,8 @@ jobs:
                   String url = "https://example.com";
                   try {
                       InputStream is = getAssets().open("config.json");
-                      byte[] buffer = new byte[is.available()]; is.read(buffer); is.close();
-                      JSONObject obj = new JSONObject(new String(buffer));
+                      byte[] buf = new byte[is.available()]; is.read(buf); is.close();
+                      JSONObject obj = new JSONObject(new String(buf));
                       url = obj.getString("url");
                   } catch (Exception e) {}
                   WebView wv = new WebView(this);
@@ -62,12 +82,18 @@ jobs:
               }
           }
           EOF
+          
+          cat > apk_template/gradle.properties << 'EOF'
+          org.gradle.jvmargs=-Xmx2g
+          EOF
+          
           cd apk_template
-          wget -q https://services.gradle.org/distributions/gradle-8.0-bin.zip
-          unzip -q gradle-8.0-bin.zip
-          ./gradle-8.0/bin/gradle wrapper --gradle-version 8.0
+          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
+          unzip -q gradle-8.5-bin.zip
+          ./gradle-8.5/bin/gradle wrapper --gradle-version 8.5
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

@@ -1,37 +1,60 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BG Remover - No Server</title>
-<style>body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}.card{background:#0f0f0f;border:1px solid #222;border-radius:16px;padding:16px;margin-top:14px}input{width:100%;padding:12px;background:#0a0a0a;border:1px dashed #333;border-radius:10px;color:#888}.btn{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:10px}.btn-g{background:#00ff88;color:#000}.preview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}img{width:100%;border-radius:12px;background:#111;min-height:150px}.checker{background:repeating-conic-gradient(#222 0% 25%,#111 0% 50%) 0 0/20px 20px}</style>
-</head><body>
-<a href="/" style="color:#3b82f6;text-decoration:none">← System</a> <b>Tool 05 BG Remover (Browser)</b>
+<title>BG Remover</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
+.card{background:#0f0f0f;border:1px solid #222;border-radius:16px;padding:16px;margin-top:14px}
+input{width:100%;padding:12px;background:#0a0a0a;border:1px dashed #333;border-radius:10px;color:#888}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:12px;cursor:pointer}
+.btn-g{background:#00ff88;color:#000}
+.preview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.preview img{width:100%;border-radius:12px;background:#111;min-height:200px;object-fit:contain}
+.checker{background:repeating-conic-gradient(#333 0% 25%,#111 0% 50%) 0 0/20px 20px}
+#log{color:#00ff88;font-size:12px;text-align:center;margin-top:10px}
+</style></head><body>
+<a href="/" style="color:#3b82f6;text-decoration:none">← System</a> <b>Tool 05 BG Remover</b>
+<p style="color:#666;font-size:12px">For white background product photos. Makes white transparent.</p>
+
 <div class="card">
 <input type="file" id="file" accept="image/*">
-<button class="btn btn-g" onclick="removeBG()">✨ Remove Background (in phone)</button>
-<div id="status" style="color:#00ff88;text-align:center;padding:10px;display:none">Processing...</div>
-<div class="preview"><div><small>ORIGINAL</small><img id="orig"></div><div><small>NO BG</small><img id="res" class="checker"></div></div>
-<button class="btn" style="background:#fff;color:#000;display:none" id="dlBtn" onclick="download()">📥 Download PNG</button>
+<button class="btn btn-g" onclick="removeBG()">✨ Remove Background</button>
+<div id="log"></div>
+<div class="preview">
+<div><small>ORIGINAL</small><img id="orig"></div>
+<div><small>NO BG</small><img id="res" class="checker"></div>
 </div>
-<script type="module">
-import { removeBackground } from 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/browser.mjs';
+<a id="dl" style="display:none" class="btn btn-g" style="background:#fff;text-align:center;text-decoration:none;color:#000;display:none">📥 Download PNG</a>
+</div>
+
+<script>
 const fileInput=document.getElementById('file');
-fileInput.onchange=e=>{
- const f=e.target.files[0];
- if(f) document.getElementById('orig').src=URL.createObjectURL(f);
-}
-window.removeBG=async()=>{
+const origImg=document.getElementById('orig');
+const resImg=document.getElementById('res');
+
+fileInput.addEventListener('change',()=>{
+ const f=fileInput.files[0]; if(!f) return;
+ const reader=new FileReader();
+ reader.onload=e=>{origImg.src=e.target.result}
+ reader.readAsDataURL(f);
+});
+
+async function removeBG(){
  const file=fileInput.files[0];
- if(!file) return alert('Choose image');
- document.getElementById('status').style.display='block';
+ if(!file) return alert('Choose file first');
+ document.getElementById('log').innerText='⏳ Removing...';
+ const fd=new FormData(); fd.append('image',file);
  try{
-  const blob=await removeBackground(file);
-  const url=URL.createObjectURL(blob);
-  document.getElementById('res').src=url;
-  document.getElementById('dlBtn').style.display='block';
-  window._blob=blob;
- }catch(e){alert('Failed: '+e)}
- document.getElementById('status').style.display='none';
-}
-window.download=()=>{
- const a=document.createElement('a'); a.href=URL.createObjectURL(window._blob); a.download='no-bg.png'; a.click();
+  const r=await fetch('/api/remove-bg',{method:'POST',body:fd});
+  const data=await r.json();
+  if(data.error) throw data.error;
+  resImg.src=data.result;
+  const dl=document.getElementById('dl');
+  dl.href=data.result; dl.download='no-bg.png'; dl.style.display='block';
+  dl.textContent='📥 Download Transparent PNG';
+  document.getElementById('log').innerText='✅ Done! White background removed.';
+ }catch(e){
+  document.getElementById('log').innerText='Error: '+e;
+  alert(e);
+ }
 }
 </script>
 </body></html>

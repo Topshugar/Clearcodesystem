@@ -1,13 +1,36 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="/static/style.css"><title>Builder - ClearCode</title></head><body>
-<nav><a href="/" class="logo">ClearCode System</a></nav>
-<section class="form-box"><h2>Build Your APK</h2>
-<form action="/generate" method="post" enctype="multipart/form-data">
-<input name="app_name" placeholder="App Name e.g. My Shop" required>
-<input name="url" placeholder="https://yourwebsite.com" required>
-<input name="phone" placeholder="Your WhatsApp (for leads)">
-<label style="font-size:13px;margin-top:10px;display:block">App Icon (PNG, optional - extra charge)</label>
-<input type="file" name="icon" accept=".png,.jpg,.jpeg">
-<button type="submit" class="btn primary" style="margin-top:15px"><button>Generate APK</button></button>
-</form><p style="font-size:12px;margin-top:15px;color:#aaa">You get direct .apk download. Install on phone instantly — no Android Studio needed.</p>
-</section></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APK Builder - ClearCode</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;padding:20px;max-width:500px;margin:auto}
+input{width:100%;padding:14px;margin:8px 0 15px 0;border-radius:10px;border:1px solid #222;background:#111;color:#fff;box-sizing:border-box}
+button{width:100%;padding:16px;background:#00ff88;color:#000;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+a{color:#00ff88;text-decoration:none}
+.box{border:1px solid #222;border-radius:14px;padding:20px;background:#0f0f0f;margin-top:15px}
+</style>
+</head>
+<body>
+<a href="/">← Back to System</a>
+<h1>Tool 01: Website → APK</h1>
+<p style="color:#999;">Enter client website, get .apk instantly.</p>
+
+<div class="box">
+<form action="/generate" method="POST">
+<label>App Name</label>
+<input name="app_name" placeholder="e.g My Shop" required>
+
+<label>Website URL (must be https)</label>
+<input name="url" placeholder="https://example.com" required>
+
+<label>Client WhatsApp (for your records)</label>
+<input name="phone" placeholder="080...">
+
+<button type="submit">⚡ Generate APK</button>
+</form>
+</div>
+
+<p style="color:#555;font-size:12px;text-align:center;margin-top:20px;">You get direct .apk download. Install on phone instantly — no Android Studio needed. • base.apk must be in repo.</p>
+</body>
+</html>

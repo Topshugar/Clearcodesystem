@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BG Remover - Tool 05</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
+.top{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px}
+.card{background:#0f0f0f;border:1px solid #222;border-radius:16px;padding:16px;margin-top:14px}
+input[type=file]{width:100%;padding:12px;background:#0a0a0a;border:1px dashed #333;border-radius:10px;color:#888}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:10px;cursor:pointer}
+.btn-green{background:#00ff88;color:#000}.btn-white{background:#fff;color:#000}
+.preview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.preview img{width:100%;border-radius:12px;background:#111;min-height:200px;object-fit:contain}
+.loading{display:none;text-align:center;padding:20px;color:#00ff88}
+.checker{background:repeating-conic-gradient(#222 0% 25%,#111 0% 50%) 0 0/20px 20px}
+</style></head><body>
+<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span>Tool 05: BG Remover</span></div>
+
+<h3>Remove Background in 1 Click</h3>
+<p style="color:#666;font-size:12px">For vendors, Jumia sellers, designers in Jos.</p>
+
+<div class="card">
+<input type="file" id="file" accept="image/*" onchange="previewOrig(this)">
+<button class="btn btn-green" onclick="removeBG()">✨ Remove Background</button>
+<div class="loading" id="loading">⏳ Removing BG... (first time takes 30s to download AI model)</div>
+<div class="preview">
+<div><div style="font-size:11px;color:#666;margin-bottom:6px">ORIGINAL</div><img id="orig"></div>
+<div><div style="font-size:11px;color:#666;margin-bottom:6px">NO BG (PNG)</div><img id="result" class="checker"></div>
+</div>
+<button class="btn btn-white" id="dlBtn" style="display:none" onclick="download()">📥 Download Transparent PNG</button>
+</div>
+
+<script>
+let origData=null;
+function previewOrig(input){
+ const f=input.files[0]; if(!f) return;
+ const r=new FileReader();
+ r.onload=e=>{document.getElementById('orig').src=e.target.result; origData=e.target.result}
+ r.readAsDataURL(f);
+}
+async function removeBG(){
+ const file=document.getElementById('file').files[0];
+ if(!file) return alert('Select image first');
+ document.getElementById('loading').style.display='block';
+ const fd=new FormData(); fd.append('image',file);
+ try{
+  const res=await fetch('/api/remove-bg',{method:'POST',body:fd});
+  const data=await res.json();
+  if(data.error) throw data.error;
+  document.getElementById('result').src=data.result;
+  document.getElementById('dlBtn').style.display='block';
+ }catch(e){alert('Error: '+e)}
+ document.getElementById('loading').style.display='none';
+}
+function download(){
+ const a=document.createElement('a'); a.href=document.getElementById('result').src; a.download='no-bg.png'; a.click();
+}
+</script>
+</body></html>

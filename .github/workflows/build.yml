@@ -1,6 +1,5 @@
 name: Build APK
 on: [push, workflow_dispatch]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,68 +8,80 @@ jobs:
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Fix SDK path conflict
+      - name: Build Real APK
         run: |
-          rm -rf /home/runner/android-sdk
-          unset ANDROID_SDK_ROOT
-          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" || true
-
-      - name: Create Project
-        run: |
+          # Create proper Android project from scratch
           rm -rf apk_template
           mkdir -p apk_template/app/src/main/java/com/clearcode/app
+          
           cat > apk_template/settings.gradle << 'EOF'
-          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
-          dependencyResolutionManagement {
-            repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-            repositories { google(); mavenCentral() }
-          }
           include ':app'
           EOF
+          
           cat > apk_template/build.gradle << 'EOF'
-          plugins { id 'com.android.application' version '8.2.0' apply false }
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.1.4' }
+          }
+          allprojects { repositories { google(); mavenCentral() } }
           EOF
+          
           cat > apk_template/app/build.gradle << 'EOF'
-          plugins { id 'com.android.application' }
-          android { namespace 'com.clearcode.app'; compileSdk 34; defaultConfig { applicationId "com.clearcode.app"; minSdk 21; targetSdk 34; versionCode 1; versionName "1.0" }; buildTypes { release { minifyEnabled false } } }
+          apply plugin: 'com.android.application'
+          android {
+              compileSdkVersion 34
+              defaultConfig {
+                  applicationId "com.clearcode.app"
+                  minSdkVersion 21
+                  targetSdkVersion 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+              buildTypes { release { minifyEnabled false } }
+              namespace 'com.clearcode.app'
+          }
           EOF
+          
           cat > apk_template/app/src/main/AndroidManifest.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-            <uses-permission android:name="android.permission.INTERNET" />
-            <application android:label="ClearCode" android:theme="@android:style/Theme.NoTitleBar"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application>
+              <uses-permission android:name="android.permission.INTERNET" />
+              <application android:label="ClearCode App" android:theme="@android:style/Theme.NoTitleBar">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+                  </activity>
+              </application>
           </manifest>
           EOF
+          
           cat > apk_template/app/src/main/java/com/clearcode/app/MainActivity.java << 'EOF'
           package com.clearcode.app;
           import android.app.Activity; import android.os.Bundle; import android.webkit.WebView; import android.webkit.WebViewClient;
           public class MainActivity extends Activity {
-            protected void onCreate(Bundle b){super.onCreate(b); WebView w=new WebView(this); w.getSettings().setJavaScriptEnabled(true); w.setWebViewClient(new WebViewClient()); w.loadUrl("https://google.com"); setContentView(w);}
+              protected void onCreate(Bundle b){
+                  super.onCreate(b);
+                  WebView wv = new WebView(this);
+                  wv.getSettings().setJavaScriptEnabled(true);
+                  wv.setWebViewClient(new WebViewClient());
+                  wv.loadUrl("https://example.com");
+                  setContentView(wv);
+              }
           }
           EOF
-          cat > apk_template/gradle.properties << 'EOF'
-          org.gradle.jvmargs=-Xmx2g
-          EOF
+          
           cd apk_template
-          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
-          unzip -q gradle-8.5-bin.zip
-          ./gradle-8.5/bin/gradle wrapper --gradle-version 8.5
+          wget -q https://services.gradle.org/distributions/gradle-8.0-bin.zip
+          unzip -q gradle-8.0-bin.zip
+          ./gradle-8.0/bin/gradle wrapper --gradle-version 8.0
           chmod +x gradlew
-
-      - name: Build APK
-        run: |
-          cd apk_template
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ClearCode-APK-Direct
-          path: apk_template/app/build/outputs/apk/debug/app-debug.apk
+          path: apk_template/app/build/outputs/apk/debug/*.apk

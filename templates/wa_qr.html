@@ -1,0 +1,42 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WA QR - Tool 03</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;padding:15px}
+.top{padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between}
+input,textarea{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:8px 0;font-size:15px}
+button{width:100%;padding:15px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;font-size:16px;margin-top:10px}
+.card{background:#0f0f0f;border:1px solid #222;border-radius:14px;padding:16px;margin-top:14px}
+#qrImg{width:100%;max-width:300px;display:block;margin:15px auto;background:#fff;padding:10px;border-radius:12px}
+.link{color:#00ff88;word-break:break-all}
+</style></head><body>
+<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span>Tool 03: WA QR Pro</span></div>
+<h3>Generate WhatsApp Link + QR</h3>
+<input id="phone" placeholder="WhatsApp Number e.g 08012345678">
+<textarea id="msg" placeholder="Pre-filled message (e.g Hello, I want to order)"></textarea>
+<button onclick="gen()">Generate Link + QR</button>
+
+<div class="card" id="res" style="display:none">
+<div>Link: <span id="link" class="link"></span></div>
+<img id="qrImg">
+<button onclick="download()" style="background:#fff">Download QR PNG</button>
+<button onclick="copyLink()" style="background:#222;color:#fff">Copy Link</button>
+</div>
+
+<script>
+async function gen(){
+ let phone=document.getElementById('phone').value.replace(/\D/g,'');
+ if(phone.startsWith('0')) phone='234'+phone.slice(1);
+ const msg=encodeURIComponent(document.getElementById('msg').value);
+ const link=`https://wa.me/${phone}${msg?'?text='+msg:''}`;
+ document.getElementById('link').textContent=link;
+ const r=await fetch('/api/qr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:link})});
+ const d=await r.json();
+ document.getElementById('qrImg').src=d.qr;
+ document.getElementById('res').style.display='block';
+}
+function download(){
+ const a=document.createElement('a');a.href=document.getElementById('qrImg').src;a.download='wa-qr.png';a.click();
+}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('link').textContent);alert('Copied!')}
+</script>
+</body></html> 

@@ -4,109 +4,77 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>Price Tag AI - ClearCode</title>
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<title>Price Tag Maker AI - ClearCode</title>
 <style>
 body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:15px}
-.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:18px;margin:10px 0}
-input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;font-size:15px;box-sizing:border-box}
-button{width:100%;padding:16px;background:#00ff88;color:#000;border:0;border-radius:12px;font-weight:bold;font-size:16px;margin-top:10px}
+.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:18px}
+input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
+button{width:100%;padding:16px;background:#00ff88;color:#000;border:0;border-radius:12px;font-weight:bold;margin-top:10px}
 canvas{width:100%;border-radius:16px;margin-top:15px;background:#fff}
-label{display:flex;align-items:center;gap:10px;color:#aaa;font-size:14px;margin:8px 0}
 </style>
 </head>
 <body>
 <a href="/" style="color:#00ff88;text-decoration:none">← Back</a>
-<h2>Price Tag Maker AI 🏷️</h2>
-<p style="color:#666;font-size:13px">Type product → AI draws it</p>
-
+<h2>Price Tag AI 🏷️</h2>
 <div class="card">
-<input id="pname" placeholder="Product Name e.g. Black Puma Sneakers">
+<input id="pname" placeholder="Product e.g. White Puma Shoe">
 <input id="price" placeholder="Price e.g. ₦15,000">
-<input id="biz" placeholder="Business Name e.g. Clear Vendors">
-<input id="phone" placeholder="WhatsApp e.g. 08165043865">
-<select id="color">
-<option value="#00ff88">Green Theme</option>
-<option value="#ffcc00">Yellow Theme</option>
-<option value="#ff3b3b">Red Hot Sales</option>
-<option value="#00d9ff">Blue Cool</option>
-<option value="#ff00ff">Pink Market</option>
-</select>
-<label><input type="checkbox" id="useAI" checked style="width:auto"> Use AI Image (Leonardo style)</label>
+<input id="biz" placeholder="Business Name e.g. Clear code" value="Clear code">
+<input id="phone" placeholder="WhatsApp" value="08165043865">
+<select id="color"><option value="#00ff88">Green Theme</option><option value="#ffcc00">Yellow</option><option value="#ff3b3b">Red</option><option value="#00d9ff">Blue</option></select>
+<label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input type="checkbox" id="useAI" checked style="width:auto"> Use AI Image</label>
 <button onclick="make()">Generate Flyer</button>
-<button onclick="download()" style="background:#fff;color:#000">Download Image</button>
-<small id="status" style="color:#00ff88"></small>
+<button onclick="download()" style="background:#fff">Download Image</button>
+<small id="status" style="color:#00ff88;display:block;margin-top:8px"></small>
 </div>
-
 <canvas id="c" width="1080" height="1080"></canvas>
-
 <script>
 let aiImg = new Image();
-aiImg.crossOrigin="anonymous";
-let aiLoaded = false;
-
-function make(){
- let name=document.getElementById('pname').value||'Your Product';
- let price=document.getElementById('price').value||'₦0';
- let biz=document.getElementById('biz').value||'ClearCode Vendor';
+let aiLoaded=false;
+function draw(biz,name,price,phone,color){
+ let cv=document.getElementById('c'), ctx=cv.getContext('2d');
+ ctx.fillStyle='#fff'; ctx.fillRect(0,0,1080,1080);
+ ctx.fillStyle=color; ctx.fillRect(0,0,1080,200);
+ ctx.fillStyle='#000'; ctx.font='bold 60px Arial'; ctx.textAlign='center';
+ ctx.fillText(biz.toUpperCase(),540,130);
+ if(aiLoaded){
+   try{ ctx.drawImage(aiImg,340,220,400,400); }catch(e){}
+   ctx.fillStyle='#000'; ctx.font='bold 55px Arial'; ctx.fillText(name,540,700);
+ } else {
+   ctx.fillStyle='#000'; ctx.font='bold 60px Arial'; ctx.fillText(name,540,500);
+ }
+ ctx.fillStyle=color; ctx.font='bold 100px Arial'; ctx.fillText(price,540,820);
+ ctx.fillStyle='#333'; ctx.font='28px Arial'; ctx.fillText('WhatsApp: '+phone,540,920);
+ ctx.fillText('Powered by ClearCode System',540,970);
+}
+async function make(){
+ let name=document.getElementById('pname').value||'Product';
+ let price=document.getElementById('price').value||'₦1000';
+ let biz=document.getElementById('biz').value||'Clear code';
  let phone=document.getElementById('phone').value||'08165043865';
  let color=document.getElementById('color').value;
  let useAI=document.getElementById('useAI').checked;
- let status=document.getElementById('status');
-
+ let st=document.getElementById('status');
  if(useAI && name){
-   status.innerText='AI drawing '+name+'... wait 5 sec';
+   st.innerText='AI drawing '+name+'... (10 sec)';
    aiLoaded=false;
-   let prompt = encodeURIComponent(name + ' product photo, clean white background, studio lighting, high quality');
-   aiImg.src = 'https://image.pollinations.ai/prompt/'+prompt+'?width=512&height=512&seed='+Date.now();
-   aiImg.onload = ()=>{ aiLoaded=true; status.innerText='AI done!'; draw(biz,name,price,phone,color); };
-   aiImg.onerror = ()=>{ status.innerText='AI failed, using text only'; draw(biz,name,price,phone,color); };
- } else {
-   draw(biz,name,price,phone,color);
- }
+   try{
+     let prompt = encodeURIComponent(name + ' product photo white background studio');
+     let res = await fetch('/api/ai-image?prompt='+prompt);
+     let data = await res.json();
+     if(data.image){
+       aiImg = new Image();
+       aiImg.onload=()=>{ aiLoaded=true; st.innerText='AI success!'; draw(biz,name,price,phone,color); };
+       aiImg.src=data.image;
+     } else { st.innerText='AI failed, text only'; draw(biz,name,price,phone,color); }
+   }catch(e){ st.innerText='AI error: '+e; draw(biz,name,price,phone,color); }
+ } else { draw(biz,name,price,phone,color); }
 }
-
-function draw(biz,name,price,phone,color){
- let canvas=document.getElementById('c');
- let ctx=canvas.getContext('2d');
- ctx.fillStyle='#ffffff';
- ctx.fillRect(0,0,1080,1080);
- ctx.fillStyle=color;
- ctx.fillRect(0,0,1080,200);
- ctx.fillStyle='#000';
- ctx.font='bold 60px Arial';
- ctx.textAlign='center';
- ctx.fillText(biz.toUpperCase(),540,130);
-
- // draw AI image in center
- if(aiLoaded){
-   ctx.drawImage(aiImg, 340, 220, 400, 400);
-   ctx.fillStyle='#000';
-   ctx.font='bold 60px Arial';
-   ctx.fillText(name,540,700);
- } else {
-   ctx.fillStyle='#000';
-   ctx.font='bold 70px Arial';
-   ctx.fillText(name,540,500);
- }
-
- ctx.fillStyle=color;
- ctx.font='bold 110px Arial';
- ctx.fillText(price,540,820);
- ctx.fillStyle='#111';
- ctx.font='28px Arial';
- ctx.fillText('WhatsApp: '+phone,540,920);
- ctx.fillText('Powered by ClearCode System',540,970);
-}
-
 function download(){
- let canvas=document.getElementById('c');
- let link=document.createElement('a');
- link.download='price-tag-ai.png';
- link.href=canvas.toDataURL();
- link.click();
+ let a=document.createElement('a'); a.download='price-tag.png'; a.href=document.getElementById('c').toDataURL(); a.click();
 }
-make();
+draw('CLEAR CODE','White puma shoe','1000','08165043865','#00ff88');
 </script>
 </body>
-</html> 
+</html>

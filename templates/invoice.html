@@ -1,26 +1,39 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Invoice Pro</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<style>body{background:#000;color:#fff;font-family:Arial;padding:15px}input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:6px 0}label{font-size:11px;color:#888}.btn{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:10px}.btn-g{background:#00ff88;color:#000}.btn-w{background:#fff;color:#000}#box{background:#fff;color:#000;padding:20px;border-radius:12px;margin-top:15px}</style>
-</head><body>
-<a href="/" style="color:#3b82f6;text-decoration:none">← System</a> <b>Tool 04 Invoice Pro</b>
-<label>Business</label><input id="biz" value="ClearCode Solutions">
-<label>Client</label><input id="client" placeholder="Alhaji Musa">
-<label>Invoice #</label><input id="no" value="INV-001">
-<label>Item</label><input id="item" value="Website Design">
-<label>Amount</label><input id="amt" type="number" value="50000">
-<button class="btn btn-g" onclick="render()">Generate</button>
-<button class="btn btn-w" onclick="dl()">Download PDF</button>
-<div id="box"><h2 id="pBiz"></h2><div id="pNo"></div><hr><div>Bill To: <b id="pClient"></b></div><div id="pItem"></div><h3 id="pAmt"></h3></div>
+<meta charset="utf-8">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>Invoice Generator - Tool 04</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
+.top{padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:6px 0;box-sizing:border-box}
+button{width:100%;padding:14px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;margin-top:10px}
+#inv{background:#fff;color:#000;padding:20px;border-radius:12px;margin-top:15px}
+.small{color:#666;font-size:12px}
+</style></head><body>
+<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span class="small">Tool 04: Invoice</span></div>
+<h3>Invoice Generator</h3>
+<input id="biz" placeholder="Your Business Name">
+<input id="client" placeholder="Client Name">
+<input id="item" placeholder="Item / Service">
+<input id="amount" placeholder="Amount ₦" type="number">
+<button onclick="gen()">Generate Invoice</button>
+<div id="inv" style="display:none"></div>
+<button id="printBtn" style="display:none;background:#fff" onclick="window.print()">Print / Save PDF</button>
+
 <script>
-function render(){
- document.getElementById('pBiz').textContent=document.getElementById('biz').value;
- document.getElementById('pNo').textContent=document.getElementById('no').value;
- document.getElementById('pClient').textContent=document.getElementById('client').value;
- document.getElementById('pItem').textContent=document.getElementById('item').value;
- document.getElementById('pAmt').textContent='₦'+Number(document.getElementById('amt').value).toLocaleString();
+function gen(){
+ let html=`<h2>${document.getElementById('biz').value}</h2>
+ <p>Bill to: ${document.getElementById('client').value}</p>
+ <hr><p>${document.getElementById('item').value}</p>
+ <h3>Total: ₦${document.getElementById('amount').value}</h3>
+ <p class="small">Generated via ClearCode System<br>Contact: 08165043865</p>`;
+ document.getElementById('inv').innerHTML=html;
+ document.getElementById('inv').style.display='block';
+ document.getElementById('printBtn').style.display='block';
 }
-function dl(){render(); html2pdf().from(document.getElementById('box')).save('invoice.pdf')}
-render()
 </script>
+<div style="background:#00ff88;color:#000;padding:15px;border-radius:12px;margin-top:20px;text-align:center">
+<b>Need Business Website?</b> <a href="https://wa.me/2348165043865?text=Hi%20I%20need%20invoice%20system" style="background:#000;color:#00ff88;padding:8px 12px;border-radius:6px;text-decoration:none">WhatsApp 08165043865</a>
+</div>
 </body></html>

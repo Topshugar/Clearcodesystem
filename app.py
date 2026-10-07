@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import qrcode, io, base64, os
+import qrcode, io, base64, os, requests
 from PIL import Image
 from rembg import remove
 
@@ -45,6 +45,10 @@ def delivery_fee():
 def price_tag():
     return render_template('price_tag.html')
 
+@app.route('/tools/debt-book')
+def debt_book():
+    return render_template('debt_book.html')
+
 @app.route('/unlock')
 def unlock_page():
     return render_template('unlock.html')
@@ -79,7 +83,7 @@ def api_ruler():
     elif cmd.startswith('echo '):
         out = cmd[5:]
     elif cmd == 'ls':
-        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html"
+        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html debt_book.html"
     elif cmd == 'pwd':
         out = "/home/clearcode/system"
     elif cmd == 'date':
@@ -102,6 +106,18 @@ def api_remove_bg():
         output.save(buf, format='PNG')
         b64 = base64.b64encode(buf.getvalue()).decode()
         return jsonify({'result': f'data:image/png;base64,{b64}'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/ai-image')
+def api_ai_image():
+    prompt = request.args.get('prompt','white puma shoe product photo white background studio')
+    # Free AI - Pollinations
+    url = f"https://image.pollinations.ai/prompt/{prompt}?width=512&height=512&nologo=true&model=turbo"
+    try:
+        r = requests.get(url, timeout=30)
+        b64 = base64.b64encode(r.content).decode()
+        return jsonify({'image': f'data:image/jpeg;base64,{b64}'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

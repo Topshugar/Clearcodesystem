@@ -1,0 +1,40 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>Delivery Fee Calculator</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>body{margin:0;background:#070707;color:#fff;font-family:Arial}
+.top{padding:12px 15px;border-bottom:1px solid #1c1c1c;display:flex;justify-content:space-between}
+.wrap{padding:18px 15px}.card{background:#121212;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
+select,input{width:100%;padding:14px;border-radius:12px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:7px 0;font-size:15px}
+button{width:100%;padding:15px;border-radius:14px;border:none;background:#00d9ff;color:#000;font-weight:bold;font-size:15px;margin-top:12px}
+.result{background:#0a141a;border:1px solid #00d9ff;border-radius:14px;padding:16px;margin-top:14px;display:none}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #222;font-size:14px}
+.total{font-size:18px;color:#00d9ff}</style></head><body>
+<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span style="color:#666;font-size:11px">Tool 08: Delivery</span></div>
+<div class="wrap">
+<h2 style="margin:0">Delivery Fee Calculator 🛵</h2><p style="color:#777;font-size:13px">No more argument with customer.</p>
+<div class="card">
+<label>From</label>
+<select id="from" onchange="calc()"><option>Terminus</option><option>Rayfield</option><option>Bukuru</option><option>Anguldi</option><option>FarinGada</option><option>Bauchi Road</option></select>
+<label>To</label>
+<select id="to" onchange="calc()"><option>Terminus</option><option>Rayfield</option><option>Bukuru</option><option>Anguldi</option><option>FarinGada</option><option>Bauchi Road</option><option>Jos South</option></select>
+<label>Item</label>
+<select id="item" onchange="calc()"><option value="small">Small</option><option value="medium">Medium +₦200</option><option value="large">Large +₦500</option></select>
+<button onclick="calc()">CALCULATE FEE</button>
+<div id="result" class="result"></div>
+</div>
+</div>
+<script>
+function calc(){
+ let from=document.getElementById('from').value;
+ let to=document.getElementById('to').value;
+ let item=document.getElementById('item').value;
+ let base= from===to?500:800+Math.floor(Math.random()*200);
+ let extra=item==='medium'?200:item==='large'?500:0;
+ let total=base+extra;
+ document.getElementById('result').style.display='block';
+ document.getElementById('result').innerHTML=`<h3 style="margin:0;color:#00d9ff">Fee: ₦${total}</h3><div class="row"><span>From</span><b>${from}</b></div><div class="row"><span>To</span><b>${to}</b></div><div class="row total"><span>Total</span><b>₦${total}</b></div><button onclick="share()" style="background:#fff;margin-top:10px">Share to Customer</button>`;
+}
+function share(){let t=document.getElementById('result').innerText; window.open(`https://wa.me/?text=${encodeURIComponent('🛵 Delivery Fee:\n'+t+'\nvia clearcodesystem.onrender.com/tools/delivery-fee')}`);}
+</script>
+</body></html>

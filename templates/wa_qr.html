@@ -1,42 +1,79 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WA QR - Tool 03</title>
+<meta charset="utf-8">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>WA QR - Tool 03 | ClearCode System</title>
 <style>
-body{background:#000;color:#fff;font-family:Arial;padding:15px}
-.top{padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between}
-input,textarea{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:8px 0;font-size:15px}
-button{width:100%;padding:15px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;font-size:16px;margin-top:10px}
+body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
+.top{padding:12px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}
+input,textarea{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:8px 0;font-size:15px;box-sizing:border-box}
+button{width:100%;padding:15px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
 .card{background:#0f0f0f;border:1px solid #222;border-radius:14px;padding:16px;margin-top:14px}
 #qrImg{width:100%;max-width:300px;display:block;margin:15px auto;background:#fff;padding:10px;border-radius:12px}
-.link{color:#00ff88;word-break:break-all}
+.link{color:#00ff88;word-break:break-all;font-size:13px}
+.small{color:#666;font-size:11px;text-align:center;margin-top:10px}
+.cta{background:#00ff88;color:#000;padding:15px;border-radius:12px;margin-top:25px;text-align:center}
+.cta a{display:inline-block;background:#000;color:#00ff88;padding:10px 20px;border-radius:8px;text-decoration:none;margin-top:8px;font-weight:bold}
 </style></head><body>
-<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span>Tool 03: WA QR Pro</span></div>
-<h3>Generate WhatsApp Link + QR</h3>
+<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span style="font-size:12px;color:#666">Tool 03: WA QR Pro</span></div>
+
+<h3 style="margin:0 0 5px 0">Generate WhatsApp Link + QR</h3>
+<p class="small" style="text-align:left;margin:0 0 10px 0">Vendors use this to get orders faster</p>
+
 <input id="phone" placeholder="WhatsApp Number e.g 08012345678">
-<textarea id="msg" placeholder="Pre-filled message (e.g Hello, I want to order)"></textarea>
+<textarea id="msg" placeholder="Pre-filled message (e.g Hello, I want to order your product)"></textarea>
 <button onclick="gen()">Generate Link + QR</button>
 
 <div class="card" id="res" style="display:none">
-<div>Link: <span id="link" class="link"></span></div>
+<div style="font-size:12px;color:#888">Your WhatsApp Link:</div>
+<div style="margin:6px 0"><span id="link" class="link"></span></div>
 <img id="qrImg">
-<button onclick="download()" style="background:#fff">Download QR PNG</button>
-<button onclick="copyLink()" style="background:#222;color:#fff">Copy Link</button>
+<button onclick="download()" style="background:#fff;color:#000">📥 Download QR PNG</button>
+<button onclick="copyLink()" style="background:#222;color:#fff">📋 Copy Link</button>
+<button onclick="shareWA()" style="background:#00ff88;color:#000">Share on WhatsApp</button>
+<div class="small">Print this QR for your shop / flyer</div>
+</div>
+
+<!-- Monetag Ad Slot will appear here after verification -->
+<div id="ad-slot" style="margin:20px 0;text-align:center;color:#333;font-size:11px">
+<!-- Paste Monetag Ad Tag here after verification -->
+</div>
+
+<div class="cta">
+<b>Need Website / Business App?</b><br><small>From ₦15k - We build for vendors</small><br>
+<a href="https://wa.me/2348165043865?text=Hi%20ClearCode%20I%20need%20website/app%20from%20WA%20QR%20Tool">💬 WhatsApp: 08165043865</a>
+<div style="margin-top:8px;font-size:11px;color:#000">Free tool supported by ads</div>
+</div>
+
+<div style="text-align:center;padding:15px;color:#666;font-size:11px">
+<a href="/" style="color:#00ff88">All 5 Tools</a> • <a href="/tools/bg-remover" style="color:#666">BG Remover</a>
 </div>
 
 <script>
 async function gen(){
  let phone=document.getElementById('phone').value.replace(/\D/g,'');
+ if(!phone){alert('Enter number');return}
  if(phone.startsWith('0')) phone='234'+phone.slice(1);
+ if(phone.length < 10){alert('Invalid number');return}
  const msg=encodeURIComponent(document.getElementById('msg').value);
  const link=`https://wa.me/${phone}${msg?'?text='+msg:''}`;
  document.getElementById('link').textContent=link;
  const r=await fetch('/api/qr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:link})});
  const d=await r.json();
- document.getElementById('qrImg').src=d.qr;
- document.getElementById('res').style.display='block';
+ if(d.qr){
+   document.getElementById('qrImg').src=d.qr;
+   document.getElementById('res').style.display='block';
+   window.scrollTo(0,document.body.scrollHeight);
+ }else{
+   alert('Error generating QR: '+(d.error||'unknown'));
+ }
 }
 function download(){
- const a=document.createElement('a');a.href=document.getElementById('qrImg').src;a.download='wa-qr.png';a.click();
+ const a=document.createElement('a');a.href=document.getElementById('qrImg').src;a.download='wa-qr-'+Date.now()+'.png';a.click();
 }
-function copyLink(){navigator.clipboard.writeText(document.getElementById('link').textContent);alert('Copied!')}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('link').textContent);alert('✅ Link Copied!');}
+function shareWA(){
+ const link=document.getElementById('link').textContent;
+ window.open(`https://wa.me/?text=${encodeURIComponent('My WhatsApp QR Link: '+link)}`,'_blank');
+}
 </script>
-</body></html> 
+</body></html>

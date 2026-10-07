@@ -41,6 +41,10 @@ def pos_charges():
 def delivery_fee():
     return render_template('delivery_fee.html')
 
+@app.route('/tools/price-tag')
+def price_tag():
+    return render_template('price_tag.html')
+
 @app.route('/unlock')
 def unlock_page():
     return render_template('unlock.html')
@@ -75,7 +79,7 @@ def api_ruler():
     elif cmd.startswith('echo '):
         out = cmd[5:]
     elif cmd == 'ls':
-        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html"
+        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html"
     elif cmd == 'pwd':
         out = "/home/clearcode/system"
     elif cmd == 'date':
@@ -103,4 +107,4 @@ def api_remove_bg():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port)

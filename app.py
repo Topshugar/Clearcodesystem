@@ -8,6 +8,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
 @app.route('/tools/apk-builder')
 def apk_builder(): return render_template('builder.html')
 @app.route('/tools/ruler-terminal')
@@ -22,6 +23,8 @@ def bg_remover(): return render_template('bg_remover.html')
 def fake_alert(): return render_template('fake_alert.html')
 @app.route('/tools/pos-charges')
 def pos_charges(): return render_template('pos_charges.html')
+@app.route('/tools/delivery-fee')
+def delivery_fee(): return render_template('delivery_fee.html')
 @app.route('/unlock')
 def unlock_page(): return render_template('unlock.html')
 
@@ -51,7 +54,7 @@ def api_ruler():
     if cmd == 'help': out = "Commands: help, clear, ls, pwd, date, echo [text], whoami"
     elif cmd == 'clear': out = '__CLEAR__'
     elif cmd.startswith('echo '): out = cmd[5:]
-    elif cmd == 'ls': out = "index.html builder.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html"
+    elif cmd == 'ls': out = "index.html builder.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html"
     elif cmd == 'pwd': out = "/home/clearcode/system"
     elif cmd == 'date': out = __import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     elif cmd == 'whoami': out = "clearcode-vendor"

@@ -1,0 +1,125 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>Fake Alert Checker - Tool 06 - ClearCode</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{box-sizing:border-box} body{margin:0;background:#070707;color:#fff;font-family:Inter,Arial;padding:0}
+.top{padding:12px 15px;border-bottom:1px solid #1c1c1c;display:flex;justify-content:space-between;align-items:center}
+.top a{color:#3b82f6;text-decoration:none;font-size:13px}
+.wrap{padding:18px 15px}
+h2{margin:0 0 6px 0;font-size:22px}
+.sub{color:#777;font-size:13px;margin-bottom:16px;line-height:1.4}
+.card{background:linear-gradient(180deg,#121212,#0d0d0d);border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
+input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:7px 0;font-size:14px}
+label{font-size:12px;color:#888;margin-top:10px;display:block}
+button{width:100%;padding:15px;border-radius:14px;border:none;background:#00ff88;color:#000;font-weight:bold;font-size:15px;margin-top:12px;cursor:pointer}
+button:active{transform:scale(0.98)}
+.result{padding:16px;border-radius:14px;margin-top:14px;display:none}
+.safe{background:#052e16;border:1px solid #00ff88;color:#b6ffda}
+.warn{background:#2e1a05;border:1px solid #ff9a00;color:#ffd8a0}
+.danger{background:#2e0505;border:1px solid #ff3b3b;color:#ffb8b8}
+.check{font-size:13px;line-height:1.6;margin:8px 0}
+.check b{color:#fff}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:bold;margin-left:6px}
+.badge-danger{background:#ff3b3b;color:#fff}
+.badge-safe{background:#00ff88;color:#000}
+.cta{margin:20px 0;background:#111;border:1px dashed #333;padding:14px;border-radius:14px;text-align:center}
+.small{color:#555;font-size:11px;text-align:center;margin-top:15px}
+</style></head><body>
+<div class="top"><a href="/">← System</a><span style="color:#666;font-size:11px">Tool 06: Anti-Scam</span></div>
+
+<div class="wrap">
+<h2>Fake Alert Checker 🔍</h2>
+<p class="sub">Nigeria #1 tool to detect fake bank transfer, fake Opay/Palmpay alert. Check before you release goods.</p>
+
+<div class="card">
+<label>Bank / App used for transfer</label>
+<select id="bank">
+<option value="">Select bank...</option>
+<option>OPay</option><option>PalmPay</option><option>Moniepoint</option><option>Kuda</option><option>First Bank</option><option>GTB</option><option>UBA</option><option>Access</option><option>Zenith</option><option>Others</option>
+</select>
+
+<label>Amount received (₦)</label>
+<input id="amount" type="number" placeholder="e.g 25000">
+
+<label>Did you receive SMS from bank? What sender name?</label>
+<select id="sms">
+<option value="">Select...</option>
+<option value="yes-real">Yes - From real bank name (e.g GTBank, OPay)</option>
+<option value="yes-number">Yes - From personal number (e.g 0803...)</option>
+<option value="no">No SMS at all</option>
+</select>
+
+<label>Did you check your balance inside banking app?</label>
+<select id="balance">
+<option value="">Select...</option>
+<option value="yes-increased">Yes - Balance increased</option>
+<option value="yes-not">Yes - Balance DID NOT increase</option>
+<option value="no">No - I didn't check</option>
+</select>
+
+<label>How did buyer behave?</label>
+<select id="behavior">
+<option value="">Select...</option>
+<option value="rush">Rushing you / "I dey hurry"</option>
+<option value="overpay">Said he overpaid / wants refund</option>
+<option value="network">Says "network dey delay"</option>
+<option value="calm">Calm, normal</option>
+</select>
+
+<button onclick="checkFake()">CHECK NOW — Is It Fake?</button>
+
+<div id="result" class="result"></div>
+
+<div id="checklist" class="card" style="display:none">
+<b style="font-size:13px">✅ Real Transfer Must Pass These 5:</b>
+<div class="check">1. <b>SMS from official shortcode</b> — not 080 personal number</div>
+<div class="check">2. <b>App balance increased</b> — not just SMS</div>
+<div class="check">3. <b>Transaction ID exists</b> — check in app history</div>
+<div class="check">4. <b>No rushing</b> — scammers always rush</div>
+<div class="check">5. <b>Call bank / check *901#</b> — if doubt</div>
+</div>
+</div>
+
+<div class="cta">
+<b style="color:#fff">Victim of fake alert before?</b><br>
+<span style="font-size:12px;color:#888">We build secure payment confirmation pages for vendors from ₦15k</span><br>
+<a href="https://wa.me/2348165043865?text=Hi%20I%20need%20fake%20alert%20protection%20page" style="display:inline-block;margin-top:10px;background:#00ff88;color:#000;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:bold;font-size:13px">WhatsApp 08165043865</a>
+</div>
+
+<p class="small">Disclaimer: This tool is educational guide based on common scam patterns. Always confirm inside your real bank app. ClearCode not liable. Built for Naija hustle 🇳🇬</p>
+</div>
+
+<script>
+function checkFake(){
+ const bank=document.getElementById('bank').value;
+ const sms=document.getElementById('sms').value;
+ const bal=document.getElementById('balance').value;
+ const beh=document.getElementById('behavior').value;
+ const res=document.getElementById('result');
+ const list=document.getElementById('checklist');
+ if(!bank||!sms||!bal||!beh){alert('Fill all fields');return}
+ let score=0; let html='';
+ if(sms==='yes-number') score+=3;
+ if(sms==='no') score+=2;
+ if(bal==='yes-not') score+=3;
+ if(bal==='no') score+=2;
+ if(beh==='rush') score+=2;
+ if(beh==='overpay') score+=3;
+ if(beh==='network') score+=2;
+ if(score>=5){
+   res.className='result danger'; res.style.display='block';
+   html=`<b>🚨 HIGH RISK — LIKELY FAKE ALERT! <span class="badge badge-danger">DANGER</span></b><br><br>Do NOT release goods.<br><br>Reasons: ${sms==='yes-number'?'SMS from personal number (real banks never use 080)':''} ${bal!=='yes-increased'?'Balance not confirmed inside app':''} ${beh!=='calm'?'Buyer rushing / overpay trick':''}<br><br><b>What to do now:</b><br>1. Open your ${bank} app → check balance & history<br>2. No balance? Tell buyer: "I never see am for app"<br>3. If he pressures, block and report 080 number`;
+ }else if(score>=2){
+   res.className='result warn'; res.style.display='block';
+   html=`<b>⚠️ SUSPICIOUS — Verify again <span class="badge" style="background:#ff9a00">CHECK</span></b><br><br>Could be network delay, but don't risk. Confirm balance inside ${bank} app, not SMS.<br><br><b>Quick check:</b> Log out and log back into app. Pull down to refresh balance.`;
+ }else{
+   res.className='result safe'; res.style.display='block';
+   html=`<b>✅ LOOKS REAL — But still confirm <span class="badge badge-safe">SAFE</span></b><br><br>SMS from real bank + balance increased + calm buyer = good signs.<br><br>Still: Check transaction ID in app history matches amount.`;
+ }
+ res.innerHTML=html; list.style.display='block';
+ window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+</body></html>

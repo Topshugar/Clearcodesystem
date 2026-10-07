@@ -1,55 +1,56 @@
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, render_template
 import os, zipfile, tempfile, json, subprocess, io, base64
 
 app = Flask(__name__)
 
-# Fallback HTML if templates missing
-FALLBACK_HOME = """
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<style>body{background:#000;color:#fff;font-family:Arial;padding:20px}
-a{display:block;background:#0f0f0f;border:1px solid #222;padding:15px;margin:10px 0;border-radius:12px;color:#00ff88;text-decoration:none}
-</style></head><body>
-<h2>ClearCode System LIVE ✅</h2>
-<a href="/tools/apk-builder">Tool 01 APK Builder</a>
-<a href="/tools/ruler-terminal">Tool 02 Ruler</a>
-<a href="/tools/wa-qr">Tool 03 WA QR</a>
-<a href="/tools/invoice">Tool 04 Invoice</a>
-<a href="/tools/bg-remover">Tool 05 BG Remover</a>
-<a href="/debug">/debug</a>
-</body></html>
-"""
-
-def safe_render(template_name, fallback_html):
+# === SAFE RENDER (if template missing, don't crash) ===
+def safe_render(template_name, fallback_html="<h2>Template missing</h2>"):
     try:
-        from flask import render_template
         return render_template(template_name)
     except Exception as e:
-        return f"<div style='color:red;padding:10px'>Missing {template_name}: {e}</div>" + fallback_html, 200
+        return f"<div style='background:#000;color:red;padding:10px'>Missing {template_name}: {e}</div>" + fallback_html, 200
+
+# === VERIFICATION FILES (for Monetag / Google) ===
+@app.route('/<path:filename>')
+def serve_verification(filename):
+    if filename.endswith('.txt') or filename.endswith('.html') or 'monetag' in filename or filename == 'manifest.json':
+        try:
+            # Try root
+            if os.path.exists(filename):
+                return send_file(filename)
+            if os.path.exists(os.path.join(os.getcwd(), filename)):
+                return send_file(os.path.join(os.getcwd(), filename))
+        except Exception as e:
+            pass
+    return "Not found", 404
 
 @app.route('/')
 def home():
-    return safe_render('index.html', FALLBACK_HOME)
+    return safe_render('index.html', "<h2>ClearCode System LIVE</h2><a href='/tools/bg-remover'>BG Remover</a>")
 
 @app.route('/debug')
 def debug():
-    files = []
-    for root, dirs, filenames in os.walk("."):
-        if ".git" in root:
-            continue
-        for f in filenames:
-            files.append(os.path.join(root, f))
-    return "<br>".join(files[:300])
+    files=[]
+    for root, dirs, fnames in os.walk("."):
+        if ".git" in root: continue
+        for f in fnames:
+            files.append(os.path.join(root,f))
+    return "<br>".join(files[:400])
 
-# === TOOL 01 APK ===
+@app.route('/unlock')
+def unlock_page():
+    return safe_render('unlock.html', "<h2>unlock.html missing</h2>")
+
+# === TOOL 01 APK BUILDER ===
 @app.route('/tools/apk-builder')
 @app.route('/builder')
 def apk_builder():
-    return safe_render('builder.html', "<h2>builder.html missing - upload it</h2>")
+    return safe_render('builder.html', "<h2>builder.html missing</h2>")
 
 @app.route('/generate', methods=['POST'])
 def generate():
     try:
-        app_name = request.form.get('app_name','MyApp')[:20] or "MyApp"
+        app_name = request.form.get('app_name','MyApp')[:25] or "MyApp"
         url = request.form.get('url','').strip()
         phone = request.form.get('phone','')
         if not url.startswith('http'):
@@ -85,10 +86,8 @@ def ruler_terminal():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.get_json().get('cmd','').strip()
-    if cmd == 'clear':
-        return jsonify(output="__CLEAR__")
-    if cmd in ['help','?']:
-        return jsonify(output="Commands: ls, pwd, echo, date, clear")
+    if cmd == 'clear': return jsonify(output="__CLEAR__")
+    if cmd in ['help','?']: return jsonify(output="Commands: ls, pwd, echo, date, clear, help")
     if any(x in cmd for x in ["rm -rf","sudo",":()"]):
         return jsonify(output="Blocked")
     try:
@@ -107,11 +106,9 @@ def api_qr():
     try:
         import qrcode
         text = request.get_json().get('text','').strip()
-        if not text:
-            return jsonify(qr="")
+        if not text: return jsonify(qr="")
         img = qrcode.make(text)
-        buf = io.BytesIO()
-        img.save(buf, format='PNG')
+        buf = io.BytesIO(); img.save(buf, format='PNG')
         b64 = base64.b64encode(buf.getvalue()).decode()
         return jsonify(qr=f"data:image/png;base64,{b64}")
     except Exception as e:
@@ -120,9 +117,9 @@ def api_qr():
 # === TOOL 04 INVOICE ===
 @app.route('/tools/invoice')
 def invoice_tool():
-    return safe_render('invoice.html', "<h2>invoice.html missing - upload the file I gave you</h2>")
+    return safe_render('invoice.html', "<h2>invoice.html missing</h2>")
 
-# === TOOL 05 BG REMOVER - LITE, NO REMBG NEEDED ===
+# === TOOL 05 BG REMOVER - LITE FOR FREE PLAN ===
 @app.route('/tools/bg-remover')
 def bg_remover_tool():
     return safe_render('bg_remover.html', "<h2>bg_remover.html missing</h2>")
@@ -133,21 +130,17 @@ def api_remove_bg():
         from PIL import Image
         file = request.files.get('image')
         if not file:
-            return jsonify(error="No image uploaded"), 400
-
+            return jsonify(error="No image"), 400
         img = Image.open(file.stream).convert("RGBA")
         datas = img.getdata()
-        new_data = []
+        new_data=[]
         for item in datas:
-            # Remove near-white background (for product photos)
             if item[0] > 210 and item[1] > 210 and item[2] > 210:
-                new_data.append((255, 255, 255, 0))
+                new_data.append((255,255,255,0))
             else:
                 new_data.append(item)
         img.putdata(new_data)
-
-        buf = io.BytesIO()
-        img.save(buf, format='PNG')
+        buf = io.BytesIO(); img.save(buf, format='PNG')
         b64 = base64.b64encode(buf.getvalue()).decode()
         return jsonify(result=f"data:image/png;base64,{b64}")
     except Exception as e:
@@ -155,4 +148,4 @@ def api_remove_bg():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port)

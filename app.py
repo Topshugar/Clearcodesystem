@@ -1,151 +1,99 @@
-from flask import Flask, request, send_file, jsonify, render_template
-import os, zipfile, tempfile, json, subprocess, io, base64
+from flask import Flask, render_template, request, jsonify, send_file
+import qrcode, io, base64, os
+from PIL import Image
+from rembg import remove
 
 app = Flask(__name__)
 
-# === SAFE RENDER (if template missing, don't crash) ===
-def safe_render(template_name, fallback_html="<h2>Template missing</h2>"):
-    try:
-        return render_template(template_name)
-    except Exception as e:
-        return f"<div style='background:#000;color:red;padding:10px'>Missing {template_name}: {e}</div>" + fallback_html, 200
-
-# === VERIFICATION FILES (for Monetag / Google) ===
-@app.route('/<path:filename>')
-def serve_verification(filename):
-    if filename.endswith('.txt') or filename.endswith('.html') or 'monetag' in filename or filename == 'manifest.json':
-        try:
-            # Try root
-            if os.path.exists(filename):
-                return send_file(filename)
-            if os.path.exists(os.path.join(os.getcwd(), filename)):
-                return send_file(os.path.join(os.getcwd(), filename))
-        except Exception as e:
-            pass
-    return "Not found", 404
-
 @app.route('/')
-def home():
-    return safe_render('index.html', "<h2>ClearCode System LIVE</h2><a href='/tools/bg-remover'>BG Remover</a>")
+def index():
+    return render_template('index.html')
 
-@app.route('/debug')
-def debug():
-    files=[]
-    for root, dirs, fnames in os.walk("."):
-        if ".git" in root: continue
-        for f in fnames:
-            files.append(os.path.join(root,f))
-    return "<br>".join(files[:400])
+@app.route('/tools/apk-builder')
+def apk_builder():
+    return render_template('builder.html')
+
+@app.route('/tools/ruler-terminal')
+def ruler_terminal():
+    return render_template('ruler_terminal.html')
+
+@app.route('/tools/wa-qr')
+def wa_qr():
+    return render_template('wa_qr.html')
+
+@app.route('/tools/invoice')
+def invoice():
+    return render_template('invoice.html')
+
+@app.route('/tools/bg-remover')
+def bg_remover():
+    return render_template('bg_remover.html')
+
+@app.route('/tools/fake-alert')
+def fake_alert():
+    return render_template('fake_alert.html')
 
 @app.route('/unlock')
 def unlock_page():
-    return safe_render('unlock.html', "<h2>unlock.html missing</h2>")
-
-# === TOOL 01 APK BUILDER ===
-@app.route('/tools/apk-builder')
-@app.route('/builder')
-def apk_builder():
-    return safe_render('builder.html', "<h2>builder.html missing</h2>")
+    return render_template('unlock.html')
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    try:
-        app_name = request.form.get('app_name','MyApp')[:25] or "MyApp"
-        url = request.form.get('url','').strip()
-        phone = request.form.get('phone','')
-        if not url.startswith('http'):
-            return "URL must start with http", 400
-        os.makedirs("data", exist_ok=True)
-        with open("data/leads.txt","a", encoding="utf-8") as f:
-            f.write(f"{app_name} | {url} | {phone}\n")
-        base_apk = os.path.join(os.getcwd(), "base.apk")
-        if not os.path.exists(base_apk):
-            return "base.apk not found in root - upload it", 500
-        tmpdir = tempfile.mkdtemp()
-        final_path = os.path.join(tmpdir, f"{app_name.replace(' ','_')}.apk")
-        config_data = json.dumps({"url": url, "app_name": app_name})
-        with zipfile.ZipFile(base_apk, 'r') as zin, zipfile.ZipFile(final_path, 'w') as zout:
-            for item in zin.infolist():
-                if item.filename == "assets/config.json":
-                    zout.writestr(item, config_data)
-                elif item.filename.startswith("META-INF/"):
-                    continue
-                else:
-                    zout.writestr(item, zin.read(item.filename))
-            if "assets/config.json" not in zin.namelist():
-                zout.writestr("assets/config.json", config_data)
-        return send_file(final_path, as_attachment=True, download_name=f"{app_name}.apk")
-    except Exception as e:
-        return f"Error in generate: {e}", 500
-
-# === TOOL 02 RULER ===
-@app.route('/tools/ruler-terminal')
-def ruler_terminal():
-    return safe_render('ruler_terminal.html', "<h2>ruler_terminal.html missing</h2>")
-
-@app.route('/api/ruler-terminal', methods=['POST'])
-def ruler_api():
-    cmd = request.get_json().get('cmd','').strip()
-    if cmd == 'clear': return jsonify(output="__CLEAR__")
-    if cmd in ['help','?']: return jsonify(output="Commands: ls, pwd, echo, date, clear, help")
-    if any(x in cmd for x in ["rm -rf","sudo",":()"]):
-        return jsonify(output="Blocked")
-    try:
-        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3)
-        return jsonify(output=(r.stdout+r.stderr)[:4000] or "(no output)")
-    except Exception as e:
-        return jsonify(output=str(e))
-
-# === TOOL 03 WA QR ===
-@app.route('/tools/wa-qr')
-def wa_qr_tool():
-    return safe_render('wa_qr.html', "<h2>wa_qr.html missing</h2>")
+    app_name = request.form.get('app_name','MyApp')
+    url = request.form.get('url')
+    phone = request.form.get('phone')
+    # save lead
+    with open('leads.txt','a') as f:
+        f.write(f"{app_name} | {url} | {phone}\n")
+    return f"<h2>{app_name} APK Generated!</h2><p>URL: {url}</p><p>We will contact {phone} on WhatsApp 08165043865</p><a href='/'>Back</a>"
 
 @app.route('/api/qr', methods=['POST'])
 def api_qr():
-    try:
-        import qrcode
-        text = request.get_json().get('text','').strip()
-        if not text: return jsonify(qr="")
-        img = qrcode.make(text)
-        buf = io.BytesIO(); img.save(buf, format='PNG')
-        b64 = base64.b64encode(buf.getvalue()).decode()
-        return jsonify(qr=f"data:image/png;base64,{b64}")
-    except Exception as e:
-        return jsonify(error=str(e)), 500
+    data = request.get_json()
+    text = data.get('text','')
+    qr = qrcode.make(text)
+    buf = io.BytesIO()
+    qr.save(buf, format='PNG')
+    b64 = base64.b64encode(buf.getvalue()).decode()
+    return jsonify({'qr': f'data:image/png;base64,{b64}'})
 
-# === TOOL 04 INVOICE ===
-@app.route('/tools/invoice')
-def invoice_tool():
-    return safe_render('invoice.html', "<h2>invoice.html missing</h2>")
-
-# === TOOL 05 BG REMOVER - LITE FOR FREE PLAN ===
-@app.route('/tools/bg-remover')
-def bg_remover_tool():
-    return safe_render('bg_remover.html', "<h2>bg_remover.html missing</h2>")
+@app.route('/api/ruler-terminal', methods=['POST'])
+def api_ruler():
+    data = request.get_json()
+    cmd = data.get('cmd','').strip()
+    if cmd == 'help':
+        out = "Commands: help, clear, ls, pwd, date, echo [text], whoami"
+    elif cmd == 'clear':
+        out = '__CLEAR__'
+    elif cmd.startswith('echo '):
+        out = cmd[5:]
+    elif cmd == 'ls':
+        out = "index.html builder.html wa_qr.html invoice.html bg_remover.html fake_alert.html"
+    elif cmd == 'pwd':
+        out = "/home/clearcode/system"
+    elif cmd == 'date':
+        out = __import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    elif cmd == 'whoami':
+        out = "clearcode-vendor"
+    else:
+        out = f"Command not found: {cmd} - type 'help'"
+    return jsonify({'output': out})
 
 @app.route('/api/remove-bg', methods=['POST'])
 def api_remove_bg():
     try:
-        from PIL import Image
         file = request.files.get('image')
         if not file:
-            return jsonify(error="No image"), 400
-        img = Image.open(file.stream).convert("RGBA")
-        datas = img.getdata()
-        new_data=[]
-        for item in datas:
-            if item[0] > 210 and item[1] > 210 and item[2] > 210:
-                new_data.append((255,255,255,0))
-            else:
-                new_data.append(item)
-        img.putdata(new_data)
-        buf = io.BytesIO(); img.save(buf, format='PNG')
+            return jsonify({'error':'No image'}), 400
+        img = Image.open(file.stream)
+        output = remove(img)
+        buf = io.BytesIO()
+        output.save(buf, format='PNG')
         b64 = base64.b64encode(buf.getvalue()).decode()
-        return jsonify(result=f"data:image/png;base64,{b64}")
+        return jsonify({'result': f'data:image/png;base64,{b64}'})
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

@@ -1,4 +1,5 @@
 Flask
-gunicorn
-qrcode[pil]
+qrcode
 Pillow
+rembg
+onnxruntime

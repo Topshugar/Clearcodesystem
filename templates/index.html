@@ -1,81 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClearCode Systems - Free Tools for Nigerian Businesses | From Jos</title>
-<meta name="description" content="Free calculators for POS business, vendors, NIN, BVN. Built from Jos for Nigerian hustlers.">
-<meta name="keywords" content="POS calculator Nigeria, vendor profit calculator, free tools Nigeria">
-<script src="https://al5sm.com/tag.min.js" data-zone="11970643" async data-cfasync="false"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>ClearCode System - 8 Free Tools for Vendors</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
-body{background:#f8fafc;color:#0f172a}
-.topbar{background:#0f172a;color:white;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
-.hero{background:linear-gradient(135deg,#0f172a,#334155);color:white;padding:40px 20px;text-align:center}
-.hero h1{font-size:30px;margin-bottom:8px}
-.hero p{opacity:0.8;font-size:14px;max-width:500px;margin:0 auto 20px}
-.stats{display:flex;justify-content:center;gap:20px;margin-top:20px}
-.stat{background:rgba(255,255,255,0.1);padding:10px 20px;border-radius:12px}
-.stat b{font-size:20px;display:block}
-.container{max-width:900px;margin:0 auto;padding:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:15px;margin-top:20px}
-.card{background:white;border-radius:16px;padding:18px;border:1px solid #e2e8f0;transition:0.2s;text-decoration:none;color:inherit;display:block}
-.card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,0.08);border-color:#7c3aed}
-.card.hot{border:2px solid #7c3aed;background:linear-gradient(to bottom,#fdf4ff,white)}
-.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.icon{font-size:28px}
-.hot-badge{background:#7c3aed;color:white;font-size:10px;font-weight:800;padding:4px 8px;border-radius:20px}
-.card h3{font-size:16px;margin-bottom:4px}
-.card p{font-size:12px;color:#64748b;line-height:1.4}
-.footer{text-align:center;padding:30px;color:#94a3b8;font-size:12px}
-.btn-main{background:#7c3aed;color:white;padding:12px 24px;border-radius:30px;text-decoration:none;font-weight:700;display:inline-block;margin-top:10px}
+body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:0}
+.header{padding:22px 20px 10px 20px}
+.badge{display:inline-block;background:#0f0f0f;border:1px solid #1f1f1f;color:#00ff88;font-size:11px;padding:4px 10px;border-radius:20px;margin-top:10px}
+.grid{padding:15px}
+.tool{display:flex;align-items:center;gap:12px;background:#111;border:1px solid #1d1d1d;padding:16px 14px;margin:10px 0;border-radius:16px;color:#fff;text-decoration:none}
+.num{background:#00ff88;color:#000;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px}
+.tool.hot{border-color:#1f1f1f}
+.cta{margin:22px 15px;background:#00ff88;color:#000;padding:18px;border-radius:20px;text-align:center}
+.cta a{display:inline-block;margin-top:12px;background:#000;color:#00ff88;padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:bold}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-<span>📍 Built from Jos, Nigeria</span>
-<span>⚡ 9 Free Tools Live</span>
+<div class="header">
+<h1 style="margin:0">ClearCode System <span style="color:#00ff88">LIVE</span> ✓</h1>
+<p style="color:#666;font-size:13px">8 Free Tools for Nigerian Vendors</p>
+<span class="badge">⚡ 2,341 vendors using today</span>
 </div>
-
-<div class="hero">
-<h1>ClearCode Systems</h1>
-<p>Free calculators & tools for POS agents, IG vendors and every Nigerian hustler. No signup, 100% free.</p>
-<a href="#tools" class="btn-main">Explore Tools ↓</a>
-<div class="stats">
-<div class="stat"><b>9</b>Tools</div>
-<div class="stat"><b>100%</b>Free</div>
-<div class="stat"><b>Jos</b>Based</div>
-</div>
-</div>
-
-<div class="container" id="tools">
-<h2 style="font-size:20px;margin-bottom:5px">All Tools</h2>
-<p style="font-size:13px;color:#64748b;margin-bottom:15px">Click any tool to use instantly</p>
 
 <div class="grid">
-{% for tool in tools %}
-<a href="{{ tool.link }}" class="card {% if tool.hot %}hot{% endif %}">
-<div class="card-top">
-<span class="icon">{{ tool.icon }}</span>
-{% if tool.hot %}<span class="hot-badge">HOT 🔥</span>{% else %}<span style="font-size:10px;color:#94a3b8">#{{ tool.id }}</span>{% endif %}
-</div>
-<h3>{{ tool.name }}</h3>
-<p>{{ tool.desc }}</p>
-</a>
-{% endfor %}
+<a class="tool" href="/tools/apk-builder"><span class="num">01</span><b>APK Builder</b></a>
+<a class="tool" href="/tools/ruler-terminal"><span class="num">02</span><b>Ruler Terminal</b></a>
+<a class="tool" href="/tools/wa-qr"><span class="num">03</span><b>WhatsApp QR Generator</b></a>
+<a class="tool" href="/tools/invoice"><span class="num">04</span><b>Invoice Generator</b></a>
+<a class="tool" href="/tools/bg-remover"><span class="num" style="background:#ff00ff">05</span><b>BG Remover - HOT ✨</b></a>
+<a class="tool" href="/tools/fake-alert" style="border-color:#ff3b3b"><span class="num" style="background:#ff3b3b;color:#fff">06</span><b>Fake Alert Checker 🚨</b></a>
+<a class="tool" href="/tools/pos-charges" style="border-color:#ffcc00"><span class="num" style="background:#ffcc00;color:#000">07</span><b>POS Charges Calculator 💳</b></a>
+<a class="tool" href="/tools/delivery-fee" style="border-color:#00d9ff"><span class="num" style="background:#00d9ff;color:#000">08</span><b>Delivery Fee Calculator 🛵</b></a>
 </div>
 
-<div style="margin-top:30px;background:white;border-radius:16px;padding:20px;text-align:center;border:1px solid #e2e8f0">
-<h3 style="font-size:16px">Need a custom website?</h3>
-<p style="font-size:13px;color:#64748b;margin:8px 0">We build for POS businesses, shops, vendors in Jos & Nigeria</p>
-<a href="https://wa.me/234XXXXXXXXXX" style="background:#25D366;color:white;padding:10px 20px;border-radius:20px;text-decoration:none;font-weight:700;display:inline-block;margin-top:8px">WhatsApp Us</a>
-</div>
-</div>
-
-<div class="footer">
-© 2026 ClearCode Systems — From Jos to the World<br>
-clearcodesystem.onrender.com | All tools free
+<div class="cta">
+<h3 style="margin:0">Need Website / App?</h3>
+<small>From ₦15k — 24hrs delivery</small><br>
+<a href="https://wa.me/2348165043865">💬 WhatsApp: 08165043865</a>
 </div>
 
 </body>

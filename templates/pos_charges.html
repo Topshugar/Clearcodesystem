@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<title>POS Charges Calculator - Tool 07</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>body{margin:0;background:#070707;color:#fff;font-family:Arial;padding:0}
+.top{padding:12px 15px;border-bottom:1px solid #1c1c1c;display:flex;justify-content:space-between}
+.wrap{padding:18px 15px}.card{background:#121212;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
+input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:7px 0;font-size:15px}
+button{width:100%;padding:15px;border-radius:14px;border:none;background:#ffcc00;color:#000;font-weight:bold;font-size:15px;margin-top:12px}
+.result{background:#111a0a;border:1px solid #ffcc00;border-radius:14px;padding:16px;margin-top:14px;display:none}
+.result h3{margin:0;color:#ffcc00}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #222;font-size:14px}
+.row b{color:#fff}.total{font-size:18px;color:#ffcc00}.small{color:#555;font-size:11px;text-align:center;margin-top:15px}</style></head><body>
+<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span style="color:#666;font-size:11px">Tool 07: POS</span></div>
+<div class="wrap">
+<h2 style="margin:0">POS Charges Calculator 💳</h2><p style="color:#777;font-size:13px">Calculate POS charge instantly. For vendors & POS business.</p>
+<div class="card">
+<label>Amount to withdraw / transfer (₦)</label>
+<input id="amount" type="number" placeholder="e.g 5000" oninput="calc()">
+<label>Your POS charge type</label>
+<select id="type" onchange="calc()">
+<option value="100-5000">Standard: ₦100 for ₦1000-₦5000</option>
+<option value="200-10000">₦200 for ₦6000-₦10000</option>
+<option value="300-15000">₦300 for ₦11000-₦15000</option>
+<option value="custom">Custom charge</option>
+</select>
+<div id="customBox" style="display:none"><input id="customCharge" type="number" placeholder="Enter your charge e.g 100" oninput="calc()"></div>
+<button onclick="calc()">CALCULATE CHARGE</button>
+<div id="result" class="result"></div>
+</div>
+<div class="card" style="font-size:13px;line-height:1.5"><b>📋 Normal POS Charges in Nigeria (2025):</b><br>
+• ₦1000 - ₦5000 → ₦100<br>• ₦6000 - ₦10000 → ₦200<br>• ₦11000 - ₦20000 → ₦300<br>• ₦21000+ → ₦400+<br><br>Tip: Always tell customer total before transaction.</div>
+<div style="background:#111;border:1px dashed #333;padding:14px;border-radius:14px;text-align:center;margin-top:15px">
+<b>Need POS Business Flyer / Website?</b><br><a href="https://wa.me/2348165043865?text=Hi%20I%20need%20POS%20flyer/website" style="display:inline-block;margin-top:10px;background:#ffcc00;color:#000;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:bold">WhatsApp 08165043865</a></div>
+<p class="small">Built for Naija hustle 🇳🇬 — ClearCode System</p>
+</div>
+<script>
+function calc(){
+ let amt=parseFloat(document.getElementById('amount').value)||0;
+ let type=document.getElementById('type').value;
+ document.getElementById('customBox').style.display=type==='custom'?'block':'none';
+ let charge=0;
+ if(type==='custom'){charge=parseFloat(document.getElementById('customCharge').value)||0;}
+ else if(amt<=5000) charge=100;
+ else if(amt<=10000) charge=200;
+ else if(amt<=20000) charge=300;
+ else if(amt<=50000) charge=500;
+ else charge=1000;
+ if(amt===0) return;
+ let total=amt+charge;
+ document.getElementById('result').style.display='block';
+ document.getElementById('result').innerHTML=`<h3>Result</h3><div class="row"><span>Amount</span><b>₦${amt.toLocaleString()}</b></div><div class="row"><span>POS Charge</span><b>₦${charge.toLocaleString()}</b></div><div class="row total"><span>Total to Collect</span><b>₦${total.toLocaleString()}</b></div><div class="row" style="border:none"><span>Customer gets</span><b>₦${amt.toLocaleString()}</b></div><br><button onclick="share()" style="background:#fff">Share Result on WhatsApp</button>`;
+}
+function share(){let r=document.getElementById('result').innerText; window.open(`https://wa.me/?text=${encodeURIComponent('POS Calculation:\n'+r+'\n\nvia clearcodesystem.onrender.com')}`);}
+</script>
+</body></html>

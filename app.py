@@ -1,43 +1,106 @@
-from flask import Flask, render_template, send_from_directory
-import os
+from flask import Flask, render_template, request, jsonify
+import qrcode, io, base64, os
+from PIL import Image
+from rembg import remove
 
 app = Flask(__name__)
 
-TOOLS = [
-    {"id": "01", "name": "APK Builder", "link": "/tools/apk-builder", "file": "apk-builder.html"},
-    {"id": "02", "name": "Ruler Terminal", "link": "/tools/ruler-terminal", "file": "ruler-terminal.html"},
-    {"id": "03", "name": "WhatsApp QR Generator", "link": "/tools/whatsapp-qr", "file": "whatsapp-qr.html"},
-    {"id": "04", "name": "Invoice Generator", "link": "/tools/invoice-generator", "file": "invoice-generator.html"},
-    {"id": "05", "name": "BG Remover - HOT", "link": "/tools/bg-remover", "file": "bg-remover.html"},
-    {"id": "06", "name": "Fake Alert Checker", "link": "/tools/fake-alert", "file": "fake-alert.html"},
-    {"id": "07", "name": "POS Charges Calculator", "link": "/tools/pos-charges", "file": "pos-charges.html"},
-    {"id": "08", "name": "Delivery Fee Calculator", "link": "/tools/delivery-fee", "file": "delivery-fee.html"},
-]
-
 @app.route('/')
-def home():
-    return render_template('index.html', tools=TOOLS)
+def index():
+    return render_template('index.html')
 
-@app.route('/tools/<tool_name>')
-def tool_page(tool_name):
-    tools_dir = os.path.join(app.root_path, 'tools')
-    filename = f"{tool_name}.html"
-    full_path = os.path.join(tools_dir, filename)
-    
-    if os.path.exists(full_path):
-        return send_from_directory(tools_dir, filename)
-    
-    alt_names = [
-        f"{tool_name}.html",
-        f"{tool_name.replace('-', '_')}.html",
-        f"{tool_name.replace('_', '-')}.html"
-    ]
-    for alt in alt_names:
-        if os.path.exists(os.path.join(tools_dir, alt)):
-            return send_from_directory(tools_dir, alt)
-            
-    return f"Tool {tool_name} not found. Check tools folder has {filename}", 404
+@app.route('/tools/apk-builder')
+def apk_builder():
+    return render_template('builder.html')
+
+@app.route('/tools/ruler-terminal')
+def ruler_terminal():
+    return render_template('ruler_terminal.html')
+
+@app.route('/tools/wa-qr')
+def wa_qr():
+    return render_template('wa_qr.html')
+
+@app.route('/tools/invoice')
+def invoice():
+    return render_template('invoice.html')
+
+@app.route('/tools/bg-remover')
+def bg_remover():
+    return render_template('bg_remover.html')
+
+@app.route('/tools/fake-alert')
+def fake_alert():
+    return render_template('fake_alert.html')
+
+@app.route('/tools/pos-charges')
+def pos_charges():
+    return render_template('pos_charges.html')
+
+@app.route('/tools/delivery-fee')
+def delivery_fee():
+    return render_template('delivery_fee.html')
+
+@app.route('/unlock')
+def unlock_page():
+    return render_template('unlock.html')
+
+@app.route('/generate', methods=['POST'])
+def generate():
+    app_name = request.form.get('app_name','MyApp')
+    url = request.form.get('url')
+    phone = request.form.get('phone')
+    with open('leads.txt','a') as f:
+        f.write(f"{app_name} | {url} | {phone}\n")
+    return f"<h2>{app_name} APK Generated!</h2><p>{url}</p><p>We will contact {phone} - 08165043865</p><a href='/'>Back</a>"
+
+@app.route('/api/qr', methods=['POST'])
+def api_qr():
+    data = request.get_json()
+    text = data.get('text','')
+    qr = qrcode.make(text)
+    buf = io.BytesIO()
+    qr.save(buf, format='PNG')
+    b64 = base64.b64encode(buf.getvalue()).decode()
+    return jsonify({'qr': f'data:image/png;base64,{b64}'})
+
+@app.route('/api/ruler-terminal', methods=['POST'])
+def api_ruler():
+    data = request.get_json()
+    cmd = data.get('cmd','').strip()
+    if cmd == 'help':
+        out = "Commands: help, clear, ls, pwd, date, echo [text], whoami"
+    elif cmd == 'clear':
+        out = '__CLEAR__'
+    elif cmd.startswith('echo '):
+        out = cmd[5:]
+    elif cmd == 'ls':
+        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html"
+    elif cmd == 'pwd':
+        out = "/home/clearcode/system"
+    elif cmd == 'date':
+        out = __import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    elif cmd == 'whoami':
+        out = "clearcode-vendor"
+    else:
+        out = f"Command not found: {cmd} - type 'help'"
+    return jsonify({'output': out})
+
+@app.route('/api/remove-bg', methods=['POST'])
+def api_remove_bg():
+    try:
+        file = request.files.get('image')
+        if not file:
+            return jsonify({'error':'No image'}), 400
+        img = Image.open(file.stream)
+        output = remove(img)
+        buf = io.BytesIO()
+        output.save(buf, format='PNG')
+        b64 = base64.b64encode(buf.getvalue()).decode()
+        return jsonify({'result': f'data:image/png;base64,{b64}'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port) 

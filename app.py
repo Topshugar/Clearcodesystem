@@ -1,106 +1,50 @@
-from flask import Flask, render_template, request, jsonify
-import qrcode, io, base64, os
-from PIL import Image
-from rembg import remove
+from flask import Flask, render_template, send_from_directory
+import os
 
 app = Flask(__name__)
 
+# Tool list - controls homepage
+TOOLS = [
+    {"id": 1, "name": "POS Charges Calculator", "desc": "Calculate POS withdrawal charges instantly", "link": "/tools/pos-charges", "icon": "🏧", "file": "pos-charges.html"},
+    {"id": 2, "name": "Age Calculator", "desc": "Calculate exact age from DOB", "link": "/tools/age-calculator", "icon": "🎂", "file": "age-calculator.html"},
+    {"id": 3, "name": "BVN Checker Format", "desc": "Validate BVN format", "link": "/tools/bvn-checker", "icon": "🏦", "file": "bvn-checker.html"},
+    {"id": 4, "name": "Character Counter", "desc": "Count words & characters for captions", "link": "/tools/word-counter", "icon": "📝", "file": "word-counter.html"},
+    {"id": 5, "name": "NIN Validator", "desc": "Check NIN format validity", "link": "/tools/nin-validator", "icon": "🪪", "file": "nin-validator.html"},
+    {"id": 6, "name": "Love Calculator", "desc": "Fun love compatibility test", "link": "/tools/love-calculator", "icon": "❤️", "file": "love-calculator.html"},
+    {"id": 7, "name": "POS Business Daily Profit", "desc": "Track daily POS business profit", "link": "/tools/pos-profit", "icon": "💵", "file": "pos-profit.html"},
+    {"id": 8, "name": "Delivery Fee Calculator", "desc": "Calculate delivery fee for Jos vendors", "link": "/tools/delivery-fee", "icon": "🛵", "file": "delivery-fee.html"},
+    {"id": 9, "name": "Vendor Profit Calculator", "desc": "Know your real profit after delivery & ads - HOT for IG vendors", "link": "/tools/profit-calculator", "icon": "💰", "file": "profit-calculator.html", "hot": True},
+]
+
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('index.html', tools=TOOLS)
 
-@app.route('/tools/apk-builder')
-def apk_builder():
-    return render_template('builder.html')
-
-@app.route('/tools/ruler-terminal')
-def ruler_terminal():
-    return render_template('ruler_terminal.html')
-
-@app.route('/tools/wa-qr')
-def wa_qr():
-    return render_template('wa_qr.html')
-
-@app.route('/tools/invoice')
-def invoice():
-    return render_template('invoice.html')
-
-@app.route('/tools/bg-remover')
-def bg_remover():
-    return render_template('bg_remover.html')
-
-@app.route('/tools/fake-alert')
-def fake_alert():
-    return render_template('fake_alert.html')
-
-@app.route('/tools/pos-charges')
-def pos_charges():
-    return render_template('pos_charges.html')
-
-@app.route('/tools/delivery-fee')
-def delivery_fee():
-    return render_template('delivery_fee.html')
-
-@app.route('/unlock')
-def unlock_page():
-    return render_template('unlock.html')
-
-@app.route('/generate', methods=['POST'])
-def generate():
-    app_name = request.form.get('app_name','MyApp')
-    url = request.form.get('url')
-    phone = request.form.get('phone')
-    with open('leads.txt','a') as f:
-        f.write(f"{app_name} | {url} | {phone}\n")
-    return f"<h2>{app_name} APK Generated!</h2><p>{url}</p><p>We will contact {phone} - 08165043865</p><a href='/'>Back</a>"
-
-@app.route('/api/qr', methods=['POST'])
-def api_qr():
-    data = request.get_json()
-    text = data.get('text','')
-    qr = qrcode.make(text)
-    buf = io.BytesIO()
-    qr.save(buf, format='PNG')
-    b64 = base64.b64encode(buf.getvalue()).decode()
-    return jsonify({'qr': f'data:image/png;base64,{b64}'})
-
-@app.route('/api/ruler-terminal', methods=['POST'])
-def api_ruler():
-    data = request.get_json()
-    cmd = data.get('cmd','').strip()
-    if cmd == 'help':
-        out = "Commands: help, clear, ls, pwd, date, echo [text], whoami"
-    elif cmd == 'clear':
-        out = '__CLEAR__'
-    elif cmd.startswith('echo '):
-        out = cmd[5:]
-    elif cmd == 'ls':
-        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html"
-    elif cmd == 'pwd':
-        out = "/home/clearcode/system"
-    elif cmd == 'date':
-        out = __import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    elif cmd == 'whoami':
-        out = "clearcode-vendor"
+@app.route('/tools/<tool_name>')
+def tool_page(tool_name):
+    # map link to file
+    # /tools/pos-charges -> pos-charges.html
+    filename = f"{tool_name}.html"
+    tools_dir = os.path.join(app.root_path, 'tools')
+    
+    # security check - only allow files in our TOOLS list
+    allowed_files = [t['file'] for t in TOOLS]
+    if filename not in allowed_files:
+        return "Tool not found", 404
+    
+    if os.path.exists(os.path.join(tools_dir, filename)):
+        return send_from_directory(tools_dir, filename)
     else:
-        out = f"Command not found: {cmd} - type 'help'"
-    return jsonify({'output': out})
+        return f"File {filename} not found in /tools folder. Please upload it.", 404
 
-@app.route('/api/remove-bg', methods=['POST'])
-def api_remove_bg():
-    try:
-        file = request.files.get('image')
-        if not file:
-            return jsonify({'error':'No image'}), 400
-        img = Image.open(file.stream)
-        output = remove(img)
-        buf = io.BytesIO()
-        output.save(buf, format='PNG')
-        b64 = base64.b64encode(buf.getvalue()).decode()
-        return jsonify({'result': f'data:image/png;base64,{b64}'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(app.root_path, 'sitemap.xml')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(app.root_path, 'robots.txt')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=False)

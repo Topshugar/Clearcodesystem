@@ -48,6 +48,10 @@ def clear_shell(): return render_template('clear_shell.html')
 @app.route('/tool/usa-notify')
 def usa_notify(): return render_template('usa_notify.html')
 
+# NEW GAMER TAG TOOL - VIRAL USA + NAIJA
+@app.route('/tool/gamer-tag')
+def gamer_tag(): return render_template('gamer_tag.html')
+
 # --- APIS ---
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
@@ -63,7 +67,7 @@ def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
     outs = {
         'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S %Y'),

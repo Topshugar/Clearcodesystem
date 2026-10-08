@@ -1,40 +1,117 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8"><meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>Delivery Fee Calculator</title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<style>body{margin:0;background:#070707;color:#fff;font-family:Arial}
-.top{padding:12px 15px;border-bottom:1px solid #1c1c1c;display:flex;justify-content:space-between}
-.wrap{padding:18px 15px}.card{background:#121212;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
-select,input{width:100%;padding:14px;border-radius:12px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:7px 0;font-size:15px}
-button{width:100%;padding:15px;border-radius:14px;border:none;background:#00d9ff;color:#000;font-weight:bold;font-size:15px;margin-top:12px}
-.result{background:#0a141a;border:1px solid #00d9ff;border-radius:14px;padding:16px;margin-top:14px;display:none}
-.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #222;font-size:14px}
-.total{font-size:18px;color:#00d9ff}</style></head><body>
-<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span style="color:#666;font-size:11px">Tool 08: Delivery</span></div>
-<div class="wrap">
-<h2 style="margin:0">Delivery Fee Calculator 🛵</h2><p style="color:#777;font-size:13px">No more argument with customer.</p>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<title>Delivery Fee - Map</title>
+<style>
+body{margin:0;background:#060606;color:#fff;font-family:Arial}
+.header{padding:15px}
+#map{height:55vh;width:100%}
+.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:14px;margin:10px}
+select,input,button{width:100%;padding:14px;margin:6px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
+button{background:#00d9ff;color:#000;font-weight:bold;border:0;font-size:16px}
+.result{background:#00ff88;color:#000;padding:18px;border-radius:16px;text-align:center;font-weight:bold;font-size:20px;margin-top:10px}
+small{color:#666}
+</style>
+</head>
+<body>
+<div class="header">
+<a href="/" style="color:#00ff88;text-decoration:none">← System</a>
+<h2 style="margin:10px 0 0">Delivery Fee Calculator 🛵 Map</h2>
+<small>Tap map to set FROM and TO</small>
+</div>
+
+<div id="map"></div>
+
 <div class="card">
-<label>From</label>
-<select id="from" onchange="calc()"><option>Terminus</option><option>Rayfield</option><option>Bukuru</option><option>Anguldi</option><option>FarinGada</option><option>Bauchi Road</option></select>
-<label>To</label>
-<select id="to" onchange="calc()"><option>Terminus</option><option>Rayfield</option><option>Bukuru</option><option>Anguldi</option><option>FarinGada</option><option>Bauchi Road</option><option>Jos South</option></select>
-<label>Item</label>
-<select id="item" onchange="calc()"><option value="small">Small</option><option value="medium">Medium +₦200</option><option value="large">Large +₦500</option></select>
+<label>Item Size</label>
+<select id="item">
+<option value="100">Small - ₦100 /km</option>
+<option value="150" selected>Medium - ₦150 /km</option>
+<option value="220">Large - ₦220 /km</option>
+<option value="300">Very Large / Fragile - ₦300 /km</option>
+</select>
+<label>Base Fee (starting price)</label>
+<input id="base" type="number" value="500" placeholder="Base e.g. 500">
 <button onclick="calc()">CALCULATE FEE</button>
-<div id="result" class="result"></div>
+<div id="res" class="result" style="display:none"></div>
+<small id="dist" style="display:block;margin-top:8px;text-align:center"></small>
+<button onclick="clearMap()" style="background:#222;color:#fff">Clear Map</button>
 </div>
-</div>
+
 <script>
-function calc(){
- let from=document.getElementById('from').value;
- let to=document.getElementById('to').value;
- let item=document.getElementById('item').value;
- let base= from===to?500:800+Math.floor(Math.random()*200);
- let extra=item==='medium'?200:item==='large'?500:0;
- let total=base+extra;
- document.getElementById('result').style.display='block';
- document.getElementById('result').innerHTML=`<h3 style="margin:0;color:#00d9ff">Fee: ₦${total}</h3><div class="row"><span>From</span><b>${from}</b></div><div class="row"><span>To</span><b>${to}</b></div><div class="row total"><span>Total</span><b>₦${total}</b></div><button onclick="share()" style="background:#fff;margin-top:10px">Share to Customer</button>`;
+let map = L.map('map').setView([9.057,7.495], 12); // Abuja default
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+
+let fromMarker=null, toMarker=null, line=null;
+let fromLatLng=null, toLatLng=null;
+let step=0;
+
+map.on('click', function(e){
+ if(step===0){
+   if(fromMarker) map.removeLayer(fromMarker);
+   fromMarker = L.marker(e.latlng,{draggable:true}).addTo(map).bindPopup("FROM - Your Shop").openPopup();
+   fromLatLng = e.latlng;
+   fromMarker.on('dragend', function(ev){ fromLatLng = ev.target.getLatLng(); updateLine(); });
+   step=1;
+ } else {
+   if(toMarker) map.removeLayer(toMarker);
+   toMarker = L.marker(e.latlng,{draggable:true}).addTo(map).bindPopup("TO - Customer").openPopup();
+   toLatLng = e.latlng;
+   toMarker.on('dragend', function(ev){ toLatLng = ev.target.getLatLng(); updateLine(); });
+   step=0;
+   updateLine();
+ }
+});
+
+function getDistance(l1,l2){
+ let R=6371; let dLat=(l2.lat-l1.lat)*Math.PI/180; let dLon=(l2.lng-l1.lng)*Math.PI/180;
+ let a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(l1.lat*Math.PI/180)*Math.cos(l2.lat*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+ return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-function share(){let t=document.getElementById('result').innerText; window.open(`https://wa.me/?text=${encodeURIComponent('🛵 Delivery Fee:\n'+t+'\nvia clearcodesystem.onrender.com/tools/delivery-fee')}`);}
+
+function updateLine(){
+ if(fromLatLng && toLatLng){
+   if(line) map.removeLayer(line);
+   line = L.polyline([fromLatLng,toLatLng],{color:'#00d9ff',weight:4}).addTo(map);
+   let d=getDistance(fromLatLng,toLatLng);
+   document.getElementById('dist').innerText = `Distance: ${d.toFixed(2)} km | Drag pins to adjust`;
+   document.getElementById('dist').style.display='block';
+ }
+}
+
+function calc(){
+ if(!fromLatLng || !toLatLng){ alert('Tap map to set FROM and TO first'); return; }
+ let d=getDistance(fromLatLng,toLatLng);
+ let rate=parseInt(document.getElementById('item').value);
+ let base=parseInt(document.getElementById('base').value)||0;
+ let fee = base + (d*rate);
+ fee = Math.ceil(fee/100)*100; // round to 100
+ let res=document.getElementById('res');
+ res.style.display='block';
+ res.innerHTML = `Distance: ${d.toFixed(2)}km<br>Fee: ₦${fee.toLocaleString()}<br><small style="color:#000;font-size:12px">Share this with customer</small>`;
+}
+
+function clearMap(){
+ if(fromMarker) map.removeLayer(fromMarker);
+ if(toMarker) map.removeLayer(toMarker);
+ if(line) map.removeLayer(line);
+ fromMarker=toMarker=line=fromLatLng=toLatLng=null; step=0;
+ document.getElementById('res').style.display='none';
+ document.getElementById('dist').innerText='';
+}
+
+// try get user location
+if(navigator.geolocation){
+ navigator.geolocation.getCurrentPosition(p=>{
+   map.setView([p.coords.latitude,p.coords.longitude],13);
+ });
+}
 </script>
-</body></html>
+</body>
+ </html> 

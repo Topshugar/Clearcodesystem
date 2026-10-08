@@ -2,6 +2,7 @@ Flask
 qrcode
 Pillow
 rembg
-onnxruntime
-gunicorn
 requests
+paramiko
+onionshare-cli
+gunicorn

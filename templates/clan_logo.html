@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Fire & COD Clan Logo Maker - Esports Logo Generator</title>
+<meta name="description" content="Make esports clan logo for Free Fire, COD, PUBG. 10 templates, download PNG. No Photoshop needed.">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+body{margin:0;background:#080808;color:#fff;font-family:Inter,sans-serif}
+.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222;position:sticky;top:0;z-index:10}
+.wrap{max-width:600px;margin:auto;padding:16px}
+label{font-size:11px;color:#888;margin:14px 0 6px 0;display:block;text-transform:uppercase}
+input,select{width:100%;padding:13px;background:#111;border:1px solid #333;color:#fff;border-radius:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.tpl{padding:12px;background:#111;border:2px solid #222;border-radius:10px;text-align:center;cursor:pointer;font-size:22px}
+.tpl.active{border-color:#00FF88;background:#00FF8811}
+.btn{width:100%;padding:15px;background:#00FF88;color:#000;border:0;font-weight:900;border-radius:12px;margin-top:14px;cursor:pointer}
+canvas{width:100%;max-width:400px;margin:20px auto;display:block;border-radius:16px;background:#111}
+.tip{color:#555;font-size:11px;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header"><a href="/" style="color:#888;text-decoration:none;font-weight:700">← Tools</a><span style="color:#00FF88;font-weight:800;font-size:12px">CLAN LOGO MAKER</span><div style="width:40px"></div></div>
+<div class="wrap">
+<label>Clan Name</label>
+<input id="name" value="RULER ESPORTS" oninput="draw()">
+<label>Short Tag (e.g. RLR)</label>
+<input id="tag" value="RLR" maxlength="4" oninput="draw()">
+<label>Style</label>
+<div class="grid" id="styles"></div>
+<label>Color</label>
+<select id="color" onchange="draw()">
+<option value="#00FF88">Neon Green</option>
+<option value="#a855f7">Purple Haze</option>
+<option value="#FF0000">Fire Red</option>
+<option value="#00D9FF">Ice Blue</option>
+<option value="#FFD700">Gold</option>
+<option value="#FF6B00">Orange Flame</option>
+</select>
+<canvas id="c" width="800" height="800"></canvas>
+<button class="btn" onclick="download()">DOWNLOAD LOGO PNG</button>
+<div class="tip">For Free Fire clan, COD clan, WhatsApp group icon, YouTube. 800x800 PNG, transparent ready.</div>
+</div>
+<script>
+const templates = [
+{name:'🔥 Fire',id:'fire'},
+{name:'💀 Skull',id:'skull'},
+{name:'👑 Crown',id:'crown'},
+{name:'⚔️ Sword',id:'sword'},
+{name:'🐺 Wolf',id:'wolf'},
+{name:'🦅 Eagle',id:'eagle'},
+{name:'👹 Demon',id:'demon'},
+{name:'⚡ Thunder',id:'thunder'},
+{name:'🛡️ Shield',id:'shield'},
+{name:'☠️ Toxic',id:'toxic'}
+];
+let active='fire';
+let styleDiv=document.getElementById('styles');
+templates.forEach(t=>{
+ let d=document.createElement('div'); d.className='tpl'+(t.id===active?' active':''); d.innerHTML=t.name; d.onclick=()=>{active=t.id; document.querySelectorAll('.tpl').forEach(e=>e.classList.remove('active')); d.classList.add('active'); draw();}; styleDiv.appendChild(d);
+});
+function draw(){
+ let c=document.getElementById('c'); let ctx=c.getContext('2d');
+ let name=document.getElementById('name').value||'RULER ESPORTS';
+ let tag=document.getElementById('tag').value||'RLR';
+ let color=document.getElementById('color').value;
+ ctx.clearRect(0,0,800,800);
+ ctx.fillStyle='#0a0a0a'; ctx.fillRect(0,0,800,800);
+ // glow
+ ctx.shadowColor=color; ctx.shadowBlur=40; ctx.fillStyle=color; ctx.beginPath(); ctx.arc(400,360,140,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+ // inner black
+ ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(400,360,120,0,Math.PI*2); ctx.fill();
+ // icon text
+ ctx.fillStyle='#fff'; ctx.font='bold 80px sans-serif'; ctx.textAlign='center';
+ let icons={fire:'🔥',skull:'💀',crown:'👑',sword:'⚔️',wolf:'🐺',eagle:'🦅',demon:'👹',thunder:'⚡',shield:'🛡️',toxic:'☠️'};
+ ctx.fillText(icons[active]||'🔥',400,390);
+ // tag
+ ctx.fillStyle=color; ctx.font='900 70px Inter,sans-serif'; ctx.fillText(tag.toUpperCase(),400,520);
+ // name
+ ctx.fillStyle='#fff'; ctx.font='700 32px Inter,sans-serif'; ctx.fillText(name.toUpperCase(),400,600);
+ // line
+ ctx.strokeStyle=color; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(250,630); ctx.lineTo(550,630); ctx.stroke();
+}
+function download(){
+ let a=document.createElement('a'); a.download='clan-logo-'+Date.now()+'.png'; a.href=document.getElementById('c').toDataURL(); a.click();
+}
+draw();
+</script>
+</body>
+</html>

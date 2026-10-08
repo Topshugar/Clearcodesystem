@@ -2,130 +2,34 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>USA Notification Simulator - For Skits & Movies Only | ClearCode</title>
-<meta name="description" content="Create fake Cash App, Venmo, Zelle notification for TikTok skits, movies. Clearly marked as simulation. Not for fraud.">
+<title>USA Notification Simulator - For Skits Only</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 body{margin:0;background:#0a0a0a;color:#fff;font-family:Inter,sans-serif}
 .header{padding:15px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222}
-label{font-size:12px;color:#888;display:block;margin:10px 0 4px 0}
-input,select{width:100%;padding:12px;background:#111;border:1px solid #333;color:#fff;border-radius:8px}
+label{font-size:12px;color:#888;display:block;margin:10px 0 4px 0}input,select{width:100%;padding:12px;background:#111;border:1px solid #333;color:#fff;border-radius:8px}
 .btn{width:100%;padding:14px;background:#00D632;color:#000;border:0;font-weight:900;border-radius:10px;margin-top:15px;cursor:pointer}
 .preview{margin:15px;background:#000;border-radius:20px;padding:10px;border:1px solid #222}
-.iphone-top{display:flex;justify-content:space-between;padding:8px 20px;font-size:12px;color:#fff}
 .notif{background:#1c1c1e;border-radius:12px;padding:12px;display:flex;gap:10px;margin:10px}
-.notif img{width:40px;height:40px;border-radius:8px}
-.badge{font-size:11px;color:#888}
-.wm{color:#ff4444;font-size:10px;text-align:center;margin-top:8px;letter-spacing:2px;font-weight:bold;border:1px dashed #ff4444;padding:4px;border-radius:4px}
+.wm{color:#ff4444;font-size:10px;text-align:center;margin-top:8px;font-weight:bold;border:1px dashed #ff4444;padding:4px;border-radius:4px}
 .warn{background:#2a1a00;border:1px solid #ffaa00;color:#ffcc66;padding:10px;border-radius:8px;font-size:12px;margin:15px}
 canvas{display:none}
 </style>
 </head>
 <body>
-<div class="header">
-<a href="/" style="color:#888;text-decoration:none">< Tools</a>
-<span style="font-size:12px;color:#00D632">TOOL: USA NOTIFY SIM_</span>
-<div style="width:30px"></div>
-</div>
-
+<div class="header"><a href="/" style="color:#888;text-decoration:none">< Tools</a><span style="font-size:12px;color:#00D632">USA SIM + Monetag</span><div style="width:30px"></div></div>
 <div style="padding:15px;max-width:500px;margin:auto">
-
-<div class="warn">⚠️ FOR ENTERTAINMENT / SKIT / MOVIE PROP ONLY. This tool adds permanent watermark "SIMULATION". Any use to defraud is illegal. By using you agree.</div>
-
-<label>App Type (USA)</label>
-<select id="appType">
-<option value="cashapp">Cash App - Payment Received</option>
-<option value="venmo">Venmo - Money Received</option>
-<option value="zelle">Zelle - Payment Received</option>
-<option value="applepay">Apple Pay - Received</option>
-</select>
-
-<label>Amount (e.g 500)</label>
-<input id="amount" value="500" type="number">
-
-<label>From Name (e.g John Doe)</label>
-<input id="fromName" value="John Doe">
-
-<label>Message / Note (optional)</label>
-<input id="note" value="For the shoes 👟">
-
-<label><input type="checkbox" id="agree"> I agree to use only for skit/entertainment, not fraud</label>
-
+<div class="warn">⚠️ FOR SKIT / MOVIE PROP ONLY. Watermark "SIMULATION" added. Not for fraud.</div>
+<label>App Type</label><select id="appType"><option value="cashapp">Cash App</option><option value="venmo">Venmo</option><option value="zelle">Zelle</option><option value="applepay">Apple Pay</option></select>
+<label>Amount</label><input id="amount" value="500" type="number"><label>From Name</label><input id="fromName" value="John Doe"><label>Note</label><input id="note" value="For the shoes">
+<label><input type="checkbox" id="agree"> I agree skit only</label>
 <button class="btn" onclick="generate()">GENERATE PREVIEW</button>
-
-<div class="preview" id="previewBox" style="display:none">
-<div class="iphone-top"><span>9:41</span><span>📶 🔋</span></div>
-<div class="notif">
-<img id="appIcon" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Square_Cash_app_logo.png">
-<div style="flex:1">
-<div style="display:flex;justify-content:space-between"><b id="pTitle" style="font-size:13px">Cash App</b><span class="badge">now</span></div>
-<div id="pBody" style="font-size:13px;margin-top:3px;color:#ddd"></div>
-</div>
-</div>
-<div class="wm">⚠️ SIMULATION - CONTENT PROP ONLY - NOT REAL PAYMENT - CLEARCODE.US</div>
-</div>
-
-<button class="btn" id="dlBtn" style="display:none;background:#fff" onclick="download()">📥 DOWNLOAD AS IMAGE (with Watermark)</button>
-
-<canvas id="c"></canvas>
-
-<div style="margin-top:20px;border-top:1px solid #222;padding-top:15px">
-<h3 style="font-size:14px">Why USA creators pay for this?</h3>
-<p style="font-size:12px;color:#666;line-height:1.5">TikTokers doing "CashApp prank" skits, YouTubers making financial storytime, Indie movie makers need fake phone notification that looks like iPhone but clearly marked as prop so YouTube doesn't demonetize. Google keyword: "fake cash app notification for skit" = 8k searches/mo. Safe niche.</p>
-</div>
-</div>
-
+<div class="preview" id="previewBox" style="display:none"><div class="notif"><img id="appIcon" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Square_Cash_app_logo.png" style="width:40px;height:40px;border-radius:8px"><div style="flex:1"><b id="pTitle" style="font-size:13px">Cash App</b><div id="pBody" style="font-size:13px;color:#ddd"></div></div></div><div class="wm">SIMULATION - CONTENT PROP ONLY - NOT REAL</div></div>
+<button class="btn" id="dlBtn" style="display:none;background:#fff" onclick="download()">DOWNLOAD IMAGE</button>
+<canvas id="c"></canvas></div>
 <script>
-const icons = {
- cashapp: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Square_Cash_app_logo.png',
- venmo: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Venmo_logo.png',
- zelle: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Zelle_logo.png',
- applepay: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg'
-};
-
-function generate(){
- if(!document.getElementById('agree').checked) return alert('Check agreement box - for skit only');
- let type=document.getElementById('appType').value;
- let amt=document.getElementById('amount').value;
- let from=document.getElementById('fromName').value;
- let note=document.getElementById('note').value;
-
- document.getElementById('previewBox').style.display='block';
- document.getElementById('dlBtn').style.display='block';
- document.getElementById('appIcon').src=icons[type];
- document.getElementById('pTitle').innerText = type.toUpperCase();
-
- let body = '';
- if(type==='cashapp') body=`${from} sent you $${amt} ${note?'- '+note:''}`;
- if(type==='venmo') body=`${from} paid you $${amt} ${note?'- '+note:''}`;
- if(type==='zelle') body=`You received $${amt} from ${from} via Zelle`;
- if(type==='applepay') body=`${from} sent you $${amt} with Apple Pay`;
-
- document.getElementById('pBody').innerText=body;
-}
-
-function download(){
- let box=document.getElementById('previewBox');
- // Use html2canvas style trick via canvas
- let c=document.getElementById('c');
- let ctx=c.getContext('2d');
- c.width=500; c.height=280;
- ctx.fillStyle='#000'; ctx.fillRect(0,0,500,280);
- ctx.fillStyle='#fff'; ctx.font='12px monospace';
- ctx.fillText('9:41',20,20); ctx.fillText('SIMULATION - NOT REAL',300,20);
- ctx.fillStyle='#1c1c1e'; ctx.fillRect(10,40,480,100);
- ctx.fillStyle='#fff'; ctx.font='bold 14px sans-serif';
- ctx.fillText(document.getElementById('pTitle').innerText, 70, 70);
- ctx.fillStyle='#aaa'; ctx.font='12px sans-serif';
- ctx.fillText(document.getElementById('pBody').innerText, 70, 90);
- ctx.fillStyle='#000'; ctx.strokeStyle='#ff4444'; ctx.lineWidth=1;
- ctx.setLineDash([5,5]); ctx.strokeRect(10,160,480,30);
- ctx.fillStyle='#ff4444'; ctx.font='bold 11px sans-serif';
- ctx.fillText('⚠️ SIMULATION - CONTENT PROP ONLY - CLEARCODE.US - NOT REAL PAYMENT', 20, 180);
- let link=document.createElement('a');
- link.download=`usa-notify-${Date.now()}.png`;
- link.href=c.toDataURL();
- link.click();
-}
+function generate(){if(!document.getElementById('agree').checked)return alert('Check box');let type=document.getElementById('appType').value;let amt=document.getElementById('amount').value;let from=document.getElementById('fromName').value;let note=document.getElementById('note').value;document.getElementById('previewBox').style.display='block';document.getElementById('dlBtn').style.display='block';document.getElementById('pTitle').innerText=type.toUpperCase();let body='';if(type==='cashapp')body=`${from} sent you $${amt} ${note}`;if(type==='venmo')body=`${from} paid you $${amt} ${note}`;if(type==='zelle')body=`You received $${amt} from ${from}`;if(type==='applepay')body=`${from} sent you $${amt} with Apple Pay`;document.getElementById('pBody').innerText=body;}
+function download(){let c=document.getElementById('c');let ctx=c.getContext('2d');c.width=500;c.height=200;ctx.fillStyle='#000';ctx.fillRect(0,0,500,200);ctx.fillStyle='#fff';ctx.font='14px sans-serif';ctx.fillText(document.getElementById('pBody').innerText,20,80);ctx.fillStyle='#ff4444';ctx.fillText('SIMULATION - PROP ONLY - NOT REAL PAYMENT',20,150);let link=document.createElement('a');link.download=`usa-${Date.now()}.png`;link.href=c.toDataURL();link.click();}
 </script>
 </body>
 </html>

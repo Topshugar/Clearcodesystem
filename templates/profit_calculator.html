@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<title>Profit Calculator</title>
+<style>
+body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:15px}
+.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:18px}
+input{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
+button{width:100%;padding:16px;background:#00ff88;color:#000;border:0;border-radius:12px;font-weight:bold;margin-top:10px;font-size:18px}
+.result{background:#111;border:2px solid #00ff88;border-radius:16px;padding:20px;margin-top:15px;text-align:center;display:none}
+.big{font-size:36px;color:#00ff88;font-weight:bold}
+</style>
+</head>
+<body>
+<a href="/" style="color:#00ff88;text-decoration:none">← System</a>
+<h2>Profit Calculator 💰</h2>
+<div class="card">
+<input id="cost" type="number" placeholder="Cost Price e.g. 5000">
+<input id="sell" type="number" placeholder="Selling Price e.g. 7500">
+<input id="exp" type="number" placeholder="Other Expenses e.g. 200 (delivery, data)">
+<button onclick="calc()">CALCULATE PROFIT</button>
+<div id="res" class="result"></div>
+<button onclick="shareWA()" id="waBtn" style="display:none;background:#25D366">Share on WhatsApp</button>
+</div>
+<script>
+let lastMsg='';
+function calc(){
+ let cost=parseFloat(document.getElementById('cost').value)||0;
+ let sell=parseFloat(document.getElementById('sell').value)||0;
+ let exp=parseFloat(document.getElementById('exp').value)||0;
+ if(!cost||!sell){alert('Enter cost and selling price');return;}
+ let profit=sell-cost-exp;
+ let margin=(profit/sell)*100;
+ let markup=(profit/cost)*100;
+ let res=document.getElementById('res');
+ res.style.display='block';
+ res.innerHTML=`Profit: <div class="big">₦${profit.toLocaleString()}</div>Margin: ${margin.toFixed(1)}%<br>Markup: ${markup.toFixed(1)}%<br><small style="color:#888">Cost ₦${cost} → Sell ₦${sell} - Exp ₦${exp}</small>`;
+ lastMsg=`*Profit Report* 💰\nCost: ₦${cost}\nSell: ₦${sell}\nExpenses: ₦${exp}\n*Profit: ₦${profit}* (${margin.toFixed(1)}% margin)\nVia ClearCode System`;
+ document.getElementById('waBtn').style.display='block';
+}
+function shareWA(){ window.open('https://wa.me/?text='+encodeURIComponent(lastMsg),'_blank'); }
+</script>
+</body>
+  </html>

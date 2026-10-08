@@ -1,29 +1,177 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>Ruler Terminal - Tool 02</title>
-<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruler Terminal - ClearCode</title>
 <style>
-body{background:#000;color:#0f0;font-family:monospace;padding:15px;margin:0}
-.top{border-bottom:1px solid #222;padding:10px 0;margin-bottom:10px;display:flex;justify-content:space-between}
-#out{background:#0a0a0a;border:1px solid #222;border-radius:10px;padding:12px;min-height:300px;white-space:pre-wrap;font-size:13px;overflow:auto}
-input{width:100%;padding:12px;background:#0f0f0f;color:#0f0;border:1px solid #222;border-radius:8px;margin-top:10px;font-family:monospace}
-a{color:#3b82f6;text-decoration:none}
-</style></head><body>
-<div class="top"><a href="/">← System</a><span style="color:#666;font-size:12px">Tool 02: Ruler Terminal</span></div>
-<div id="out">Type 'help' for commands...</div>
-<input id="cmd" placeholder="Enter command e.g ls, pwd, date, echo hello" onkeydown="if(event.key==='Enter')run()">
-<script>
-async function run(){
- let c=document.getElementById('cmd').value; if(!c)return;
- let o=document.getElementById('out'); o.textContent+='\n> '+c;
- const r=await fetch('/api/ruler-terminal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd:c})});
- const d=await r.json();
- if(d.output==='__CLEAR__') o.textContent=''; else o.textContent+='\n'+d.output;
- document.getElementById('cmd').value=''; o.scrollTop=o.scrollHeight;
-}
-</script>
-<div style="background:#00ff88;color:#000;padding:12px;border-radius:10px;margin-top:20px;text-align:center;font-family:Arial">
-<b>Need Website?</b> <a href="https://wa.me/2348165043865" style="background:#000;color:#00ff88;padding:6px 12px;border-radius:6px;text-decoration:none">08165043865</a>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020202;color:#00FF88;font-family:'Courier New',monospace;min-height:100vh;display:flex;flex-direction:column}
+.top{padding:12px 15px;background:#0A0A0A;border-bottom:1px solid #00FF8822;display:flex;justify-content:space-between;align-items:center}
+.top a{color:#666;text-decoration:none;font-size:14px}
+.top span{color:#00FF88;font-size:12px;letter-spacing:2px}
+#term{flex:1;background:#000;margin:10px;border:1px solid #00FF8833;border-radius:10px;padding:15px;overflow-y:auto;white-space:pre-wrap;font-size:14px;line-height:1.6;box-shadow:0 0 30px #00FF8811 inset}
+.line{margin-bottom:4px}
+.input-bar{display:flex;gap:8px;padding:10px;background:#0A0A0A;border-top:1px solid #1a1a1a}
+.input-bar span{color:#00FF88;padding:12px 0;font-weight:bold}
+#cmd{flex:1;background:#111;color:#00FF88;border:1px solid #333;border-radius:8px;padding:12px;font-family:monospace;font-size:15px;outline:none}
+#cmd:focus{border-color:#00FF88;box-shadow:0 0 10px #00FF8844}
+.btn{padding:12px 18px;background:#00FF88;color:#000;border:0;border-radius:8px;font-weight:900;cursor:pointer}
+.cta{margin:10px;background:#00FF88;border-radius:10px;padding:4px;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px}
+.cta b{color:#000;font-size:15px;padding:10px}
+.cta a{background:#000;color:#00FF88;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px}
+.cursor{display:inline-block;width:8px;height:15px;background:#00FF88;animation:blink 1s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,50%{opacity:1} 70%,100%{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)}}
+.shake{animation:shake 0.2s}
+</style>
+</head>
+<body>
+<div class="top">
+<a href="/">< Back</a>
+<span>TOOL 02: RULER TERMINAL_</span>
+<div style="width:40px"></div>
 </div>
-</body></html>
+
+<div id="term"><span style="color:#00FF88">ClearCode Ruler v2.0 - Type 'help' for commands...</span>
+<span style="color:#444">System initialized at {{ moment or '' }} - vendor mode</span>
+</div>
+
+<div class="input-bar">
+<span>$</span>
+<input id="cmd" placeholder="Enter command e.g ls, pwd, date, echo hello, hack, matrix, neofetch" autocomplete="off" autofocus>
+<button class="btn" onclick="runCmd()">RUN</button>
+</div>
+
+<div class="cta">
+<b>Need Website?</b>
+<a href="https://wa.me/2348165043865" target="_blank">08165043865</a>
+</div>
+
+<script>
+const term = document.getElementById('term');
+const input = document.getElementById('cmd');
+let history = [];
+let hIndex = -1;
+
+const localCmds = {
+ help: `Available commands:
+  help - show this list
+  clear - clear screen
+  ls - list files
+  pwd - current directory
+  date - current date
+  whoami - who you are
+  echo [text] - print text
+  neofetch - system info (cool)
+  hack - start hacking animation
+  matrix - matrix rain
+  banner - show ClearCode banner
+  vendors - list vendors online`,
+ clear: '__CLEAR__',
+ ls: 'builder.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html',
+ pwd: '/home/clearcode/vendors/system',
+ whoami: 'clearcode-vendor [level: RULER]',
+ date: new Date().toString(),
+ banner: `
+ ██████╗██╗ ███████╗ █████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██║ ██╔════╝██╔══██╗██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝
+██║ ██║ █████╗ ███████║██████╔╝██║ ██║ ██║██║ ██║█████╗
+██║ ██║ ██╔══╝ ██╔══██║██╔══██╗██║ ██║ ██║██║ ██║██╔══╝
+╚██████╗███████╗███████╗██║ ██║██║ ██║╚██████╗╚██████╔╝██████╔╝███████╗
+ ╚═════╝╚══════╝╚══════╝╚═╝ ╚═╝╚═╝ ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝
+        Vendor OS - Built for Naija Vendors`,
+ vendors: '234 vendors online | Lagos: 89 | Abuja: 45 | PH: 31 | Others: 69',
+ neofetch: `clearcode@vendor-os
+
+OS: ClearCode Vendor OS 2.0
+Host: Infinix HOT 40 Pro
+Kernel: Android 14
+Uptime: 12 days
+Packages: 12 tools
+Shell: ruler-terminal
+CPU: 8-core (4x2.2GHz)
+Memory: 256MB / 8GB
+IP: 102.89.xxx.xxx [NG]`
+};
+
+function addLine(text, color='#00FF88'){
+  const div = document.createElement('div');
+  div.className='line';
+  div.style.color=color;
+  div.textContent=text;
+  term.appendChild(div);
+  term.scrollTop = term.scrollHeight;
+}
+
+async function runCmd(){
+  let cmd = input.value.trim();
+  if(!cmd) return;
+  history.push(cmd); hIndex = history.length;
+  addLine(`$ ${cmd}`,'#666');
+  input.value='';
+
+  let lower = cmd.toLowerCase();
+
+  if(lower==='clear'){
+    term.innerHTML = "<span style='color:#00FF88'>ClearCode Ruler v2.0 - Type 'help'...</span>";
+    return;
+  }
+  if(lower==='hack'){
+    hackAnim(); return;
+  }
+  if(lower==='matrix'){
+    matrixAnim(); return;
+  }
+  if(localCmds[lower] || lower.startsWith('echo ')){
+    if(lower.startsWith('echo ')){
+      addLine(cmd.substring(5));
+    } else {
+      addLine(localCmds[lower]);
+    }
+    return;
+  }
+  // fallback to server api
+  try{
+    let res = await fetch('/api/ruler-terminal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd})});
+    let data = await res.json();
+    if(data.output==='__CLEAR__'){
+      term.innerHTML = "<span style='color:#00FF88'>ClearCode Ruler v2.0 - Type 'help'...</span>";
+    } else {
+      addLine(data.output);
+    }
+  }catch(e){
+    term.classList.add('shake');
+    addLine(`Command not found: ${cmd} - type 'help'`,'#ff4444');
+    setTimeout(()=>term.classList.remove('shake'),200);
+  }
+}
+
+function hackAnim(){
+  let count=0;
+  let iv=setInterval(()=>{
+    addLine(`[${Math.random().toString(16).slice(2,8)}] Brute forcing vendor dashboard... ${Math.floor(Math.random()*100)}%`,'#00FF88');
+    count++;
+    if(count>18){clearInterval(iv); addLine('ACCESS GRANTED - Welcome Ruler_',' #00FF88');}
+  },120);
+}
+
+function matrixAnim(){
+  let chars="01";
+  let count=0;
+  let iv=setInterval(()=>{
+    let line='';
+    for(let i=0;i<60;i++) line+=chars[Math.floor(Math.random()*2)];
+    addLine(line,'#00FF8844');
+    count++;
+    if(count>15){clearInterval(iv); addLine('Matrix mode off - type clear',' #888');}
+  },80);
+}
+
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter') runCmd();
+  if(e.key==='ArrowUp'){ if(hIndex>0){hIndex--; input.value=history[hIndex];} }
+  if(e.key==='ArrowDown'){ if(hIndex<history.length-1){hIndex++; input.value=history[hIndex];} else {hIndex=history.length; input.value='';} }
+});
+</script>
+</body>
+</html>

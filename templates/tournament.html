@@ -1,75 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Fire Tournament Bracket Generator - 4,8,16 Teams</title>
-<meta name="description" content="Generate tournament bracket for Free Fire, COD, PUBG. 4 to 16 teams, share image. For Lagos gaming centers.">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tournament Bracket Generator - 4 to 16 Teams</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<style>
-body{margin:0;background:#080808;color:#fff;font-family:Inter,sans-serif}
-.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222;position:sticky;top:0}
-.wrap{max-width:650px;margin:auto;padding:16px}
-label{font-size:11px;color:#888;margin:12px 0 6px 0;display:block;text-transform:uppercase}
-input,select,textarea{width:100%;padding:12px;background:#111;border:1px solid #333;color:#fff;border-radius:10px}
-textarea{height:100px}
-.btn{width:100%;padding:14px;background:#00FF88;color:#000;border:0;font-weight:900;border-radius:12px;margin-top:12px;cursor:pointer}
-.bracket{background:#111;border:1px solid #222;border-radius:14px;padding:14px;margin-top:16px;overflow-x:auto}
-.match{background:#0a0a0a;border:1px solid #222;border-radius:8px;padding:8px 12px;margin:6px 0;display:flex;justify-content:space-between;font-size:13px}
-.round{margin-bottom:18px}
-.round h4{color:#00FF88;font-size:11px;margin-bottom:8px}
-</style>
+<style>body{margin:0;background:#080808;color:#fff;font-family:Inter,sans-serif}.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222}.wrap{max-width:800px;margin:auto;padding:16px}input,select,textarea{width:100%;padding:13px;background:#111;border:1px solid #333;color:#fff;border-radius:12px;margin-top:8px}label{font-size:11px;color:#888;margin-top:12px;display:block}.bracket{display:flex;gap:20px;overflow-x:auto;padding:20px 0}.col{min-width:180px}.match{background:#111;border:1px solid #333;padding:10px;border-radius:10px;margin-bottom:12px;font-size:12px}.btn{width:100%;padding:14px;background:#FF6B00;color:#fff;border:0;font-weight:900;border-radius:12px;margin-top:10px}</style>
 </head>
 <body>
-<div class="header"><a href="/" style="color:#888;text-decoration:none">← Tools</a><span style="color:#00FF88;font-weight:800;font-size:12px">TOURNAMENT BRACKET</span><div style="width:40px"></div></div>
+<div class="header"><a href="/" style="color:#888;text-decoration:none">← Back</a><span style="color:#FF6B00;font-weight:800">TOURNAMENT</span><div style="width:40px"></div></div>
 <div class="wrap">
 <label>Tournament Name</label>
 <input id="tname" value="RULER CUP SEASON 2" oninput="gen()">
 <label>Number of Teams</label>
-<select id="tnum" onchange="gen()">
-<option value="4">4 Teams - Semi Final</option>
-<option value="8" selected>8 Teams - Quarter Final</option>
-<option value="16">16 Teams</option>
-</select>
-<label>Enter Team Names (one per line)</label>
-<textarea id="teams" oninput="gen()">Team Ruler
+<select id="tnum" onchange="gen()"><option value="4">4 Teams</option><option value="8" selected>8 Teams</option><option value="16">16 Teams</option></select>
+<label>Team Names (One per line)</label>
+<textarea id="teams" rows="8" oninput="gen()">Team Ruler
 Naija Demons
 Lagos Wolves
 Eko Esports
-Ikeja Kings
-Naija Snipers
-Fire Squad
-Blazing FF</textarea>
+Abuja Kings
+PH Destroyers
+Ibadan Legends
+Kano Snipers</textarea>
 <button class="btn" onclick="gen()">GENERATE BRACKET</button>
-<div id="out"></div>
-<button class="btn" style="background:#222;color:#fff" onclick="share()">DOWNLOAD / SHARE BRACKET IMAGE</button>
+<div id="out" style="background:#0a0a0a;border-radius:14px;margin-top:16px;padding:10px">
+<h3 id="title" style="text-align:center;color:#FF6B00">RULER CUP SEASON 2</h3>
+<div class="bracket" id="bracket"></div>
+</div>
+<button class="btn" style="background:#fff;color:#000" onclick="download()">DOWNLOAD BRACKET AS IMAGE</button>
 </div>
 <script>
 function gen(){
  let name=document.getElementById('tname').value;
+ document.getElementById('title').innerText=name;
+ let teams=document.getElementById('teams').value.split('\n').filter(x=>x.trim()!='');
  let num=parseInt(document.getElementById('tnum').value);
- let list=document.getElementById('teams').value.split('\n').filter(x=>x.trim()!='').slice(0,num);
- while(list.length<num) list.push('Team '+(list.length+1));
- let html=`<div class="bracket"><div style="text-align:center;font-weight:900;color:#00FF88;margin-bottom:12px">${name}</div>`;
- let roundName = num==4?['SEMI FINAL','FINAL']:num==8?['QUARTER','SEMI','FINAL']:['ROUND 1','QUARTER','SEMI','FINAL'];
- let current=list;
- let roundIdx=0;
+ teams=teams.slice(0,num);
+ while(teams.length<num){teams.push('Team '+(teams.length+1))}
+ let html='';
+ let rounds=[];
+ let current=teams;
  while(current.length>=2){
-   html+=`<div class="round"><h4>${roundName[roundIdx]||'ROUND '+(roundIdx+1)}</h4>`;
-   let next=[];
-   for(let i=0;i<current.length;i+=2){
-     let a=current[i]||'TBD'; let b=current[i+1]||'TBD';
-     html+=`<div class="match"><span>${a}</span><span style="color:#555">vs</span><span>${b}</span></div>`;
-     next.push('Winner '+(i/2+1));
-   }
-   html+=`</div>`; current=next; roundIdx++; if(roundIdx>6) break;
+  rounds.push(current);
+  let next=[];
+  for(let i=0;i<current.length;i+=2){next.push('Winner '+(i/2+1))}
+  current=next;
  }
- html+=`<div style="text-align:center;margin-top:12px;color:#FFD700;font-weight:900">🏆 CHAMPION: TBD</div></div>`;
- document.getElementById('out').innerHTML=html;
+ rounds.push(['🏆 CHAMPION']);
+ let labels=['QUARTER','SEMI','FINAL','CHAMPION'];
+ if(num==4) labels=['SEMI','FINAL','CHAMPION'];
+ if(num==16) labels=['ROUND 1','QUARTER','SEMI','FINAL','CHAMPION'];
+ let out='';
+ rounds.forEach((r,i)=>{
+  out+=`<div class="col"><div style="font-size:10px;color:#FF6B00;font-weight:800;margin-bottom:8px">${labels[i]||'ROUND'}</div>`;
+  r.forEach((t,idx)=>{
+   if(i==rounds.length-1){ out+=`<div class="match" style="border-color:#FFD700;background:#FFD70022;font-weight:900;text-align:center">${t}</div>` }
+   else if(idx%2==0 && i<rounds.length-1){
+    let t2=r[idx+1]||'TBD';
+    out+=`<div class="match"><div>${t}</div><div style="margin:6px 0;color:#555">VS</div><div>${t2}</div></div>`;
+   }
+  });
+  out+=`</div>`;
+ });
+ document.getElementById('bracket').innerHTML=out;
 }
-function share(){
- let text=document.getElementById('out').innerText;
- let w=window.open(); w.document.write('<pre style="background:#111;color:#00FF88;padding:20px;font-family:monospace">'+text+'</pre><script>window.print()<\/script>');
+function download(){
+ html2canvas(document.getElementById('out')).then(c=>{
+  let a=document.createElement('a');
+  a.download='bracket.png';
+  a.href=c.toDataURL();
+  a.click();
+ });
 }
 gen();
 </script>

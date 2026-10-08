@@ -4,5 +4,3 @@ Pillow
 requests
 paramiko
 gunicorn
-onnxruntime
-rembg

@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import qrcode, io, base64, os, requests, paramiko
 from PIL import Image
-from rembg import remove
 from datetime import datetime
+
+# Safe import - this fixes your Render crash
+try:
+    from rembg import remove
+except:
+    remove = None
 
 app = Flask(__name__)
 
@@ -41,51 +46,39 @@ def index():
 @app.route('/tools/apk-builder')
 def apk_builder():
     return render_template('builder.html')
-
 @app.route('/tools/ruler-terminal')
 def ruler_terminal():
     return render_template('ruler_terminal.html')
-
 @app.route('/tools/wa-qr')
 def wa_qr():
     return render_template('wa_qr.html')
-
 @app.route('/tools/invoice')
 def invoice():
     return render_template('invoice.html')
-
 @app.route('/tools/bg-remover')
 def bg_remover():
     return render_template('bg_remover.html')
-
 @app.route('/tools/fake-alert')
 def fake_alert():
     return render_template('fake_alert.html')
-
 @app.route('/tools/pos-charges')
 def pos_charges():
     return render_template('pos_charges.html')
-
 @app.route('/tools/delivery-fee')
 def delivery_fee():
     return render_template('delivery_fee.html')
-
 @app.route('/tools/price-tag')
 def price_tag():
     return render_template('price_tag.html')
-
 @app.route('/tools/profit-calculator')
 def profit_calculator():
     return render_template('profit_calculator.html')
-
 @app.route('/tools/debt-book')
 def debt_book():
     return render_template('debt_book.html')
-
 @app.route('/tools/clear-shell')
 def clear_shell():
     return render_template('clear_shell.html')
-
 @app.route('/unlock')
 def unlock_page():
     return render_template('unlock.html')
@@ -121,7 +114,7 @@ def api_ruler():
     elif cmd.startswith('echo '):
         out = cmd[5:]
     elif cmd == 'ls':
-        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html"
+        out = "builder.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html"
     elif cmd == 'pwd':
         out = "/home/clearcode/system"
     elif cmd == 'date':
@@ -134,6 +127,8 @@ def api_ruler():
 
 @app.route('/api/remove-bg', methods=['POST'])
 def api_remove_bg():
+    if remove is None:
+        return jsonify({'error':'BG remover disabled on server'}), 500
     try:
         file = request.files.get('image')
         if not file:

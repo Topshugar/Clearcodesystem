@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stylish Free Fire & COD Gamer Name Generator - Cool Fonts</title>
+<meta name="description" content="Generate cool stylish gamer names for Free Fire, COD, PUBG. 20+ fonts: ꧁༒•Ruler•༒꧂. Copy paste for TikTok, Instagram.">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+body{margin:0;background:#0a0a0a;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222;position:sticky;top:0;z-index:10}
+.wrap{max-width:600px;margin:auto;padding:15px}
+label{font-size:11px;color:#888;margin:14px 0 6px 0;display:block;letter-spacing:.5px}
+input,select{width:100%;padding:14px;background:#111;border:1px solid #333;color:#fff;border-radius:12px;outline:none;font-size:14px}
+input:focus,select:focus{border-color:#a855f7}
+.btn{width:100%;padding:15px;background:#a855f7;color:#fff;border:0;font-weight:900;border-radius:12px;margin-top:16px;cursor:pointer;font-size:15px}
+.grid{display:grid;gap:10px;margin-top:18px}
+.card{background:#111;border:1px solid #222;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.card b{font-size:15px;word-break:break-all}
+.copy{padding:8px 14px;background:#222;color:#fff;border:0;border-radius:8px;font-weight:800;cursor:pointer;font-size:12px;flex-shrink:0;margin-left:10px}
+.copy:active{background:#a855f7}
+.seo{color:#444;font-size:11px;margin-top:30px;line-height:1.6;border-top:1px solid #111;padding-top:15px}
+</style>
+</head>
+<body>
+<div class="header"><a href="/" style="color:#888;text-decoration:none;font-weight:700">← Tools</a><span style="color:#a855f7;font-weight:800;font-size:12px">GAMER TAG • VIRAL</span><div style="width:40px"></div></div>
+<div class="wrap">
+<label>Enter Your Name</label>
+<input id="nameInput" placeholder="e.g. Ruler" value="Ruler" oninput="generate()">
+<label>Style</label>
+<select id="style" onchange="generate()">
+<option value="all">All Styles - 20 Fonts</option>
+<option value="pro">Pro / Esports</option>
+<option value="cute">Cute / Girl Gamer</option>
+<option value="demon">Demon / Aggressive</option>
+</select>
+<button class="btn" onclick="generate()">GENERATE 20 STYLISH NAMES</button>
+<div class="grid" id="result"></div>
+<div class="seo">Cool nickname generator for Free Fire, CODM, PUBG, Valorant, TikTok. Type your name and get 20+ stylish fonts like ꧁༒•Name•༒꧂ that you can copy paste into your game. USA & Nigeria gamers use this daily.</div>
+</div>
+<script>
+const fonts = {
+  fancy1: s => `꧁༒•${s}•༒꧂`,
+  fancy2: s => `★彡[${s}]彡★`,
+  fancy3: s => `◥꧁${s}꧂◤`,
+  fancy4: s => `『${s}』`,
+  fancy5: s => `•°${s}°•`,
+  bold: s => s.replace(/[A-Za-z]/g, c => { const map = {a:'𝐚',b:'𝐛',c:'𝐜',d:'𝐝',e:'𝐞',f:'𝐟',g:'𝐠',h:'𝐡',i:'𝐢',j:'𝐣',k:'𝐤',l:'𝐥',m:'𝐦',n:'𝐧',o:'𝐨',p:'𝐩',q:'𝐪',r:'𝐫',s:'𝐬',t:'𝐭',u:'𝐮',v:'𝐯',w:'𝐰',x:'𝐱',y:'𝐲',z:'𝐳',A:'𝐀',B:'𝐁',C:'𝐂',D:'𝐃',E:'𝐄',F:'𝐅',G:'𝐆',H:'𝐇',I:'𝐈',J:'𝐉',K:'𝐊',L:'𝐋',M:'𝐌',N:'𝐍',O:'𝐎',P:'𝐏',Q:'𝐐',R:'𝐑',S:'𝐒',T:'𝐓',U:'𝐔',V:'𝐕',W:'𝐖',X:'𝐗',Y:'𝐘',Z:'𝐙'}; return map[c]||c; }),
+  small: s => s.toLowerCase().replace(/[a-z]/g, c => { const map={a:'ᵃ',b:'ᵇ',c:'ᶜ',d:'ᵈ',e:'ᵉ',f:'ᶠ',g:'ᵍ',h:'ʰ',i:'ⁱ',j:'ʲ',k:'ᵏ',l:'ˡ',m:'ᵐ',n:'ⁿ',o:'ᵒ',p:'ᵖ',q:'ᵠ',r:'ʳ',s:'ˢ',t:'ᵗ',u:'ᵘ',v:'ᵛ',w:'ʷ',x:'ˣ',y:'ʸ',z:'ᶻ'}; return map[c]||c; }),
+  demon: s => `꧁☬☠${s}☠☬꧂`,
+  pro: s => `乂${s}乂`,
+  crown: s => `👑 ${s} 👑`,
+  fire: s => `🔥 ${s} 🔥`,
+  cry: s => `༺${s}༻`,
+  ghost: s => `☠️ ${s} ☠️`,
+  angel: s => `✧･ﾟ: *${s}*:･ﾟ✧`,
+  wolf: s => `🐺 ${s} 🐺`,
+  ninja: s => `⚔️ ${s} ⚔️`,
+  galaxy: s => `🌌 ${s} 🌌`,
+  demon2: s => `⫷${s}⫸`,
+  vip: s => `VIP ${s} VIP`,
+  elite: s => `『★${s}★』`,
+  toxic: s => `☣️ ${s} ☣️`
+};
+function generate(){
+  let name = document.getElementById('nameInput').value.trim() || 'Ruler';
+  let style = document.getElementById('style').value;
+  let list = [];
+  let all = Object.values(fonts).map(fn=>fn(name));
+  if(style==='all') list = all;
+  if(style==='pro') list = [fonts.fancy1(name), fonts.fancy3(name), fonts.pro(name), fonts.bold(name), fonts.crown(name), fonts.vip(name), fonts.elite(name), fonts.fire(name), fonts.ninja(name)];
+  if(style==='cute') list = [fonts.angel(name), fonts.galaxy(name), fonts.fancy2(name), fonts.fancy4(name), fonts.small(name), fonts.fancy5(name), fonts.cry(name)];
+  if(style==='demon') list = [fonts.demon(name), fonts.ghost(name), fonts.wolf(name), fonts.ninja(name), fonts.toxic(name), fonts.demon2(name), fonts.cry(name), fonts.pro(name)];
+  let html='';
+  [...new Set(list)].slice(0,20).forEach(t=>{
+    let safe = t.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    html+=`<div class="card"><b>${t}</b><button class="copy" onclick="copyText(this,'${safe}')">COPY</button></div>`;
+  });
+  document.getElementById('result').innerHTML=html;
+}
+function copyText(btn, text){
+  navigator.clipboard.writeText(text);
+  let old = btn.innerText; btn.innerText='COPIED!'; btn.style.background='#a855f7';
+  setTimeout(()=>{btn.innerText='COPY'; btn.style.background='#222';},1000);
+}
+generate();
+</script>
+</body>
+</html>

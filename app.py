@@ -45,6 +45,10 @@ def delivery_fee():
 def price_tag():
     return render_template('price_tag.html')
 
+@app.route('/tools/profit-calculator')
+def profit_calculator():
+    return render_template('profit_calculator.html')
+
 @app.route('/tools/debt-book')
 def debt_book():
     return render_template('debt_book.html')
@@ -83,7 +87,7 @@ def api_ruler():
     elif cmd.startswith('echo '):
         out = cmd[5:]
     elif cmd == 'ls':
-        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html debt_book.html"
+        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html"
     elif cmd == 'pwd':
         out = "/home/clearcode/system"
     elif cmd == 'date':
@@ -112,7 +116,6 @@ def api_remove_bg():
 @app.route('/api/ai-image')
 def api_ai_image():
     prompt = request.args.get('prompt','white puma shoe product photo white background studio')
-    # Free AI - Pollinations
     url = f"https://image.pollinations.ai/prompt/{prompt}?width=512&height=512&nologo=true&model=turbo"
     try:
         r = requests.get(url, timeout=30)

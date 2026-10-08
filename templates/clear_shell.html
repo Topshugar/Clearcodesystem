@@ -2,47 +2,149 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClearShell - ClearCode</title>
+<title>ClearShell - Free VPS SSH in Browser | JuiceSSH Alternative | ClearCode</title>
+<meta name="description" content="Connect to VPS from phone browser. No JuiceSSH needed. Free SSH terminal for Hostinger, Contabo, DigitalOcean VPS. Learn what is VPS.">
 <style>
 body{margin:0;background:#0A0A0A;color:#00FF88;font-family:monospace}
-.header{padding:15px;background:#111;border-bottom:1px solid #00FF8833}
-input{padding:12px;background:#111;color:#fff;border:1px solid #333;border-radius:6px}
-#term{background:#000;border:1px solid #00FF8833;padding:15px;height:340px;overflow:auto;white-space:pre-wrap;margin:15px;border-radius:8px}
-.btn{padding:12px 20px;background:#00FF88;color:#000;border:0;font-weight:bold;border-radius:6px}
+.header{padding:15px;background:#111;border-bottom:1px solid #00FF8833;position:sticky;top:0}
+input{padding:12px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;font-family:monospace}
+#term{background:#000;border:1px solid #00FF8833;padding:15px;height:320px;overflow:auto;white-space:pre-wrap;margin:15px;border-radius:8px;font-size:13px;line-height:1.5}
+.btn{padding:12px 20px;background:#00FF88;color:#000;border:0;font-weight:bold;border-radius:6px;cursor:pointer}
+.btn2{padding:8px 12px;background:#111;color:#00FF88;border:1px solid #00FF88;border-radius:6px;font-size:12px;cursor:pointer;margin:2px}
+.save{background:#222;color:#888;border:1px solid #333}
+.quick{display:flex;flex-wrap:wrap;gap:4px;padding:0 15px}
+.seo{background:#0F0F0F;border-top:1px solid #1a1a1a;padding:20px;margin-top:20px}
+.seo h2{color:#fff;font-size:18px;margin:15px 0 10px 0}
+.seo h3{color:#00FF88;font-size:15px;margin:12px 0 6px 0}
+.seo p,.seo li{color:#888;font-size:13px;line-height:1.6;font-family:Inter,sans-serif}
+.seo ul{padding-left:18px}
+.faq{border:1px solid #222;border-radius:8px;margin:8px 0;background:#111}
+.faq b{display:block;padding:12px;color:#fff;cursor:pointer}
+.faq div{padding:0 12px 12px 12px;color:#888;font-family:Inter,sans-serif;font-size:13px;display:none}
+.faq.open div{display:block}
 </style>
 </head>
 <body>
 <div class="header">
-<a href="/" style="color:#888;text-decoration:none">< Back</a>
-<h2>> ClearShell_ <span style="font-size:12px;color:#888">Tool 12</span></h2>
+<a href="/" style="color:#888;text-decoration:none">< Back to Tools</a>
+<h2 style="margin:8px 0 0 0">> ClearShell_ <span style="font-size:11px;color:#888">JuiceSSH in Browser - Tool 12</span></h2>
 </div>
+
 <div style="padding:15px">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<input id="host" placeholder="VPS IP" style="flex:1">
+<input id="host" placeholder="VPS IP e.g 65.21.12.45" style="flex:1;min-width:140px">
 <input id="user" value="root" style="width:80px">
-<input id="pass" type="password" placeholder="Password" style="flex:1">
+<input id="pass" type="password" placeholder="Password" style="flex:1;min-width:140px">
+<button class="btn save" onclick="saveServer()">💾 SAVE</button>
 </div>
-<div id="term">$ ClearShell ready... Connect VPS from phone</div>
+
+<div id="term">$ ClearShell V2 ready...
+> Type IP + Password to connect
+> Quick commands below - 1 tap
+
+Example: Try ls, pwd, free -h, df -h</div>
+
+<div class="quick">
+<button class="btn2" onclick="quick('ls')">ls</button>
+<button class="btn2" onclick="quick('pwd')">pwd</button>
+<button class="btn2" onclick="quick('free -h')">free -h</button>
+<button class="btn2" onclick="quick('df -h')">df -h</button>
+<button class="btn2" onclick="quick('ps aux')">ps aux</button>
+<button class="btn2" onclick="quick('uptime')">uptime</button>
+<button class="btn2" onclick="document.getElementById('term').innerHTML='$ Cleared...'">clear</button>
+</div>
+
 <div style="display:flex;gap:8px;margin-top:10px">
-<input id="cmd" placeholder="ls" style="flex:1;color:#0F0;background:#000;border-color:#00FF88">
+<input id="cmd" placeholder="Enter command" style="flex:1;color:#0F0;background:#000;border-color:#00FF88">
 <button class="btn" onclick="run()">SEND</button>
 </div>
+<p style="color:#444;font-size:11px;padding:5px 2px">Press ↑ arrow to recall last command. Saved VPS stays after you close browser.</p>
 </div>
+
+<!-- SEO SECTION - FOR GOOGLE TRAFFIC -->
+<div class="seo">
+<h2>What is VPS? Learn in 30 seconds (For Vendors)</h2>
+<p>VPS means <b style="color:#fff">Virtual Private Server</b>. It's like renting your own computer online that never sleeps. You can host your website, run WhatsApp bots, run trading bots, or run ClearCode tools 24/7 on it.</p>
+
+<h3>Why vendors need VPS?</h3>
+<ul>
+<li>Your store website stays online even when your phone is off</li>
+<li>Run auto-reply bot for WhatsApp & Instagram</li>
+<li>Host your APK Builder apps without Render sleeping</li>
+<li>More secure than shared hosting</li>
+</ul>
+
+<h3>Where to buy cheap VPS in Nigeria?</h3>
+<p>Cheapest for beginners:</p>
+<ul>
+<li><b>Hostinger VPS</b> - $5.99/mo - Good for start</li>
+<li><b>Contabo</b> - €4.50/mo - 200GB storage</li>
+<li><b>DigitalOcean</b> - $6/mo - Very fast</li>
+</ul>
+<p>After you buy, they give you IP + root password. Paste it above to connect.</p>
+
+<h3>Is ClearShell safe?</h3>
+<p>Yes. Your VPS password does NOT save on our server. It saves only in YOUR phone browser (localStorage). We only log IP and command for security like JuiceSSH. No password stored.</p>
+
+<h2>Frequently Asked Questions (FAQ)</h2>
+
+<div class="faq" onclick="this.classList.toggle('open')"><b>❓ What is difference between VPS and Hosting?</b><div>Shared hosting = you share 1 computer with 100 people. VPS = your own private computer. Faster and you have root access.</div></div>
+
+<div class="faq" onclick="this.classList.toggle('open')"><b>❓ Can I use ClearShell without buying VPS?</b><div>Yes, you can try with demo: Use our Ruler Terminal (Tool 02) which is fake terminal for content. But for real server work you need VPS.</div></div>
+
+<div class="faq" onclick="this.classList.toggle('open')"><b>❓ JuiceSSH vs ClearShell?</b><div>JuiceSSH needs download 20MB app. ClearShell works inside browser, no download, works on iPhone too. Same commands: ls, pwd, free -h etc.</div></div>
+
+<div class="faq" onclick="this.classList.toggle('open')"><b>❓ How to get root password?</b><div>When you buy VPS from Hostinger, go to VPS Dashboard > Root Password > Reset. Copy new password and paste above.</div></div>
+
+<p style="margin-top:20px;color:#333">Keywords: vps nigeria, free vps, what is vps, how to connect vps from phone, juicessh alternative, ssh in browser, hostinger vps login, contabo ssh</p>
+</div>
+
 <script>
+const term=document.getElementById('term');
+const hostI=document.getElementById('host');
+const userI=document.getElementById('user');
+const passI=document.getElementById('pass');
+const cmdI=document.getElementById('cmd');
+let hist=[]; let hi=-1;
+
+// Load saved
+let saved = JSON.parse(localStorage.getItem('clear_shell_saved')||'null');
+if(saved){ hostI.value=saved.host||''; userI.value=saved.user||'root'; }
+
+function saveServer(){
+ localStorage.setItem('clear_shell_saved', JSON.stringify({host:hostI.value.trim(), user:userI.value.trim()}));
+ alert('Saved! Next time you open ClearShell it will auto-fill.');
+}
+
+function quick(c){
+ cmdI.value=c; run();
+}
+
 async function run(){
- let host=document.getElementById('host').value.trim();
- let user=document.getElementById('user').value.trim()||'root';
- let pass=document.getElementById('pass').value;
- let cmd=document.getElementById('cmd').value.trim();
- if(!host||!pass||!cmd) return alert('Fill IP, Pass, Command');
- let term=document.getElementById('term');
+ let host=hostI.value.trim();
+ let user=userI.value.trim()||'root';
+ let pass=passI.value;
+ let cmd=cmdI.value.trim();
+ if(!host||!pass||!cmd) return alert('Fill IP, Password and Command');
+ hist.push(cmd); hi=hist.length;
  term.innerHTML += `\n\n$ ${cmd}\n> connecting ${host}...`;
+ term.scrollTop = term.scrollHeight;
+ try{
  let res = await fetch('/api/clear-shell',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host,user,pass,cmd})});
  let data = await res.json();
  term.innerHTML += `\n${data.output}`;
+ }catch(e){
+ term.innerHTML += `\nError: ${e.message}`;
+ }
  term.scrollTop = term.scrollHeight;
- document.getElementById('cmd').value='';
+ cmdI.value='';
 }
+
+cmdI.addEventListener('keydown',e=>{
+ if(e.key==='Enter') run();
+ if(e.key==='ArrowUp'){ if(hi>0){hi--; cmdI.value=hist[hi];} }
+ if(e.key==='ArrowDown'){ if(hi<hist.length-1){hi++; cmdI.value=hist[hi];} else {hi=hist.length; cmdI.value='';} }
+});
 </script>
 </body>
 </html>

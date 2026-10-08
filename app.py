@@ -123,7 +123,15 @@ def api_ai_image():
         return jsonify({'image': f'data:image/jpeg;base64,{b64}'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+        
+@app.route('/tools/profit-calculator')
+def profit_calculator():
+    return render_template('profit_calculator.html')
 
+@app.route('/tools/debt-book')
+def debt_book():
+    return render_template('debt_book.html')
+    
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

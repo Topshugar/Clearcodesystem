@@ -3,103 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fake Cash App Notification Generator for Skits & Movies - USA Sim (PROP ONLY)</title>
-<meta name="description" content="Create realistic Cash App, Venmo, Zelle, Apple Pay notification screenshot for film skits, TikTok pranks, YouTube videos. With SIMULATION watermark. Not real payment. For content creators only.">
-<meta name="keywords" content="cash app notification generator for movies, fake venmo screenshot for skit, prop notification maker, filmmaking tools">
-<!-- Monetag Zone 11970643 - High CPM -->
+<title>Cash App Prop Notification Generator for Movies & Skits (PROP ONLY)</title>
+<meta name="description" content="Prop Cash App notification maker for filmmakers, TikTok skits. Generates iOS-style notification with PROP watermark. Not real money. For content creation only.">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
-body{margin:0;background:#0a0a0a;color:#fff;font-family:Inter,system-ui,sans-serif}
-.header{padding:15px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222;position:sticky;top:0;z-index:10}
-label{font-size:12px;color:#888;display:block;margin:12px 0 4px 0}
-input,select{width:100%;padding:13px;background:#111;border:1px solid #333;color:#fff;border-radius:10px;outline:none}
-input:focus,select:focus{border-color:#00D632}
-.btn{width:100%;padding:14px;background:#00D632;color:#000;border:0;font-weight:900;border-radius:10px;margin-top:15px;cursor:pointer;font-size:15px}
-.preview{margin:15px;background:#000;border-radius:20px;padding:10px;border:1px solid #222}
-.notif{background:#1c1c1e;border-radius:12px;padding:12px;display:flex;gap:10px;margin:10px}
-.wm{color:#ff4444;font-size:11px;text-align:center;margin-top:8px;font-weight:bold;border:1px dashed #ff4444;padding:6px;border-radius:6px;letter-spacing:1px}
-.warn{background:#2a1a00;border:1px solid #ffaa00;color:#ffcc66;padding:12px;border-radius:10px;font-size:12px;margin:15px;line-height:1.5}
+body{margin:0;background:#0a0a0a;color:#fff;font-family:-apple-system,Inter,sans-serif}
+.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222}
+.card{max-width:480px;margin:auto;padding:15px}
+label{font-size:11px;color:#888;margin:12px 0 4px 0;display:block;text-transform:uppercase;letter-spacing:.5px}
+input{width:100%;padding:13px;background:#111;border:1px solid #333;color:#fff;border-radius:10px}
+.btn{width:100%;padding:15px;background:#00D632;color:#000;border:0;font-weight:900;border-radius:12px;margin-top:16px;cursor:pointer;font-size:15px}
+.preview-wrap{background:#000;border-radius:24px;padding:15px;margin-top:20px;border:1px solid #222}
+.ios-notif{background:#1c1c1e;border-radius:18px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;position:relative;overflow:hidden}
+.ios-notif .icon{width:42px;height:42px;border-radius:9px;background:#00D632;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-size:22px;flex-shrink:0}
+.ios-title{font-size:13.5px;font-weight:700;color:#fff;display:flex;justify-content:space-between}
+.ios-body{font-size:14.5px;color:#e5e5e5;margin-top:3px;line-height:1.3}
+.ios-time{font-size:11px;color:#8e8e93}
+.wm{margin-top:12px;background:#ff000022;border:1px dashed #ff4444;color:#ff5555;font-size:11px;font-weight:800;text-align:center;padding:8px;border-radius:8px;letter-spacing:.5px}
+.footer-note{color:#444;font-size:10px;text-align:center;margin-top:12px}
+.warn{background:#2a1a00;border:1px solid #ffaa00;color:#ffcc66;padding:10px;border-radius:10px;font-size:12px;line-height:1.4}
 canvas{display:none}
-.seo-text{padding:20px;color:#555;font-size:12px;line-height:1.6;margin-top:20px;border-top:1px solid #111}
-.seo-text b{color:#777}
 </style>
 </head>
 <body>
-<div class="header"><a href="/" style="color:#888;text-decoration:none">< Tools</a><span style="font-size:12px;color:#00D632;font-weight:800">USA SIM • PROP • $5+ CPM</span><div style="width:30px"></div></div>
+<div class="header"><a href="/" style="color:#888;text-decoration:none">< Tools</a><span style="color:#00D632;font-size:12px;font-weight:800">CASH APP PROP • $5+ CPM</span><div style="width:30px"></div></div>
+<div class="card">
+<div class="warn">⚠️ PROP ONLY for movies/skits/education. Adds permanent SIMULATION watermark. Not real payment. Cannot be used for fraud.</div>
 
-<div style="padding:15px;max-width:500px;margin:auto">
-<div class="warn">⚠️ FOR SKIT / MOVIE PROP ONLY. This tool adds permanent "SIMULATION - PROP ONLY" watermark. Not for fraud, deception, or real payment claims. For filmmakers, content creators, educational use only.</div>
+<label>Amount ($)</label><input id="amount" value="500" type="number">
+<label>From Name (Actor/Character)</label><input id="fromName" value="John Doe">
+<label>Note / Scene</label><input id="note" value="For the shoes - Scene 4">
+<label><input type="checkbox" id="agree" style="width:auto"> I confirm PROP ONLY for film/skit</label>
 
-<label>App Type</label>
-<select id="appType">
-<option value="cashapp">Cash App - Payment Received</option>
-<option value="venmo">Venmo - Paid You</option>
-<option value="zelle">Zelle - Money Received</option>
-<option value="applepay">Apple Pay - Send/Receive</option>
-</select>
+<button class="btn" onclick="generate()">GENERATE CASH APP PROP</button>
 
-<label>Amount ($)</label><input id="amount" value="500" type="number" placeholder="e.g. 500">
-<label>From Name (Character Name)</label><input id="fromName" value="John Doe" placeholder="Actor name">
-<label>Note / For (Movie Scene Note)</label><input id="note" value="For the shoes - Scene 4">
-
-<label style="margin-top:15px"><input type="checkbox" id="agree" style="width:auto"> I confirm this is for film/skit/educational prop only and will not use for fraud.</label>
-
-<button class="btn" onclick="generate()">GENERATE PREVIEW (PROP)</button>
-
-<div class="preview" id="previewBox" style="display:none">
-<div class="notif">
-<img id="appIcon" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Square_Cash_app_logo.png" style="width:40px;height:40px;border-radius:8px">
-<div style="flex:1"><b id="pTitle" style="font-size:13px;color:#fff">Cash App</b><div id="pBody" style="font-size:13px;color:#ddd;margin-top:2px"></div><div style="font-size:10px;color:#666;margin-top:4px">Just now</div></div>
+<div class="preview-wrap" id="previewBox" style="display:none">
+<div class="ios-notif">
+<div class="icon">$</div>
+<div style="flex:1">
+<div class="ios-title"><span>Cash App</span><span class="ios-time">now</span></div>
+<div class="ios-body" id="pBody">John Doe sent you $500</div>
 </div>
-<div class="wm">⚠️ SIMULATION - CONTENT PROP ONLY - NOT REAL MONEY - FOR FILM/SKIT USE ONLY ⚠️</div>
+</div>
+<div class="wm">⚠️ SIMULATION - PROP ONLY - NOT REAL MONEY - FOR FILM/SKIT USE ONLY ⚠️</div>
+<div class="footer-note">ClearCode Prop Tools • Prop ID: <span id="propId">0000</span> • Not real money</div>
 </div>
 
-<button class="btn" id="dlBtn" style="display:none;background:#fff" onclick="download()">DOWNLOAD PROP IMAGE (WITH WATERMARK)</button>
-
+<button class="btn" id="dlBtn" style="display:none;background:#fff;color:#000" onclick="download()">DOWNLOAD PROP IMAGE</button>
 <canvas id="c"></canvas>
-
-<div class="seo-text">
-<b>What is this tool?</b><br>
-This is a prop notification generator for filmmakers, YouTubers, TikTok skit creators, and students. Create a realistic-looking Cash App, Venmo, Zelle or Apple Pay notification screenshot for your movie scene, with mandatory SIMULATION watermark to prevent misuse. This is NOT a real payment system. 100% fake for video/film use only. Popular in USA for content creation.<br><br>
-<b>Legal use:</b> Movies, skits, TikTok, YouTube, educational videos. <b>Illegal use:</b> Scamming, fraud, fake payment proof. This tool prevents illegal use by adding watermark to all exports.
-</div>
 </div>
 
 <script>
 function generate(){
-if(!document.getElementById('agree').checked)return alert('Please confirm PROP ONLY use');
-let type=document.getElementById('appType').value;
+if(!document.getElementById('agree').checked)return alert('Confirm PROP only');
 let amt=document.getElementById('amount').value;
 let from=document.getElementById('fromName').value;
 let note=document.getElementById('note').value;
+let body=`${from} paid you $${amt} for ${note}`;
+document.getElementById('pBody').innerText=body;
+document.getElementById('propId').innerText=Math.floor(1000+Math.random()*9000);
 document.getElementById('previewBox').style.display='block';
 document.getElementById('dlBtn').style.display='block';
-document.getElementById('pTitle').innerText=type.toUpperCase() + ' - PROP PREVIEW';
-let body='';
-if(type==='cashapp')body=`${from} sent you $${amt} for ${note}`;
-if(type==='venmo')body=`${from} paid you $${amt} - ${note}`;
-if(type==='zelle')body=`You received $${amt} from ${from} - ${note}`;
-if(type==='applepay')body=`${from} sent you $${amt} with Apple Pay - ${note}`;
-document.getElementById('pBody').innerText=body + ' (PROP)';
 }
 function download(){
-let c=document.getElementById('c');
-let ctx=c.getContext('2d');
-c.width=1080;c.height=400;
-ctx.fillStyle='#000';ctx.fillRect(0,0,1080,400);
-ctx.fillStyle='#1c1c1e';ctx.fillRect(20,20,1040,260);
-ctx.fillStyle='#fff';ctx.font='bold 28px sans-serif';
-ctx.fillText(document.getElementById('pTitle').innerText,40,70);
-ctx.font='22px sans-serif';ctx.fillStyle='#ddd';
-ctx.fillText(document.getElementById('pBody').innerText,40,120);
-ctx.fillStyle='#ff4444';ctx.font='bold 20px sans-serif';
-ctx.fillText('⚠️ SIMULATION - PROP ONLY - NOT REAL - FOR FILM/SKIT USE ONLY ⚠️',40,200);
-ctx.fillStyle='#666';ctx.font='16px sans-serif';
-ctx.fillText('Generated by ClearCode Prop Tools - Not real money',40,350);
-let link=document.createElement('a');
-link.download=`PROP-usa-${Date.now()}.png`;
-link.href=c.toDataURL();
-link.click();
+let c=document.getElementById('c');let ctx=c.getContext('2d');
+c.width=1080;c.height=1350;
+ctx.fillStyle='#000';ctx.fillRect(0,0,1080,1350);
+// iPhone wallpaper blur
+ctx.fillStyle='#101010';ctx.fillRect(0,0,1080,1350);
+ctx.fillStyle='#1c1c1e';ctx.beginPath();ctx.roundRect(60,500,960,220,36);ctx.fill();
+ctx.fillStyle='#00D632';ctx.beginPath();ctx.roundRect(90,530,90,90,18);ctx.fill();
+ctx.fillStyle='#000';ctx.font='bold 50px sans-serif';ctx.fillText('$',115,590);
+ctx.fillStyle='#8e8e93';ctx.font='24px sans-serif';ctx.fillText('now',880,545);
+ctx.fillStyle='#fff';ctx.font='bold 28px sans-serif';ctx.fillText('Cash App',210,555);
+ctx.fillStyle='#e5e5e5';ctx.font='28px sans-serif';
+let text=document.getElementById('pBody').innerText;
+ctx.fillText(text,210,600,750);
+// Watermark banner
+ctx.fillStyle='#ff0000';ctx.font='bold 26px sans-serif';
+ctx.fillText('⚠️ SIMULATION - PROP ONLY - NOT REAL MONEY - FOR FILM/SKIT USE ONLY ⚠️',60,800);
+ctx.fillStyle='#555';ctx.font='18px sans-serif';
+ctx.fillText('ClearCode Prop Tools • PROP ID: '+document.getElementById('propId').innerText+' • Not real money • For film/skit use only',60,860);
+let a=document.createElement('a');a.download='cashapp-PROP-'+Date.now()+'.png';a.href=c.toDataURL();a.click();
 }
 </script>
 </body>

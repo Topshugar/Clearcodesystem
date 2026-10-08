@@ -39,6 +39,8 @@ def sensitivity(): return render_template('sensitivity.html')
 def clan_logo(): return render_template('clan_logo.html')
 @app.route('/tool/tournament')
 def tournament(): return render_template('tournament.html')
+@app.route('/tool/paycheck')
+def paycheck(): return render_template('paycheck.html')
 
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
@@ -52,7 +54,7 @@ def gen_qr():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors','ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html','pwd': '/home/clearcode/vendors','whoami': 'clearcode-vendor','date': datetime.now().strftime('%a %b %d %H:%M:%S %Y'),'clear': '__CLEAR__'}
+    outs = {'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors','ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html','pwd': '/home/clearcode/vendors','whoami': 'clearcode-vendor','date': datetime.now().strftime('%a %b %d %H:%M:%S %Y'),'clear': '__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import qrcode, io, base64, os, requests
+import qrcode, io, base64, os, requests, paramiko
 from PIL import Image
 from rembg import remove
 from datetime import datetime
@@ -9,7 +9,6 @@ app = Flask(__name__)
 # --- VISITOR TRACKER ---
 @app.before_request
 def track_visit():
-    # Don't track admin and api to avoid spam
     if request.path.startswith('/api/') or request.path.startswith('/admin/'):
         return
     if request.path.startswith('/tools') or request.path == '/' or request.path == '/unlock':
@@ -25,8 +24,8 @@ def admin_visits():
         return "<h2>No visits yet</h2>"
     try:
         with open('visits.txt','r', encoding='utf-8') as f:
-            lines = f.read().splitlines()[-200:][::-1] # last 200
-        html = "<h2>ClearCode - Last 200 Visits</h2><p>Total visits logged in visits.txt</p><hr><pre>"
+            lines = f.read().splitlines()[-300:][::-1]
+        html = "<h2>ClearCode - Last 300 Visits</h2><hr><pre style='background:#111;color:#0f0;padding:15px'>"
         for l in lines:
             html += l + "\n"
         html += "</pre><br><a href='/'>Back Home</a>"
@@ -34,7 +33,7 @@ def admin_visits():
     except Exception as e:
         return str(e)
 
-# --- YOUR TOOLS ROUTES (11) ---
+# --- PAGES ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -83,10 +82,15 @@ def profit_calculator():
 def debt_book():
     return render_template('debt_book.html')
 
+@app.route('/tools/clear-shell')
+def clear_shell():
+    return render_template('clear_shell.html')
+
 @app.route('/unlock')
 def unlock_page():
     return render_template('unlock.html')
 
+# --- APIS ---
 @app.route('/generate', methods=['POST'])
 def generate():
     app_name = request.form.get('app_name','MyApp')
@@ -94,7 +98,7 @@ def generate():
     phone = request.form.get('phone')
     with open('leads.txt','a', encoding='utf-8') as f:
         f.write(f"{datetime.now()} | {app_name} | {url} | {phone}\n")
-    return f"<h2>{app_name} APK Generated!</h2><p>{url}</p><p>We will contact {phone} - 08165043865</p><a href='/'>Back</a>"
+    return f"<h2>{app_name} APK Generated!</h2><p>{url}</p><p>We will contact {phone}</p><a href='/'>Back</a>"
 
 @app.route('/api/qr', methods=['POST'])
 def api_qr():
@@ -117,7 +121,7 @@ def api_ruler():
     elif cmd.startswith('echo '):
         out = cmd[5:]
     elif cmd == 'ls':
-        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html"
+        out = "builder.html ruler_terminal.html wa_qr.html invoice.html bg_remover.html fake_alert.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html"
     elif cmd == 'pwd':
         out = "/home/clearcode/system"
     elif cmd == 'date':
@@ -153,6 +157,28 @@ def api_ai_image():
         return jsonify({'image': f'data:image/jpeg;base64,{b64}'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/clear-shell', methods=['POST'])
+def api_clear_shell():
+    data = request.get_json()
+    host = data.get('host','').strip()
+    user = data.get('user','root').strip()
+    pwd = data.get('pass','')
+    cmd = data.get('cmd','ls').strip()
+    if not host or not pwd:
+        return jsonify({'output': 'Add IP and Password'})
+    try:
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(host, username=user, password=pwd, timeout=8, look_for_keys=False)
+        stdin, stdout, stderr = client.exec_command(cmd, timeout=10)
+        out = stdout.read().decode(errors='ignore') + stderr.read().decode(errors='ignore')
+        client.close()
+        with open('visits.txt','a', encoding='utf-8') as f:
+            f.write(f"{datetime.now()} | ClearShell | {host} | {cmd}\n")
+        return jsonify({'output': out or 'Command done - no output'})
+    except Exception as e:
+        return jsonify({'output': f'Error: {str(e)}'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

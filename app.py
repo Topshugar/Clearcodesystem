@@ -2,9 +2,39 @@ from flask import Flask, render_template, request, jsonify
 import qrcode, io, base64, os, requests
 from PIL import Image
 from rembg import remove
+from datetime import datetime
 
 app = Flask(__name__)
 
+# --- VISITOR TRACKER ---
+@app.before_request
+def track_visit():
+    # Don't track admin and api to avoid spam
+    if request.path.startswith('/api/') or request.path.startswith('/admin/'):
+        return
+    if request.path.startswith('/tools') or request.path == '/' or request.path == '/unlock':
+        try:
+            with open('visits.txt','a', encoding='utf-8') as f:
+                f.write(f"{datetime.now()} | {request.remote_addr} | {request.path} | {request.headers.get('User-Agent','')[:80]}\n")
+        except:
+            pass
+
+@app.route('/admin/visits')
+def admin_visits():
+    if not os.path.exists('visits.txt'):
+        return "<h2>No visits yet</h2>"
+    try:
+        with open('visits.txt','r', encoding='utf-8') as f:
+            lines = f.read().splitlines()[-200:][::-1] # last 200
+        html = "<h2>ClearCode - Last 200 Visits</h2><p>Total visits logged in visits.txt</p><hr><pre>"
+        for l in lines:
+            html += l + "\n"
+        html += "</pre><br><a href='/'>Back Home</a>"
+        return html
+    except Exception as e:
+        return str(e)
+
+# --- YOUR TOOLS ROUTES (11) ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -62,8 +92,8 @@ def generate():
     app_name = request.form.get('app_name','MyApp')
     url = request.form.get('url')
     phone = request.form.get('phone')
-    with open('leads.txt','a') as f:
-        f.write(f"{app_name} | {url} | {phone}\n")
+    with open('leads.txt','a', encoding='utf-8') as f:
+        f.write(f"{datetime.now()} | {app_name} | {url} | {phone}\n")
     return f"<h2>{app_name} APK Generated!</h2><p>{url}</p><p>We will contact {phone} - 08165043865</p><a href='/'>Back</a>"
 
 @app.route('/api/qr', methods=['POST'])
@@ -91,7 +121,7 @@ def api_ruler():
     elif cmd == 'pwd':
         out = "/home/clearcode/system"
     elif cmd == 'date':
-        out = __import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        out = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     elif cmd == 'whoami':
         out = "clearcode-vendor"
     else:

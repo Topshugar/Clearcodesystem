@@ -1,8 +1,8 @@
-Flask
-qrcode
-Pillow
-rembg
-requests
-paramiko
-onionshare-cli
-gunicorn
+Flask==2.3.3
+qrcode==7.4.2
+Pillow==10.0.1
+requests==2.31.0
+paramiko==3.3.1
+gunicorn==21.2.0
+onnxruntime==1.16.3
+rembg[cpu]==2.0.50

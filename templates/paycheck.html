@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>USA Paycheck Calculator - Hourly to Salary After Tax 2025</title>
+<meta name="description" content="Calculate paycheck after tax in USA. Hourly to salary, weekly, bi-weekly. California, Texas, New York.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+body{margin:0;background:#080808;color:#fff;font-family:Inter,sans-serif}
+.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222;position:sticky;top:0}
+.wrap{max-width:600px;margin:auto;padding:16px}
+label{font-size:11px;color:#888;margin:12px 0 6px 0;display:block;text-transform:uppercase}
+input,select{width:100%;padding:13px;background:#111;border:1px solid #333;color:#fff;border-radius:12px}
+.card{background:#111;border:1px solid #222;border-radius:14px;padding:18px;margin-top:16px}
+.big{font-size:32px;font-weight:900;color:#00FF88}
+.small{color:#888;font-size:12px;margin-top:4px}
+.row{display:flex;justify-content:space-between;margin:8px 0;font-size:13px}
+.btn{width:100%;padding:14px;background:#00FF88;color:#000;border:0;font-weight:900;border-radius:12px;margin-top:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header"><a href="/" style="color:#888;text-decoration:none">← Tools</a><span style="color:#00FF88;font-weight:800;font-size:12px">USA PAYCHECK CALC</span><div style="width:40px"></div></div>
+<div class="wrap">
+<label>Hourly Rate ($)</label>
+<input id="rate" type="number" value="20" oninput="calc()">
+<label>Hours Per Week</label>
+<input id="hours" type="number" value="40" oninput="calc()">
+<label>State (Tax)</label>
+<select id="state" onchange="calc()">
+<option value="0">Texas / Florida - No State Tax (0%)</option>
+<option value="6">California - 6% Avg</option>
+<option value="5">New York - 5% Avg</option>
+<option value="4.95">Illinois - 4.95%</option>
+<option value="5.75">Michigan - 5.75%</option>
+<option value="4">Other - 4% Avg</option>
+</select>
+<label>Pay Frequency</label>
+<select id="freq" onchange="calc()">
+<option value="1">Weekly</option>
+<option value="2" selected>Bi-Weekly (Every 2 Weeks)</option>
+<option value="2.17">Semi-Monthly</option>
+<option value="4.33">Monthly</option>
+</select>
+<div class="card" id="card">
+<div class="small">ESTIMATED TAKE-HOME PER PAYCHECK</div>
+<div class="big" id="take">$680.00</div>
+<div class="row"><span>Gross Pay</span><span id="gross">$800.00</span></div>
+<div class="row"><span>Federal Tax (12%)</span><span id="fed">-$96.00</span></div>
+<div class="row"><span>State Tax</span><span id="st">-$0.00</span></div>
+<div class="row"><span>FICA (7.65%)</span><span id="fica">-$61.20</span></div>
+<div class="row" style="border-top:1px solid #222;padding-top:8px;font-weight:800"><span>Annual Salary</span><span id="annual" style="color:#00FF88">$35,360 /yr</span></div>
+</div>
+<div class="small" style="text-align:center;margin-top:12px;color:#555">For educational estimate only. Actual taxes may vary. Not tax advice.</div>
+<button class="btn" onclick="calc()">RECALCULATE</button>
+</div>
+<script>
+function calc(){
+ let rate=parseFloat(document.getElementById('rate').value)||0;
+ let hours=parseFloat(document.getElementById('hours').value)||0;
+ let stateTax=parseFloat(document.getElementById('state').value)||0;
+ let freq=parseFloat(document.getElementById('freq').value)||1;
+ let grossWeekly=rate*hours;
+ let grossPerCheck=grossWeekly*freq;
+ let fed=grossPerCheck*0.12;
+ let st=grossPerCheck*stateTax/100;
+ let fica=grossPerCheck*0.0765;
+ let take=grossPerCheck-fed-st-fica;
+ let annual=grossWeekly*52;
+ document.getElementById('take').innerText='$'+take.toFixed(2);
+ document.getElementById('gross').innerText='$'+grossPerCheck.toFixed(2);
+ document.getElementById('fed').innerText='-$'+fed.toFixed(2);
+ document.getElementById('st').innerText='-$'+st.toFixed(2);
+ document.getElementById('fica').innerText='-$'+fica.toFixed(2);
+ document.getElementById('annual').innerText='$'+annual.toFixed(0)+' /yr';
+}
+calc();
+</script>
+</body>
+</html>

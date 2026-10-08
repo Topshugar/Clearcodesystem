@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<title>Debt Book</title>
+<style>
+body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:12px}
+.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:14px;margin:10px 0}
+input,button{width:100%;padding:14px;margin:6px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
+button{font-weight:bold;border:0;font-size:15px}
+.btn-add{background:#a855f7;color:#fff}
+.btn-pay{background:#00ff88;color:#000;padding:6px 10px;width:auto;font-size:12px;border-radius:8px}
+.btn-del{background:#ff3b3b;color:#fff;padding:6px 10px;width:auto;font-size:12px;border-radius:8px}
+.btn-wa{background:#25D366;color:#000;padding:6px 10px;width:auto;font-size:12px;border-radius:8px}
+.item{background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:12px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+.total{background:#a855f7;color:#fff;padding:18px;border-radius:16px;text-align:center;font-weight:bold;font-size:22px;margin:10px 0}
+small{color:#888}
+</style>
+</head>
+<body>
+<a href="/" style="color:#a855f7;text-decoration:none">← System</a>
+<h2 style="margin:10px 0 0">Debt Book 📒</h2>
+<small>Saved on your phone only - offline</small>
 
+<div id="total" class="total">Total Owed: ₦0</div>
+
+<div class="card">
+<input id="name" placeholder="Customer Name e.g. Mama Nkechi">
+<input id="phone" placeholder="Phone e.g. 080... (optional)">
+<input id="amount" type="number" placeholder="Amount Owed e.g. 5000">
+<input id="item" placeholder="Item e.g. 2 shoes (optional)">
+<button class="btn-add" onclick="addDebt()">+ ADD DEBT</button>
+</div>
+
+<div id="list"></div>
+
+<div class="card" style="text-align:center">
+<button onclick="clearAll()" style="background:#222;color:#fff">Clear All Debts</button>
+<small>Tip: Tap WhatsApp to remind customer</small>
+</div>
+
+<script>
+let debts = JSON.parse(localStorage.getItem('cc_debts')||'[]');
+function save(){ localStorage.setItem('cc_debts', JSON.stringify(debts)); render(); }
+function addDebt(){
+ let name=document.getElementById('name').value.trim();
+ let phone=document.getElementById('phone').value.trim();
+ let amount=parseFloat(document.getElementById('amount').value);
+ let item=document.getElementById('item').value.trim();
+ if(!name||!amount){ alert('Enter name and amount'); return; }
+ debts.unshift({id:Date.now(), name, phone, amount, item, date:new Date().toLocaleDateString()});
+ document.getElementById('name').value=''; document.getElementById('phone').value=''; document.getElementById('amount').value=''; document.getElementById('item').value='';
+ save();
+}
+function payDebt(id){
+ let d=debts.find(x=>x.id===id);
+ let pay=prompt(`How much did ${d.name} pay? Owed: ₦${d.amount}`, d.amount);
+ if(!pay) return;
+ pay=parseFloat(pay);
+ d.amount -= pay;
+ if(d.amount<=0){ if(confirm(`${d.name} cleared debt! Remove?`)){ debts=debts.filter(x=>x.id!==id); } else { d.amount=0; } }
+ save();
+}
+function deleteDebt(id){ if(confirm('Delete this debt?')){ debts=debts.filter(x=>x.id!==id); save(); } }
+function waRemind(id){
+ let d=debts.find(x=>x.id===id);
+ let msg=`Hello ${d.name}, you have an outstanding balance of ₦${d.amount.toLocaleString()}${d.item?' for '+d.item:''} as of ${d.date}. Please pay at your convenience. - From ClearCode System`;
+ let url=d.phone?`https://wa.me/234${d.phone.slice(-10)}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`;
+ window.open(url,'_blank');
+}
+function clearAll(){ if(confirm('Clear ALL debts?')){ debts=[]; save(); } }
+function render(){
+ let list=document.getElementById('list');
+ let total=debts.reduce((s,x)=>s+x.amount,0);
+ document.getElementById('total').innerText=`Total Owed: ₦${total.toLocaleString()} | ${debts.length} debtors`;
+ if(debts.length===0){ list.innerHTML='<p style="text-align:center;color:#555;margin:30px">No debts yet</p>'; return; }
+ list.innerHTML=debts.map(d=>`
+  <div class="item">
+   <div>
+    <b>${d.name}</b> <small>${d.date}</small><br>
+    <span style="color:#a855f7;font-weight:bold">₦${d.amount.toLocaleString()}</span> ${d.item?`<small>${d.item}</small>`:''}<br>
+    ${d.phone?`<small>📞 ${d.phone}</small>`:''}
+   </div>
+   <div style="display:flex;flex-direction:column;gap:6px">
+    <button class="btn-pay" onclick="payDebt(${d.id})">PAY</button>
+    <button class="btn-wa" onclick="waRemind(${d.id})">WA</button>
+    <button class="btn-del" onclick="deleteDebt(${d.id})">X</button>
+   </div>
+  </div>`).join('');
+}
+render();
+</script>
+</body>
+  </html>

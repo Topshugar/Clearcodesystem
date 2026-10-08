@@ -2,54 +2,43 @@ from flask import Flask, render_template, request, jsonify
 import qrcode, os, io, base64
 from datetime import datetime
 import paramiko
-
 app = Flask(__name__)
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def home(): return render_template('index.html')
 
 @app.route('/tool/builder')
 def builder(): return render_template('builder.html')
-
 @app.route('/tool/wa-qr')
 def wa_qr(): return render_template('wa_qr.html')
-
 @app.route('/tool/invoice')
 def invoice(): return render_template('invoice.html')
-
 @app.route('/tool/bg-remover')
 def bg_remover(): return render_template('bg_remover.html')
-
 @app.route('/tool/pos-charges')
 def pos_charges(): return render_template('pos_charges.html')
-
 @app.route('/tool/delivery-fee')
 def delivery_fee(): return render_template('delivery_fee.html')
-
 @app.route('/tool/price-tag')
 def price_tag(): return render_template('price_tag.html')
-
 @app.route('/tool/profit-calc')
 def profit_calc(): return render_template('profit_calculator.html')
-
 @app.route('/tool/debt-book')
 def debt_book(): return render_template('debt_book.html')
-
 @app.route('/tool/ruler-terminal')
 def ruler_terminal(): return render_template('ruler_terminal.html')
-
 @app.route('/tool/clear-shell')
 def clear_shell(): return render_template('clear_shell.html')
-
 @app.route('/tool/usa-notify')
 def usa_notify(): return render_template('usa_notify.html')
-
 @app.route('/tool/gamer-tag')
 def gamer_tag(): return render_template('gamer_tag.html')
-
 @app.route('/tool/sensitivity')
 def sensitivity(): return render_template('sensitivity.html')
+@app.route('/tool/clan-logo')
+def clan_logo(): return render_template('clan_logo.html')
+@app.route('/tool/tournament')
+def tournament(): return render_template('tournament.html')
 
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
@@ -63,14 +52,7 @@ def gen_qr():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {
-        'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html',
-        'pwd': '/home/clearcode/vendors',
-        'whoami': 'clearcode-vendor',
-        'date': datetime.now().strftime('%a %b %d %H:%M:%S %Y'),
-        'clear': '__CLEAR__'
-    }
+    outs = {'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors','ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html','pwd': '/home/clearcode/vendors','whoami': 'clearcode-vendor','date': datetime.now().strftime('%a %b %d %H:%M:%S %Y'),'clear': '__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 

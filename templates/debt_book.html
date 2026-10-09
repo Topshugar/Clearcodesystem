@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Debt Book - Premium 4K + Slider</title>
-<meta name="description" content="Track who owes you - 4K debt report">
+<title>Debt Book App Free - Track Who Owes You Money + 4K Report 2026 | ClearCode</title>
+<meta name="description" content="Free debt book app for vendors. Track who owes you money, save customer debts, generate 4K report to send on WhatsApp. No app download.">
+<meta name="keywords" content="debt book free, track who owes me money, customer debt tracker, debt book app nigeria, vendor debt book">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://clearcode.quest/tool/debt-book">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Debt Book + 4K Report","url":"https://clearcode.quest/tool/debt-book","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}}
+</script>
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -16,6 +22,9 @@ body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
 .wrap{max-width:1000px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
 @media(max-width:850px){.wrap{grid-template-columns:1fr}}
 .panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+.seo-mini{background:#0F0F0F;border:1px solid #222;border-radius:10px;padding:10px;margin-bottom:10px}
+.seo-mini h1{font-size:13px;font-weight:900}
+.seo-mini p{font-size:10px;color:#888;margin-top:3px;line-height:1.4}
 label{font-size:10px;color:#888;text-transform:uppercase;margin-top:10px;display:block;font-weight:800}
 input{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px;font-weight:700}
 .btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
@@ -36,12 +45,16 @@ input{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#ff
 .compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:11}
 .label-before{left:10px;background:#000;color:#fff}
 .label-after{right:10px;background:#00FF88;color:#000}
+.faq{background:#0F0F0F;border:1px solid #222;border-radius:10px;padding:10px;margin-top:10px}
+.faq b{font-size:10px;color:#00FF88}
+.faq p{font-size:10px;color:#666;margin:3px 0 8px}
 </style>
 </head>
 <body>
-<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">DEBT BOOK V3 - PREMIUM + 4K + SLIDER</span><span class="badge">DEBT • 4K</span></div>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">DEBT BOOK V3 - SEO FIXED 2026</span><span class="badge">DEBT • 4K</span></div>
 <div class="wrap">
 <div class="panel">
+<div class="seo-mini"><h1>Debt Book App - Track Who Owes You Money</h1><p>Free debt tracker for vendors. Save customer name, amount, item. Generate 4K report to send on WhatsApp. Saved on phone.</p></div>
 <label>Customer Name</label>
 <input id="cName" placeholder="e.g Chidera">
 <label>Amount Owed (₦)</label>
@@ -53,6 +66,7 @@ input{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#ff
 <button class="btn btn4k" onclick="download4k()">🔥 Download 4K Debt Report</button>
 <button class="btn btn2" onclick="toggleSlider()">↔️ Before / After Slider</button>
 <button class="btn btn-red" onclick="clearAll()">Clear All</button>
+<div class="faq"><b>Q: Is data saved?</b><p>Yes, saved in your phone browser, not online. Private.</p><b>Q: Can I send report?</b><p>Yes, 4K image to send debtors on WhatsApp.</p><p>Related: <a href="/tool/profit-calc" style="color:#00FF88">Profit Calc</a> | <a href="/" style="color:#00FF88">All Tools</a></p></div>
 </div>
 <div style="position:relative">
 <div id="report" class="report">
@@ -98,7 +112,7 @@ function render(){
  document.getElementById('dateText').innerText=new Date().toLocaleString();
  document.getElementById('compareAfter').innerHTML=document.getElementById('report').innerHTML;
 }
-async function download4k(){ let c=await html2canvas(document.getElementById('report'),{scale:4}); let a=document.createElement('a'); a.href=c.toDataURL(); a.download='debt-book-4k.png'; a.click(); }
+async function download4k(){ let c=await html2canvas(document.getElementById('report'),{scale:4}); let a=document.createElement('a'); a.href=c.toDataURL(); a.download='clearcode-debt-book-4k.png'; a.click(); }
 function toggleSlider(){ let r=document.getElementById('report'), c=document.getElementById('compareWrap'); if(c.style.display=='block'){c.style.display='none'; r.style.display='block'} else {c.style.display='block'; r.style.display='none'; render(); initSlider()} }
 function initSlider(){ let w=document.getElementById('compareWrap'), a=document.getElementById('compareAfter'), s=document.getElementById('compareSlider'), d=false; function u(x){ let rect=w.getBoundingClientRect(); let p=Math.max(5,Math.min(95,((x-rect.left)/rect.width)*100)); a.style.clipPath=`inset(0 0 0 ${p}%)`; s.style.left=p+'%'; } w.onmousedown=e=>{d=true; u(e.clientX)}; window.onmouseup=()=>d=false; window.onmousemove=e=>{if(d) u(e.clientX)}; w.ontouchstart=e=>{d=true; u(e.touches[0].clientX)}; w.ontouchmove=e=>{if(d) u(e.touches[0].clientX)}; }
 render(); initSlider();

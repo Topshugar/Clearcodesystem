@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import qrcode, os, io, base64
 from datetime import datetime
 import paramiko
@@ -35,6 +35,10 @@ app = Flask(__name__)
 @app.route('/')
 def home(): 
     return render_template('index.html')
+
+@app.route('/unlock')
+def unlock():
+    return render_template('unlock.html')
 
 @app.route('/tool/builder')
 @app.route('/tool/store-builder')
@@ -107,6 +111,22 @@ def whatsapp_broadcast():
 def background_check(): 
     return render_template('usa_background_check.html')
 
+# --- SEO: SITEMAP + ROBOTS ---
+@app.route('/sitemap.xml')
+def sitemap():
+    tools = ['builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check']
+    xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    xml += '<url><loc>https://clearcode.quest/</loc><priority>1.0</priority></url>'
+    for t in tools:
+        xml += f'<url><loc>https://clearcode.quest/tool/{t}</loc><priority>0.8</priority></url>'
+    xml += '</urlset>'
+    return Response(xml, mimetype='application/xml')
+
+@app.route('/robots.txt')
+def robots():
+    txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcode.quest/sitemap.xml"
+    return Response(txt, mimetype='text/plain')
+
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
     try:
@@ -150,7 +170,7 @@ def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
     outs = {
         'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html unlock.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),

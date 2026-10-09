@@ -1,80 +1,260 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>Price Tag AI - ClearCode</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price Tag Maker - AI + 4K + Before After - Free</title>
+<meta name="description" content="Make price tag for Instagram - AI background, 4K upscale, before after slider. For vendors.">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
-body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:15px}
-.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:18px}
-input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
-button{width:100%;padding:16px;background:#00ff88;color:#000;border:0;border-radius:12px;font-weight:bold;margin-top:10px}
-canvas{width:100%;border-radius:16px;margin-top:15px;background:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:9px;background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:1000px;margin:auto;padding:16px;display:grid;grid-template-columns:340px 1fr;gap:14px}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-top:12px;display:block;font-weight:800}
+input,select{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:5px;font-size:13px;font-weight:600}
+input[type=color]{padding:2px;height:40px}
+.style-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px}
+.style-btn{padding:10px;border-radius:10px;border:1px solid #2a2a2a;background:#1a1a1a;color:#fff;font-size:11px;font-weight:800;cursor:pointer;text-align:center}
+.style-btn.active{border-color:#00FF88;background:#00FF88;color:#000}
+.btn{width:100%;padding:13px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.btn4k{background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000}
+.preview-area{position:relative}
+.canvas-wrap{background:repeating-conic-gradient(#1a1a1a 0% 25%, #222 0% 50%) 0 0 / 20px 20px;border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:center;min-height:400px}
+#tagCanvas{max-width:100%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+/* SLIDER */
+.compare-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;min-height:400px;background:repeating-conic-gradient(#1a1a1a 0% 25%, #222 0% 50%) 0 0 / 20px 20px;display:none}
+.compare-wrap img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:90%;max-height:90%;border-radius:12px}
+.compare-after{clip-path:inset(0 0 0 50%)}
+.compare-slider{position:absolute;top:0;left:50%;width:3px;height:100%;background:#00FF88;z-index:5;transform:translateX(-50%)}
+.compare-handle{position:absolute;top:50%;left:50%;width:36px;height:36px;background:#00FF88;border:3px solid #000;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-size:12px;cursor:ew-resize}
+.compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:6}
+.label-before{left:10px;background:#000;color:#fff;border:1px solid #333}
+.label-after{right:10px;background:#00FF88;color:#000}
+.progress{height:4px;background:#1a1a1a;border-radius:20px;overflow:hidden;margin-top:10px;display:none}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,#FFD700,#00FF88);transition:0.3s}
+.prompt-box{margin-top:10px;background:#0F0F0F;border:1px dashed #333;border-radius:12px;padding:10px}
 </style>
 </head>
 <body>
-<a href="/" style="color:#00ff88;text-decoration:none">← Back</a>
-<h2>Price Tag AI 🏷️</h2>
-<div class="card">
-<input id="pname" placeholder="Product e.g. White Puma Shoe">
-<input id="price" placeholder="Price e.g. ₦15,000">
-<input id="biz" placeholder="Business Name e.g. Clear code" value="Clear code">
-<input id="phone" placeholder="WhatsApp" value="08165043865">
-<select id="color"><option value="#00ff88">Green Theme</option><option value="#ffcc00">Yellow</option><option value="#ff3b3b">Red</option><option value="#00d9ff">Blue</option></select>
-<label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input type="checkbox" id="useAI" checked style="width:auto"> Use AI Image</label>
-<button onclick="make()">Generate Flyer</button>
-<button onclick="download()" style="background:#fff">Download Image</button>
-<small id="status" style="color:#00ff88;display:block;margin-top:8px"></small>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">PRICE TAG MAKER V3 - AI + 4K + SLIDER</span><span class="badge">4K PREMIUM</span></div>
+
+<div class="wrap">
+<div class="panel">
+<label>Product Name</label>
+<input id="pName" value="Luxury Bag" oninput="renderTag()">
+
+<label>Price (Naira)</label>
+<input id="pPrice" value="25000" type="number" oninput="renderTag()">
+
+<label>Old Price (Slash - optional)</label>
+<input id="pOld" placeholder="e.g 35000" oninput="renderTag()">
+
+<label>Choose Style</label>
+<div class="style-grid">
+<button class="style-btn active" onclick="setStyle('minimal')">Minimal</button>
+<button class="style-btn" onclick="setStyle('luxury')">Luxury</button>
+<button class="style-btn" onclick="setStyle('sale')">Sale 🔥</button>
+<button class="style-btn" onclick="setStyle('neon')">Neon</button>
+<button class="style-btn" onclick="setStyle('gold')">Gold</button>
+<button class="style-btn" onclick="setStyle('black')">Black</button>
 </div>
-<canvas id="c" width="1080" height="1080"></canvas>
+
+<label>Colors</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:5px">
+<input type="color" id="bgColor" value="#ffffff" oninput="renderTag()">
+<input type="color" id="textColor" value="#000000" oninput="renderTag()">
+</div>
+
+<label>Upload Product Photo</label>
+<input type="file" id="pImgFile" accept="image/*" onchange="loadImg(event)">
+
+<div class="prompt-box">
+<label style="margin-top:0;color:#a855f7">✨ AI Background Prompt for Tag</label>
+<input id="aiPrompt" placeholder="e.g: luxury boutique, marble background">
+<button class="btn btn2" style="margin-top:6px;font-size:11px" onclick="genAiBg()">Generate AI Background for Tag</button>
+</div>
+
+<label>Badge Text</label>
+<input id="badgeText" value="NEW" oninput="renderTag()">
+
+<button class="btn" onclick="downloadTag()">⬇ Download Tag (HD)</button>
+<button class="btn btn4k" onclick="upscaleTag()">🔥 Upscale to 4K - For Printing</button>
+<button class="btn btn2" onclick="toggleSlider()">↔️ Toggle Before/After Slider</button>
+<div class="progress" id="prog"><div class="bar" id="bar"></div></div>
+</div>
+
+<div class="preview-area">
+<div class="canvas-wrap" id="canvasWrap">
+<canvas id="tagCanvas" width="800" height="800"></canvas>
+</div>
+
+<div class="compare-wrap" id="compareWrap">
+<img id="beforeImg">
+<img id="afterImg" class="compare-after">
+<div class="compare-slider" id="compareSlider"><div class="compare-handle">↔</div></div>
+<span class="compare-label label-before">BLANK</span>
+<span class="compare-label label-after">YOUR TAG • 4K</span>
+</div>
+
+<p style="text-align:center;color:#555;font-size:10px;margin-top:10px">Drag slider to compare • 4K ready for Instagram & Printing</p>
+</div>
+</div>
+
 <script>
-let aiImg = new Image();
-let aiLoaded=false;
-function draw(biz,name,price,phone,color){
- let cv=document.getElementById('c'), ctx=cv.getContext('2d');
- ctx.fillStyle='#fff'; ctx.fillRect(0,0,1080,1080);
- ctx.fillStyle=color; ctx.fillRect(0,0,1080,200);
- ctx.fillStyle='#000'; ctx.font='bold 60px Arial'; ctx.textAlign='center';
- ctx.fillText(biz.toUpperCase(),540,130);
- if(aiLoaded){
-   try{ ctx.drawImage(aiImg,340,220,400,400); }catch(e){}
-   ctx.fillStyle='#000'; ctx.font='bold 55px Arial'; ctx.fillText(name,540,700);
+let currentStyle='minimal', productImg=null, aiBgImg=null, upscaledUrl=null;
+let canvas=document.getElementById('tagCanvas'), ctx=canvas.getContext('2d');
+let beforeCanvas=document.createElement('canvas'); beforeCanvas.width=800; beforeCanvas.height=800;
+let bctx=beforeCanvas.getContext('2d'); bctx.fillStyle='#111'; bctx.fillRect(0,0,800,800);
+
+function setStyle(s){
+ currentStyle=s; document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active');
+ renderTag();
+}
+function loadImg(e){
+ let f=e.target.files[0]; if(!f) return;
+ let r=new FileReader(); r.onload=ev=>{
+  let im=new Image(); im.src=ev.target.result; im.onload=()=>{ productImg=im; renderTag(); }
+ }; r.readAsDataURL(f);
+}
+
+function renderTag(){
+ let name=document.getElementById('pName').value||'Product';
+ let price=parseInt(document.getElementById('pPrice').value)||0;
+ let oldPrice=document.getElementById('pOld').value;
+ let bg=document.getElementById('bgColor').value;
+ let tc=document.getElementById('textColor').value;
+ let badge=document.getElementById('badgeText').value;
+
+ // Clear
+ ctx.clearRect(0,0,800,800);
+
+ // AI BG or color
+ if(aiBgImg){
+  ctx.drawImage(aiBgImg,0,0,800,800);
  } else {
-   ctx.fillStyle='#000'; ctx.font='bold 60px Arial'; ctx.fillText(name,540,500);
+  ctx.fillStyle=bg; ctx.fillRect(0,0,800,800);
  }
- ctx.fillStyle=color; ctx.font='bold 100px Arial'; ctx.fillText(price,540,820);
- ctx.fillStyle='#333'; ctx.font='28px Arial'; ctx.fillText('WhatsApp: '+phone,540,920);
- ctx.fillText('Powered by ClearCode System',540,970);
+
+ // Style configs
+ let styles={
+  minimal:{card:'#fff',accent:'#00FF88'},
+  luxury:{card:'#0a0a0a',accent:'#FFD700'},
+  sale:{card:'#FF0000',accent:'#FFFF00'},
+  neon:{card:'#080808',accent:'#00FF88'},
+  gold:{card:'#FFFBEB',accent:'#B45309'},
+  black:{card:'#000',accent:'#fff'}
+ };
+ let st=styles[currentStyle]||styles.minimal;
+
+ // Draw product image area (top 55%)
+ if(productImg){
+  let scale=Math.min(450/productImg.width, 450/productImg.height);
+  let w=productImg.width*scale, h=productImg.height*scale;
+  ctx.drawImage(productImg, (800-w)/2, 30, w,h);
+ }
+
+ // Bottom card
+ let cardY=500;
+ ctx.fillStyle=currentStyle=='minimal'?'#fff':currentStyle=='black'?'#111':st.card;
+ if(currentStyle!='minimal'){ ctx.fillStyle=st.card; }
+ ctx.beginPath(); ctx.roundRect(20,cardY,760,280,20); ctx.fill();
+
+ // Badge
+ if(badge){
+  ctx.fillStyle=st.accent; ctx.beginPath(); ctx.roundRect(40,cardY+15,100,30,20); ctx.fill();
+  ctx.fillStyle=currentStyle=='minimal'?'#000':'#fff'; if(currentStyle=='luxury'||currentStyle=='black') ctx.fillStyle='#FFD700';
+  ctx.font='900 14px Inter'; ctx.fillText(badge.toUpperCase(),55,cardY+34);
+ }
+
+ // Product name
+ ctx.fillStyle=currentStyle=='minimal'||currentStyle=='gold'? '#000' : '#fff';
+ ctx.font='800 28px Inter'; ctx.fillText(name.substring(0,22),40,cardY+85);
+
+ // Price
+ ctx.fillStyle=currentStyle=='sale'? '#fff' : st.accent; if(currentStyle=='minimal') ctx.fillStyle='#000';
+ ctx.font='900 44px Inter'; ctx.fillText('₦'+price.toLocaleString(),40,cardY+150);
+
+ // Old price slash
+ if(oldPrice){
+  ctx.fillStyle='#888'; ctx.font='600 20px Inter'; ctx.fillText('₦'+parseInt(oldPrice).toLocaleString(),40+ctx.measureText('₦'+price.toLocaleString()).width+15,cardY+145);
+  ctx.strokeStyle='#888'; ctx.beginPath(); ctx.moveTo(40+ctx.measureText('₦'+price.toLocaleString()).width+15,cardY+137); ctx.lineTo(40+ctx.measureText('₦'+price.toLocaleString()).width+15+ctx.measureText('₦'+parseInt(oldPrice).toLocaleString()).width,cardY+137); ctx.stroke();
+ }
+
+ // CTA
+ ctx.fillStyle='#666'; ctx.font='600 12px Inter'; ctx.fillText('ClearCode • Swipe to Order',40,cardY+240);
+ ctx.fillStyle=st.accent; ctx.beginPath(); ctx.roundRect(600,cardY+210,180,50,12); ctx.fill();
+ ctx.fillStyle='#000'; ctx.font='900 13px Inter'; ctx.fillText('BUY NOW →',635,cardY+240);
+
+ updateBeforeAfter();
 }
-async function make(){
- let name=document.getElementById('pname').value||'Product';
- let price=document.getElementById('price').value||'₦1000';
- let biz=document.getElementById('biz').value||'Clear code';
- let phone=document.getElementById('phone').value||'08165043865';
- let color=document.getElementById('color').value;
- let useAI=document.getElementById('useAI').checked;
- let st=document.getElementById('status');
- if(useAI && name){
-   st.innerText='AI drawing '+name+'... (10 sec)';
-   aiLoaded=false;
-   try{
-     let prompt = encodeURIComponent(name + ' product photo white background studio');
-     let res = await fetch('/api/ai-image?prompt='+prompt);
-     let data = await res.json();
-     if(data.image){
-       aiImg = new Image();
-       aiImg.onload=()=>{ aiLoaded=true; st.innerText='AI success!'; draw(biz,name,price,phone,color); };
-       aiImg.src=data.image;
-     } else { st.innerText='AI failed, text only'; draw(biz,name,price,phone,color); }
-   }catch(e){ st.innerText='AI error: '+e; draw(biz,name,price,phone,color); }
- } else { draw(biz,name,price,phone,color); }
+
+function updateBeforeAfter(){
+ let before=document.getElementById('beforeImg'), after=document.getElementById('afterImg');
+ before.src=beforeCanvas.toDataURL();
+ after.src=canvas.toDataURL();
+ document.getElementById('compareWrap').dataset.url=canvas.toDataURL();
 }
-function download(){
- let a=document.createElement('a'); a.download='price-tag.png'; a.href=document.getElementById('c').toDataURL(); a.click();
+
+async function genAiBg(){
+ let prompt=document.getElementById('aiPrompt').value.trim();
+ if(!prompt) return alert('Type prompt e.g: luxury marble');
+ let prog=document.getElementById('prog'), bar=document.getElementById('bar');
+ prog.style.display='block'; bar.style.width='30%';
+ try{
+  let seed=Math.floor(Math.random()*1000000);
+  let bgUrl=`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt+', aesthetic background, soft lighting, 4k, high detail, no text, clean') }?width=800&height=800&seed=${seed}&nologo=true`;
+  bar.style.width='60%';
+  let bgImg=new Image(); bgImg.crossOrigin='anonymous'; bgImg.src=bgUrl;
+  await new Promise((res,rej)=>{ bgImg.onload=res; bgImg.onerror=rej; setTimeout(rej,15000); });
+  aiBgImg=bgImg; bar.style.width='100%'; renderTag(); prog.style.display='none';
+ }catch(e){ alert('AI busy, try again'); prog.style.display='none'; }
 }
-draw('CLEAR CODE','White puma shoe','1000','08165043865','#00ff88');
+
+function downloadTag(){
+ let a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='clearcode-price-tag-hd.png'; a.click();
+}
+
+async function upscaleTag(){
+ let prog=document.getElementById('prog'), bar=document.getElementById('bar');
+ prog.style.display='block'; bar.style.width='20%';
+ let img=new Image(); img.src=canvas.toDataURL(); await img.decode(); bar.style.width='50%';
+ let upCanvas=document.createElement('canvas'); upCanvas.width=3200; upCanvas.height=3200;
+ let upCtx=upCanvas.getContext('2d'); upCtx.imageSmoothingQuality='high'; upCtx.drawImage(img,0,0,3200,3200);
+ bar.style.width='90%';
+ let url=upCanvas.toDataURL('image/png');
+ document.getElementById('afterImg').src=url; document.getElementById('compareWrap').dataset.url=url;
+ upscaledUrl=url;
+ bar.style.width='100%'; setTimeout(()=>prog.style.display='none',500);
+ alert('✅ Upscaled to 4K (3200x3200) - Now download!');
+}
+
+function toggleSlider(){
+ let wrap=document.getElementById('canvasWrap'), comp=document.getElementById('compareWrap');
+ if(comp.style.display=='block'){ comp.style.display='none'; wrap.style.display='flex'; }
+ else { comp.style.display='block'; wrap.style.display='none'; updateBeforeAfter(); initSlider(); }
+}
+
+function initSlider(){
+ let wrap=document.getElementById('compareWrap'), after=document.getElementById('afterImg'), slider=document.getElementById('compareSlider');
+ let dragging=false;
+ function update(x){
+  let rect=wrap.getBoundingClientRect(); let pct=Math.max(5,Math.min(95, ((x-rect.left)/rect.width)*100));
+  after.style.clipPath=`inset(0 0 0 ${pct}%)`; slider.style.left=pct+'%';
+ }
+ wrap.onmousedown=e=>{dragging=true; update(e.clientX)};
+ window.onmouseup=()=>dragging=false;
+ window.onmousemove=e=>{if(dragging) update(e.clientX)};
+ wrap.ontouchstart=e=>{dragging=true; update(e.touches[0].clientX)};
+ wrap.ontouchmove=e=>{if(dragging) update(e.touches[0].clientX)};
+}
+
+renderTag(); initSlider();
 </script>
 </body>
 </html>

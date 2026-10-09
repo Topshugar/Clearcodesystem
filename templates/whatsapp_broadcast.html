@@ -2,7 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WhatsApp Broadcast - WhatsApp Filter</title>
+<title>WhatsApp Broadcast - Safe Import</title>
+
+<!-- Monetag Pop + Vignette -->
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
 h1{font-size:22px;font-weight:900}.sub{color:#888;font-size:12px;margin-top:4px}
@@ -28,20 +33,16 @@ textarea{width:100%;background:#080808;border:1px solid #333;border-radius:12px;
 <div class="card">
 <span class="label">1 PASTE CONTACTS (Name,Number - one per line)</span>
 <textarea id="contacts" placeholder="Musa,08012345678&#10;Aisha,08098765432"></textarea>
-
 <div class="import-row">
 <button class="btn btn-dark" onclick="pickContacts()">📱 IMPORT PHONE</button>
 <label class="btn btn-dark" style="text-align:center;padding:14px">📂 IMPORT.VCF<input type="file" id="fileIn" accept=".vcf,.csv,.txt" hidden onchange="importFile(event)"></label>
 </div>
-
 <button class="btn btn-blue" onclick="filterWhatsApp()">✅ FILTER: WHATSAPP ONLY (Clean + Deduplicate)</button>
-
 <div class="stat">
 <div><b id="totalCount">0</b> Total</div>
 <div><b id="waCount">0</b> WhatsApp Valid</div>
 <div><b id="dupCount">0</b> Duplicates Removed</div>
 </div>
-
 <button class="btn btn-green" onclick="split256()">SPLIT INTO 256 (WhatsApp Limit)</button>
 <div id="lists">Lists will appear here...</div>
 </div>
@@ -64,10 +65,9 @@ Check: clearcode.quest</textarea>
 
 <script>
 let batches=[], currentBatch=0, timerInt=null, timeLeft=120;
-
 function pickContacts(){
  if(!('contacts' in navigator && 'ContactsManager' in window)){
-   alert('Not supported on this browser. Use Android Chrome + IMPORT.VCF from Google Contacts');
+   alert('Not supported - Use Android Chrome + IMPORT.VCF');
    return;
  }
  navigator.contacts.select(['name','tel'],{multiple:true}).then(c=>{
@@ -80,7 +80,6 @@ function pickContacts(){
    filterWhatsApp();
  });
 }
-
 function importFile(e){
  const file=e.target.files[0]; if(!file) return;
  const r=new FileReader();
@@ -98,7 +97,6 @@ function importFile(e){
  };
  r.readAsText(file);
 }
-
 function cleanNumber(raw){
   let n=raw.replace(/[^0-9+]/g,'');
   if(!n) return null;
@@ -109,7 +107,6 @@ function cleanNumber(raw){
   if(n.startsWith('+') && n.length>=12) return n;
   return null;
 }
-
 function filterWhatsApp(){
  let raw=document.getElementById('contacts').value.split('\n');
  let seen=new Set(); let cleaned=[]; let dups=0;
@@ -118,7 +115,6 @@ function filterWhatsApp(){
    let parts=line.split(',');
    let name=parts[0]?.trim()||'Customer';
    let numPart=parts.slice(1).join(',').trim()||name;
-   // if line is only number without comma
    if(!numPart || parts.length==1){ numPart=name; name='Customer'; }
    let clean=cleanNumber(numPart);
    if(!clean) return;
@@ -131,7 +127,6 @@ function filterWhatsApp(){
  document.getElementById('waCount').innerText=cleaned.length;
  document.getElementById('dupCount').innerText=dups;
 }
-
 function split256(){
  filterWhatsApp();
  let raw=document.getElementById('contacts').value.trim().split('\n').filter(l=>l.trim());
@@ -141,13 +136,12 @@ function split256(){
  batches.forEach((b,idx)=>{ html+=`--- LIST ${idx+1} (${b.length}) ---\n${b.join('\n')}\n\n`; });
  document.getElementById('lists').innerText=html;
 }
-
 function genLink(){
  let m=document.getElementById('msg').value;
  let link='https://wa.me/?text='+encodeURIComponent(m);
  document.getElementById('statusLink').value=link;
  navigator.clipboard.writeText(link);
- alert('Link copied - Post on Status!');
+ alert('Link copied!');
 }
 function startTimer(){
  clearInterval(timerInt); timeLeft=120;

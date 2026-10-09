@@ -1,39 +1,223 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>Invoice Generator - Tool 04</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invoice Generator - Premium 4K + Slider - Free</title>
+<meta name="description" content="Professional invoice generator - 4K download, premium design for vendors">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
-.top{padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between}
-input{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:6px 0;box-sizing:border-box}
-button{width:100%;padding:14px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;margin-top:10px}
-#inv{background:#fff;color:#000;padding:20px;border-radius:12px;margin-top:15px}
-.small{color:#666;font-size:12px}
-</style></head><body>
-<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span class="small">Tool 04: Invoice</span></div>
-<h3>Invoice Generator</h3>
-<input id="biz" placeholder="Your Business Name">
-<input id="client" placeholder="Client Name">
-<input id="item" placeholder="Item / Service">
-<input id="amount" placeholder="Amount ₦" type="number">
-<button onclick="gen()">Generate Invoice</button>
-<div id="inv" style="display:none"></div>
-<button id="printBtn" style="display:none;background:#fff" onclick="window.print()">Print / Save PDF</button>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:9px;background:linear-gradient(90deg,#00FF88,#a855f7);color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:1100px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
+@media(max-width:850px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-top:10px;display:block;font-weight:800}
+input,select,textarea{width:100%;padding:10px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px}
+textarea{resize:none}
+.item-row{display:grid;grid-template-columns:2fr 1fr 1fr 30px;gap:6px;margin-top:6px;align-items:center}
+.item-row input{margin-top:0}
+.btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.btn4k{background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000}
+.btn-red{background:#1a1a1a;color:#ff4444;border:1px solid #331a1a}
+.style-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px}
+.style-btn{padding:8px;border-radius:10px;border:1px solid #2a2a2a;background:#1a1a1a;color:#fff;font-size:10px;font-weight:800;cursor:pointer}
+.style-btn.active{border-color:#00FF88;background:#00FF88;color:#000}
+
+/* INVOICE PREVIEW */
+.invoice-preview{background:#fff;color:#000;border-radius:16px;padding:24px;min-height:600px;position:relative;overflow:hidden}
+.invoice-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #000;padding-bottom:16px}
+.invoice-header h2{font-size:28px;font-weight:900;letter-spacing:-1px}
+.invoice-meta{font-size:11px;color:#666;line-height:1.6;text-align:right}
+.company{margin-top:16px;display:flex;justify-content:space-between}
+.company div{font-size:12px;line-height:1.5}
+.company b{font-size:13px}
+.table{width:100%;margin-top:20px;border-collapse:collapse}
+.table th{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:#888;border-bottom:2px solid #eee;padding:8px 0;text-align:left}
+.table td{font-size:13px;padding:12px 0;border-bottom:1px solid #f0f0f0}
+.table.right{text-align:right}
+.total-box{margin-top:16px;background:#000;color:#fff;border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.total-box.style-gold{background:linear-gradient(135deg,#FFD700,#B45309);color:#000}
+.total-box.style-neon{background:#080808;border:2px solid #00FF88;color:#00FF88}
+.total-box.style-minimal{background:#f5f5f5;color:#000;border:1px solid #eee}
+.footer-note{margin-top:20px;font-size:10px;color:#888;border-top:1px dashed #ddd;padding-top:12px}
+
+/* SLIDER */
+.compare-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;min-height:650px;background:#fff;display:none}
+.compare-wrap.inv{position:absolute;top:0;left:0;width:100%;height:100%;overflow:auto}
+.compare-after{clip-path:inset(0 0 0 50%)}
+.compare-slider{position:absolute;top:0;left:50%;width:3px;height:100%;background:#00FF88;z-index:20;transform:translateX(-50%)}
+.compare-handle{position:absolute;top:50%;left:50%;width:36px;height:36px;background:#00FF88;border:3px solid #000;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-size:12px;cursor:ew-resize}
+.compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:21}
+.label-before{left:10px;background:#000;color:#fff}
+.label-after{right:10px;background:#00FF88;color:#000}
+.progress{height:4px;background:#1a1a1a;border-radius:20px;overflow:hidden;margin-top:10px;display:none}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,#FFD700,#00FF88);transition:0.3s}
+</style>
+</head>
+<body>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">INVOICE GENERATOR V3 - PREMIUM + 4K + SLIDER</span><span class="badge">4K PREMIUM</span></div>
+
+<div class="wrap">
+<div class="panel">
+<label>Invoice Style</label>
+<div class="style-grid">
+<button class="style-btn active" onclick="setStyle('black')">Black Pro</button>
+<button class="style-btn" onclick="setStyle('gold')">Gold Luxury</button>
+<button class="style-btn" onclick="setStyle('neon')">Neon</button>
+<button class="style-btn" onclick="setStyle('minimal')">Minimal</button>
+</div>
+
+<label>Your Business Name</label>
+<input id="bizName" value="ClearCode Stores" oninput="render()">
+
+<label>Your Phone / WhatsApp</label>
+<input id="bizPhone" value="08165043865" oninput="render()">
+
+<label>Client Name</label>
+<input id="clientName" value="John Doe" oninput="render()">
+
+<label>Invoice No & Date</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+<input id="invNo" value="INV-001" oninput="render()">
+<input id="invDate" type="date" oninput="render()">
+</div>
+
+<label>Items</label>
+<div id="items"></div>
+<button class="btn btn2" onclick="addItem()">+ Add Item</button>
+
+<label>Notes</label>
+<textarea id="notes" rows="2" oninput="render()">Thanks for your patronage! Pay within 3 days.</textarea>
+
+<button class="btn" onclick="downloadHD()">⬇ Download Invoice HD Image</button>
+<button class="btn btn4k" onclick="upscaleInvoice()">🔥 Upscale to 4K - For Printing</button>
+<button class="btn btn2" onclick="toggleSlider()">↔️ Toggle Before / After Slider</button>
+<button class="btn btn2" onclick="window.print()">🖨️ Print PDF</button>
+<div class="progress" id="prog"><div class="bar" id="bar"></div></div>
+</div>
+
+<div style="position:relative">
+<div id="invoice" class="invoice-preview">
+<div class="invoice-header">
+<div><h2 id="pBizName">ClearCode Stores</h2><div style="font-size:11px;color:#888;margin-top:2px">Professional Invoice • ClearCode.quest</div></div>
+<div class="invoice-meta"><div id="pInvNo">INV-001</div><div id="pInvDate"></div><div id="pBizPhone">08165043865</div></div>
+</div>
+<div class="company">
+<div><b>BILL TO:</b><br><span id="pClientName">John Doe</span><br><span style="color:#888">Lagos, Nigeria</span></div>
+<div style="text-align:right"><b id="pBizName2">ClearCode Stores</b><br><span style="color:#888">Vendor • Fast Delivery</span></div>
+</div>
+<table class="table">
+<thead><tr><th>Item</th><th class="right">Qty</th><th class="right">Price</th><th class="right">Total</th></tr></thead>
+<tbody id="pItems"></tbody>
+</table>
+<div class="total-box" id="totalBox">
+<div><div style="font-size:11px;opacity:0.7">TOTAL AMOUNT</div><div style="font-size:10px;margin-top:2px" id="pNotes">Thanks for your patronage!</div></div>
+<div style="font-size:28px;font-weight:900" id="pTotal">₦0</div>
+</div>
+<div class="footer-note">Generated with ClearCode Invoice Generator • Pay via transfer • 08165043865 • clearcode.quest/tool/invoice</div>
+</div>
+
+<div class="compare-wrap" id="compareWrap">
+<div class="inv" style="background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">BLANK TEMPLATE</div>
+<div class="inv compare-after" id="compareAfter"><div id="compareInner"></div></div>
+<div class="compare-slider" id="compareSlider"><div class="compare-handle">↔</div></div>
+<span class="compare-label label-before">BLANK</span><span class="compare-label label-after">YOUR INVOICE • 4K</span>
+</div>
+</div>
+</div>
 
 <script>
-function gen(){
- let html=`<h2>${document.getElementById('biz').value}</h2>
- <p>Bill to: ${document.getElementById('client').value}</p>
- <hr><p>${document.getElementById('item').value}</p>
- <h3>Total: ₦${document.getElementById('amount').value}</h3>
- <p class="small">Generated via ClearCode System<br>Contact: 08165043865</p>`;
- document.getElementById('inv').innerHTML=html;
- document.getElementById('inv').style.display='block';
- document.getElementById('printBtn').style.display='block';
+let items=[{name:'Luxury Bag',qty:1,price:25000},{name:'Delivery Fee',qty:1,price:3000}];
+let currentStyle='black';
+
+function setStyle(s){
+ currentStyle=s; document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active');
+ let box=document.getElementById('totalBox');
+ box.className='total-box'; if(s!='black') box.classList.add('style-'+s);
+ render();
 }
+
+function addItem(){ items.push({name:'',qty:1,price:0}); renderItems(); render(); }
+function removeItem(i){ items.splice(i,1); renderItems(); render(); }
+
+function renderItems(){
+ let html='';
+ items.forEach((it,idx)=>{
+  html+=`<div class="item-row"><input placeholder="Item name" value="${it.name}" oninput="items[${idx}].name=this.value;render()"><input type="number" value="${it.qty}" oninput="items[${idx}].qty=parseInt(this.value)||0;render()"><input type="number" value="${it.price}" oninput="items[${idx}].price=parseInt(this.value)||0;render()"><button class="btn-red" style="padding:8px;border-radius:8px;cursor:pointer" onclick="removeItem(${idx})">✕</button></div>`;
+ });
+ document.getElementById('items').innerHTML=html;
+}
+
+function render(){
+ document.getElementById('pBizName').innerText=document.getElementById('bizName').value||'Business';
+ document.getElementById('pBizName2').innerText=document.getElementById('bizName').value||'Business';
+ document.getElementById('pClientName').innerText=document.getElementById('clientName').value||'Client';
+ document.getElementById('pInvNo').innerText=document.getElementById('invNo').value||'INV-001';
+ let d=document.getElementById('invDate').value; document.getElementById('pInvDate').innerText=d?new Date(d).toDateString():new Date().toDateString();
+ document.getElementById('pBizPhone').innerText=document.getElementById('bizPhone').value||'';
+ document.getElementById('pNotes').innerText=document.getElementById('notes').value||'';
+ let tbody=document.getElementById('pItems'); let total=0; tbody.innerHTML='';
+ items.forEach(it=>{
+  let t=(it.qty||0)*(it.price||0); total+=t;
+  tbody.innerHTML+=`<tr><td>${it.name||'Item'}</td><td class="right">${it.qty}</td><td class="right">₦${(it.price||0).toLocaleString()}</td><td class="right"><b>₦${t.toLocaleString()}</b></td></tr>`;
+ });
+ document.getElementById('pTotal').innerText='₦'+total.toLocaleString();
+ // Update compare
+ document.getElementById('compareInner').innerHTML=document.getElementById('invoice').innerHTML;
+ document.getElementById('compareInner').className='invoice-preview';
+}
+
+async function downloadHD(){
+ let prog=document.getElementById('prog'), bar=document.getElementById('bar');
+ prog.style.display='block'; bar.style.width='30%';
+ let canvas=await html2canvas(document.getElementById('invoice'),{scale:2,backgroundColor:'#ffffff'});
+ bar.style.width='80%';
+ let a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='clearcode-invoice-hd.png'; a.click();
+ bar.style.width='100%'; setTimeout(()=>prog.style.display='none',500);
+}
+
+async function upscaleInvoice(){
+ let prog=document.getElementById('prog'), bar=document.getElementById('bar');
+ prog.style.display='block'; bar.style.width='20%'; bar.innerText='';
+ let canvas=await html2canvas(document.getElementById('invoice'),{scale:4,backgroundColor:'#ffffff'});
+ bar.style.width='90%';
+ let upCanvas=document.createElement('canvas'); upCanvas.width=3200; upCanvas.height=Math.round(3200*canvas.height/canvas.width);
+ let upCtx=upCanvas.getContext('2d'); upCtx.imageSmoothingQuality='high'; upCtx.drawImage(canvas,0,0,upCanvas.width,upCanvas.height);
+ let url=upCanvas.toDataURL('image/png');
+ document.getElementById('compareAfter').innerHTML=`<img src="${url}" style="width:100%">`;
+ let a=document.createElement('a'); a.href=url; a.download='clearcode-invoice-4k.png'; a.click();
+ bar.style.width='100%'; prog.style.display='none';
+ alert('✅ 4K Invoice downloaded (3200px) - Ready for printing & WhatsApp HD');
+}
+
+function toggleSlider(){
+ let inv=document.getElementById('invoice'), comp=document.getElementById('compareWrap');
+ if(comp.style.display=='block'){ comp.style.display='none'; inv.style.display='block'; }
+ else { comp.style.display='block'; inv.style.display='none'; render(); initSlider(); }
+}
+
+function initSlider(){
+ let wrap=document.getElementById('compareWrap'), after=document.getElementById('compareAfter'), slider=document.getElementById('compareSlider');
+ let dragging=false;
+ function update(x){
+  let rect=wrap.getBoundingClientRect(); let pct=Math.max(5,Math.min(95, ((x-rect.left)/rect.width)*100));
+  after.style.clipPath=`inset(0 0 0 ${pct}%)`; slider.style.left=pct+'%';
+ }
+ wrap.onmousedown=e=>{dragging=true; update(e.clientX)};
+ window.onmouseup=()=>dragging=false;
+ window.onmousemove=e=>{if(dragging) update(e.clientX)};
+ wrap.ontouchstart=e=>{dragging=true; update(e.touches[0].clientX)};
+ wrap.ontouchmove=e=>{if(dragging) update(e.touches[0].clientX)};
+}
+
+document.getElementById('invDate').valueAsDate=new Date();
+renderItems(); render(); initSlider();
 </script>
-<div style="background:#00ff88;color:#000;padding:15px;border-radius:12px;margin-top:20px;text-align:center">
-<b>Need Business Website?</b> <a href="https://wa.me/2348165043865?text=Hi%20I%20need%20invoice%20system" style="background:#000;color:#00ff88;padding:8px 12px;border-radius:6px;text-decoration:none">WhatsApp 08165043865</a>
-</div>
-</body></html>
+</body>
+</html>

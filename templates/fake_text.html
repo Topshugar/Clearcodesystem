@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fake Text Story Generator - iMessage Fake Chat for TikTok</title>
+<meta name="description" content="Create fake iMessage text stories for TikTok. Fake chat with mom, girlfriend, boss. Viral USA tool.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+body{margin:0;background:#080808;color:#fff;font-family:Inter,sans-serif}
+.header{padding:14px;background:#111;display:flex;justify-content:space-between;border-bottom:1px solid #222;position:sticky;top:0;z-index:20}
+.wrap{max-width:900px;margin:auto;padding:16px;display:grid;grid-template-columns:1fr 380px;gap:16px}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+.panel{background:#111;border:1px solid #222;border-radius:14px;padding:16px}
+label{font-size:10px;color:#888;margin-top:12px;display:block;text-transform:uppercase;font-weight:700;letter-spacing:0.5px}
+input,select,textarea{width:100%;padding:12px;background:#0a0a0a;border:1px solid #333;color:#fff;border-radius:10px;margin-top:6px;font-size:13px}
+textarea{resize:vertical}
+.btn{width:100%;padding:13px;background:#fff;color:#000;border:0;font-weight:900;border-radius:12px;margin-top:10px;cursor:pointer}
+.btn-green{background:#00FF88;color:#000}
+.btn-purple{background:#a855f7;color:#fff}
+.msg-row{display:flex;gap:8px;margin-top:8px}
+.msg-row input{flex:1}
+.small-btn{padding:12px;background:#222;color:#fff;border:1px solid #333;border-radius:10px;cursor:pointer;font-size:11px;font-weight:800}
+#phone{width:380px;max-width:100%;margin:auto;background:#000;border:6px solid #222;border-radius:42px;padding:8px;position:relative;overflow:hidden}
+#screen{background:#fff;border-radius:32px;overflow:hidden;min-height:600px;display:flex;flex-direction:column}
+.status{height:34px;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font-size:12px;color:#000;font-weight:700}
+.contact-bar{padding:10px 14px;background:#f5f5f7;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e5e5e5}
+.avatar{width:36px;height:36px;border-radius:50%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px}
+.chat{flex:1;padding:14px;background:#fff;display:flex;flex-direction:column;gap:8px;min-height:400px}
+.bubble{max-width:75%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.3;word-wrap:break-word}
+.me{align-self:flex-end;background:#0A84FF;color:#fff;border-bottom-right-radius:4px}
+.them{align-self:flex-start;background:#E9E9EB;color:#000;border-bottom-left-radius:4px}
+.input-bar{padding:10px;background:#fff;border-top:1px solid #e5e5e5;display:flex;align-items:center;gap:8px;color:#aaa;font-size:12px}
+.watermark{text-align:center;font-size:9px;color:#aaa;padding:6px;background:#fff}
+</style>
+</head>
+<body>
+<div class="header"><a href="/" style="color:#888;text-decoration:none">← Tools</a><span style="color:#a855f7;font-weight:800;font-size:12px">FAKE TEXT STORY - PREMIUM</span><div style="width:40px"></div></div>
+
+<div class="wrap">
+<div class="panel">
+<label>Contact Name (e.g Mom, GF, Boss)</label>
+<input id="cname" value="Mom" oninput="render()">
+
+<label>Contact Initial (Avatar Letter)</label>
+<input id="cinit" value="M" maxlength="2" oninput="render()">
+
+<label>iPhone Time</label>
+<input id="ctime" value="9:41" oninput="render()">
+
+<label>Story Messages - Format: Me: text OR Mom: text (one per line)</label>
+<textarea id="msgs" rows="10" oninput="render()">Mom: Where did my $200 go???
+Me: I can explain mom
+Mom: Explain this belt then 😡
+Me: NO PLEASE MOM IT WAS FOR ROBUX
+Mom: Come to the living room. NOW.</textarea>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<button class="small-btn" onclick="addLine('Mom: ')">+ MOM LINE</button>
+<button class="small-btn" onclick="addLine('Me: ')">+ ME LINE</button>
+</div>
+
+<button class="btn-green btn" onclick="render()">UPDATE PREVIEW</button>
+<button class="btn-purple btn" onclick="download()">DOWNLOAD PNG 4K (FOR TIKTOK)</button>
+<p style="font-size:10px;color:#555;text-align:center;margin-top:8px">Premium: No watermark $5/mo coming soon. Now free with small watermark.</p>
+</div>
+
+<div class="panel" style="background:#0a0a0a;display:flex;align-items:start;justify-content:center">
+<div id="phone">
+<div id="screen">
+<div class="status"><span id="stime">9:41</span><span>📶 📶 🔋</span></div>
+<div class="contact-bar"><div style="color:#0A84FF">‹</div><div class="avatar" id="av">M</div><div style="flex:1"><div id="cn" style="color:#000;font-weight:700;font-size:14px">Mom</div><div style="color:#888;font-size:11px">iMessage</div></div><div style="color:#000">📹</div></div>
+<div class="chat" id="chat"></div>
+<div class="input-bar">🎥 +Aa &nbsp;&nbsp;&nbsp; [ iMessage ] &nbsp;&nbsp;&nbsp; 🎤</div>
+<div class="watermark">Made with ClearCode.quest</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function addLine(p){ document.getElementById('msgs').value+='\n'+p; render(); }
+function render(){
+ let name=document.getElementById('cname').value||'Mom';
+ let init=document.getElementById('cinit').value||'M';
+ let time=document.getElementById('ctime').value||'9:41';
+ document.getElementById('cn').innerText=name;
+ document.getElementById('av').innerText=init.toUpperCase();
+ document.getElementById('stime').innerText=time;
+ let raw=document.getElementById('msgs').value.split('\n').filter(x=>x.trim()!='');
+ let html='';
+ raw.forEach(line=>{
+  let isMe=line.toLowerCase().startsWith('me:');
+  let isThem=line.toLowerCase().startsWith(name.toLowerCase()+':') || line.toLowerCase().startsWith('mom:') || line.toLowerCase().startsWith('gf:') || line.toLowerCase().startsWith('boss:');
+  let text=line.split(':').slice(1).join(':').trim();
+  if(!text) text=line;
+  if(isMe){
+   html+=`<div class="bubble me">${escapeHtml(text)}</div>`;
+  }else{
+   html+=`<div class="bubble them">${escapeHtml(text)}</div>`;
+  }
+ });
+ document.getElementById('chat').innerHTML=html;
+}
+function escapeHtml(t){
+ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function download(){
+ html2canvas(document.getElementById('screen'),{scale:3,useCORS:true}).then(c=>{
+  let a=document.createElement('a');
+  a.download='fake-text-story.png';
+  a.href=c.toDataURL('image/png');
+  a.click();
+ });
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Broadcast - ClearCode | Tool 20</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;color:#fff;font-family:system-ui,-apple-system,sans-serif;padding:16px}
+h2{font-size:22px}
+.small{color:#888;font-size:13px;margin:6px 0 16px}
+.card{background:#111;border:1px solid #222;border-radius:20px;padding:18px;margin-bottom:16px}
+.card h4{font-size:14px;margin-bottom:8px;color:#25D366}
+textarea,input{width:100%;background:#000;color:#fff;border:1px solid #2a2a2a;border-radius:12px;padding:14px;font-size:14px;margin-top:8px;outline:none}
+textarea:focus,input:focus{border-color:#25D366}
+.btn{background:#25D366;color:#000;border:none;padding:14px;border-radius:12px;font-weight:900;width:100%;margin-top:12px;font-size:14px;cursor:pointer}
+.btn2{background:#fff;color:#000}
+.list{background:#000;border:1px dashed #25D366;border-radius:12px;padding:12px;margin-top:12px;font-size:12px;white-space:pre-wrap;min-height:60px;color:#ccc}
+.timer{font-size:42px;font-weight:900;text-align:center;color:#25D366;letter-spacing:2px;margin:10px 0}
+.pill{display:inline-block;background:#1a2e1f;color:#25D366;border:1px solid #25D366;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:800}
+</style>
+</head>
+<body>
+
+<h2>📢 WhatsApp Broadcast <span class="pill">SAFE • NO BAN</span></h2>
+<p class="small">Tool #20 - Send to 1000+ contacts safely. Split + Timer + Status Link</p>
+
+<div class="card">
+<h4>1️⃣ PASTE CONTACTS (Name,Number - one per line)</h4>
+<textarea id="contacts" rows="6" placeholder="Musa,08012345678&#10;Aisha,08098765432&#10;John,09011223344"></textarea>
+<button class="btn" onclick="split()">SPLIT INTO 256 (WhatsApp Limit)</button>
+<div id="output" class="list">Lists will appear here...</div>
+</div>
+
+<div class="card">
+<h4>2️⃣ YOUR MESSAGE (use {{name}} for personalization)</h4>
+<textarea id="msg" rows="4">Hi {{name}} 👋
+New stock alert! Clean 4K product photos.
+Check here: clearcode.quest
+
+Reply YES to get price list.</textarea>
+<input id="waLink" readonly placeholder="Your wa.me status link will appear here">
+<button class="btn" onclick="genLink()">GENERATE STATUS LINK + COPY</button>
+<p class="small">Post this link on Status / Groups - Zero forward limit. Anyone taps = DM auto-filled.</p>
+</div>
+
+<div class="card">
+<h4>3️⃣ SAFE SPREADER - 5 CHATS / 2 MINS</h4>
+<div class="timer" id="timer">02:00</div>
+<p style="text-align:center;color:#888;font-size:12px;margin-bottom:10px">WhatsApp allows 5 forwards. Send to 5, then wait. This timer protects you.</p>
+<button class="btn" onclick="startTimer()">START 2-MIN TIMER</button>
+<button class="btn btn2" onclick="nextBatch()">I SENT TO 5 ✅ NEXT BATCH</button>
+</div>
+
+<script>
+function split(){
+ let raw=document.getElementById('contacts').value.trim()
+ if(!raw){alert('Paste contacts first');return}
+ let c=raw.split('\n').filter(x=>x.trim()!=='')
+ let chunks=[]
+ for(let i=0;i<c.length;i+=256) chunks.push(c.slice(i,i+256))
+ let out=''
+ chunks.forEach((ch,i)=>{
+  out+=`--- BROADCAST LIST ${i+1} (${ch.length} contacts) ---\nCreate new Broadcast in WhatsApp > Paste these:\n`+ch.join('\n')+'\n\n'
+ })
+ document.getElementById('output').innerText=out
+}
+function genLink(){
+ let m=document.getElementById('msg').value.trim()
+ if(!m){alert('Write message first');return}
+ let clean=m.replaceAll('{{name}}','')
+ let link='https://wa.me/?text='+encodeURIComponent(clean)
+ document.getElementById('waLink').value=link
+ navigator.clipboard.writeText(link).then(()=>{alert('✅ Status link copied! Post it now - No limit')})
+}
+let interval
+function startTimer(){
+ let t=120
+ clearInterval(interval)
+ interval=setInterval(()=>{
+  t--
+  let mm=String(Math.floor(t/60)).padStart(2,'0')
+  let ss=String(t%60).padStart(2,'0')
+  document.getElementById('timer').innerText=mm+':'+ss
+  if(t<=0){clearInterval(interval);alert('✅ 2 mins done! You can send to next 5 now');document.getElementById('timer').innerText='02:00'}
+ },1000)
+}
+function nextBatch(){ startTimer(); alert('Timer reset - send next 5') }
+</script>
+
+</body>
+</html>

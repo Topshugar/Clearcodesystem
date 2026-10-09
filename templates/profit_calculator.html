@@ -1,48 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profit Calculator - Premium 4K + Slider</title>
+<meta name="description" content="Know real profit after expenses - 4K report">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<title>Profit Calculator</title>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:15px}
-.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:18px}
-input{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
-button{width:100%;padding:16px;background:#00ff88;color:#000;border:0;border-radius:12px;font-weight:bold;margin-top:10px;font-size:18px}
-.result{background:#111;border:2px solid #00ff88;border-radius:16px;padding:20px;margin-top:15px;text-align:center;display:none}
-.big{font-size:36px;color:#00ff88;font-weight:bold}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:9px;background:linear-gradient(90deg,#00FF88,#FFD700);color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:1000px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
+@media(max-width:850px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+label{font-size:10px;color:#888;text-transform:uppercase;margin-top:10px;display:block;font-weight:800}
+input{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px;font-weight:700}
+.btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.btn4k{background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000}
+.report{background:#fff;color:#000;border-radius:16px;padding:20px;min-height:500px}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.row.total{font-weight:900;font-size:18px;background:#000;color:#fff;padding:14px;border-radius:12px;border-bottom:0;margin-top:10px}
+.profit-bar{height:10px;background:#f0f0f0;border-radius:20px;overflow:hidden;margin-top:10px;display:flex}
+.profit-bar div{height:100%}
+.compare-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;min-height:500px;background:#fff;display:none}
+.compare-after{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:inset(0 0 0 50%);background:#fff}
+.compare-slider{position:absolute;top:0;left:50%;width:3px;height:100%;background:#00FF88;z-index:10}
+.compare-handle{position:absolute;top:50%;left:50%;width:36px;height:36px;background:#00FF88;border:3px solid #000;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;cursor:ew-resize}
+.compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:11}
+.label-before{left:10px;background:#000;color:#fff}
+.label-after{right:10px;background:#00FF88;color:#000}
 </style>
 </head>
 <body>
-<a href="/" style="color:#00ff88;text-decoration:none">← System</a>
-<h2>Profit Calculator 💰</h2>
-<div class="card">
-<input id="cost" type="number" placeholder="Cost Price e.g. 5000">
-<input id="sell" type="number" placeholder="Selling Price e.g. 7500">
-<input id="exp" type="number" placeholder="Other Expenses e.g. 200 (delivery, data)">
-<button onclick="calc()">CALCULATE PROFIT</button>
-<div id="res" class="result"></div>
-<button onclick="shareWA()" id="waBtn" style="display:none;background:#25D366">Share on WhatsApp</button>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">PROFIT CALCULATOR V3 - PREMIUM + 4K</span><span class="badge">PROFIT • 4K</span></div>
+<div class="wrap">
+<div class="panel">
+<label>Product Cost Price (₦)</label>
+<input id="cost" type="number" value="8000" oninput="calc()">
+<label>Selling Price (₦)</label>
+<input id="sell" type="number" value="15000" oninput="calc()">
+<label>Delivery / Waybill (₦)</label>
+<input id="delivery" type="number" value="1500" oninput="calc()">
+<label>Ads / Data / Packaging (₦)</label>
+<input id="ads" type="number" value="1000" oninput="calc()">
+<label>Other Expenses (₦)</label>
+<input id="other" type="number" value="500" oninput="calc()">
+<button class="btn" onclick="calc()">Calculate Real Profit</button>
+<button class="btn btn4k" onclick="download4k()">🔥 Download 4K Report</button>
+<button class="btn btn2" onclick="toggleSlider()">↔️ Before / After Slider</button>
+</div>
+<div style="position:relative">
+<div id="report" class="report">
+<h2 style="font-weight:900">Profit Report</h2>
+<div style="font-size:11px;color:#888;margin-top:2px" id="dateText"></div>
+<div style="margin-top:16px">
+<div class="row"><span>Cost Price</span><b id="rCost">₦8,000</b></div>
+<div class="row"><span>Selling Price</span><b id="rSell">₦15,000</b></div>
+<div class="row"><span>Delivery</span><b id="rDel">₦1,500</b></div>
+<div class="row"><span>Ads / Packaging</span><b id="rAds">₦1,000</b></div>
+<div class="row"><span>Other</span><b id="rOther">₦500</b></div>
+<div class="row"><span>Total Expenses</span><b id="rExp">₦11,000</b></div>
+<div class="row total"><span>Real Profit</span><span id="rProfit">₦4,000</span></div>
+<div class="row"><span>Profit Margin</span><b id="rMargin" style="color:#00A651">26.6%</b></div>
+</div>
+<div class="profit-bar"><div id="barCost" style="background:#ddd"></div><div id="barProfit" style="background:#00FF88"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-top:6px"><span>Cost 73%</span><span>Profit 27%</span></div>
+<div style="margin-top:16px;background:#f5f5f5;border-radius:10px;padding:10px;font-size:10px;color:#666">Generated by ClearCode Profit Calculator • clearcode.quest/tool/profit-calc • 08165043865</div>
+</div>
+<div class="compare-wrap" id="compareWrap">
+<div style="padding:20px;color:#aaa;background:#f5f5f5;height:100%">BLANK REPORT</div>
+<div class="compare-after" id="compareAfter" style="padding:20px"></div>
+<div class="compare-slider" id="compareSlider"><div class="compare-handle">↔</div></div>
+<span class="compare-label label-before">BLANK</span><span class="compare-label label-after">YOUR PROFIT • 4K</span>
+</div>
+</div>
 </div>
 <script>
-let lastMsg='';
 function calc(){
  let cost=parseFloat(document.getElementById('cost').value)||0;
  let sell=parseFloat(document.getElementById('sell').value)||0;
- let exp=parseFloat(document.getElementById('exp').value)||0;
- if(!cost||!sell){alert('Enter cost and selling price');return;}
- let profit=sell-cost-exp;
- let margin=(profit/sell)*100;
- let markup=(profit/cost)*100;
- let res=document.getElementById('res');
- res.style.display='block';
- res.innerHTML=`Profit: <div class="big">₦${profit.toLocaleString()}</div>Margin: ${margin.toFixed(1)}%<br>Markup: ${markup.toFixed(1)}%<br><small style="color:#888">Cost ₦${cost} → Sell ₦${sell} - Exp ₦${exp}</small>`;
- lastMsg=`*Profit Report* 💰\nCost: ₦${cost}\nSell: ₦${sell}\nExpenses: ₦${exp}\n*Profit: ₦${profit}* (${margin.toFixed(1)}% margin)\nVia ClearCode System`;
- document.getElementById('waBtn').style.display='block';
+ let del=parseFloat(document.getElementById('delivery').value)||0;
+ let ads=parseFloat(document.getElementById('ads').value)||0;
+ let other=parseFloat(document.getElementById('other').value)||0;
+ let exp=cost+del+ads+other;
+ let profit=sell-exp;
+ let margin=sell? (profit/sell*100).toFixed(1):0;
+ document.getElementById('rCost').innerText='₦'+cost.toLocaleString();
+ document.getElementById('rSell').innerText='₦'+sell.toLocaleString();
+ document.getElementById('rDel').innerText='₦'+del.toLocaleString();
+ document.getElementById('rAds').innerText='₦'+ads.toLocaleString();
+ document.getElementById('rOther').innerText='₦'+other.toLocaleString();
+ document.getElementById('rExp').innerText='₦'+exp.toLocaleString();
+ document.getElementById('rProfit').innerText='₦'+profit.toLocaleString();
+ document.getElementById('rProfit').style.color=profit>=0?'#00A651':'#ff0000';
+ document.getElementById('rMargin').innerText=margin+'%';
+ document.getElementById('rMargin').style.color=profit>=0?'#00A651':'#ff0000';
+ document.getElementById('dateText').innerText=new Date().toLocaleString();
+ let costPct=sell? Math.min(90,(exp/sell*100)):50;
+ document.getElementById('barCost').style.width=costPct+'%';
+ document.getElementById('barProfit').style.width=(100-costPct)+'%';
+ document.getElementById('compareAfter').innerHTML=document.getElementById('report').innerHTML;
 }
-function shareWA(){ window.open('https://wa.me/?text='+encodeURIComponent(lastMsg),'_blank'); }
+async function download4k(){ let c=await html2canvas(document.getElementById('report'),{scale:4}); let a=document.createElement('a'); a.href=c.toDataURL(); a.download='profit-report-4k.png'; a.click(); }
+function toggleSlider(){ let r=document.getElementById('report'), c=document.getElementById('compareWrap'); if(c.style.display=='block'){c.style.display='none'; r.style.display='block'} else {c.style.display='block'; r.style.display='none'; calc(); initSlider()} }
+function initSlider(){ let w=document.getElementById('compareWrap'), a=document.getElementById('compareAfter'), s=document.getElementById('compareSlider'), d=false; function u(x){ let rect=w.getBoundingClientRect(); let p=Math.max(5,Math.min(95,((x-rect.left)/rect.width)*100)); a.style.clipPath=`inset(0 0 0 ${p}%)`; s.style.left=p+'%'; } w.onmousedown=e=>{d=true; u(e.clientX)}; window.onmouseup=()=>d=false; window.onmousemove=e=>{if(d) u(e.clientX)}; w.ontouchstart=e=>{d=true; u(e.touches[0].clientX)}; w.ontouchmove=e=>{if(d) u(e.touches[0].clientX)}; }
+calc(); initSlider();
 </script>
 </body>
-  </html>
+</html>

@@ -1,39 +1,187 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>BG Remover - Tool 05</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Background Remover - Free Product Photo BG Remover</title>
+<meta name="description" content="Remove background from product photos free - No download, works on phone. For vendors.">
+<!-- Monetag Pop + Vignette -->
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
-body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
-.top{padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between}
-button{width:100%;padding:15px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;font-size:16px;margin-top:10px}
-.card{background:#0f0f0f;border:1px solid #222;border-radius:14px;padding:16px;margin-top:14px;text-align:center}
-img{max-width:100%;border-radius:10px;margin-top:10px}
-.small{color:#666;font-size:11px}
-</style></head><body>
-<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span class="small">Tool 05: BG Remover 🔥</span></div>
-<h3>Remove Background - Free</h3>
-<p class="small">For product photos - white bg auto removed</p>
-<input type="file" id="file" accept="image/*" style="width:100%;padding:12px;background:#0f0f0f;border:1px solid #222;border-radius:10px;color:#fff">
-<button onclick="removeBG()">Remove Background</button>
-<div class="card" id="res" style="display:none">
-<img id="out">
-<button onclick="download()" style="background:#fff">Download PNG</button>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif;min-height:100vh}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:10px;background:#00FF88;color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.hero{text-align:center;padding:18px 0 8px}
+.hero h1{font-size:26px;font-weight:900;letter-spacing:-0.5px}
+.hero p{color:#888;font-size:13px;margin-top:6px}
+.upload-box{background:#121212;border:2px dashed #2a2a2a;border-radius:18px;padding:28px 16px;text-align:center;margin-top:18px;cursor:pointer;transition:0.2s}
+.upload-box.dragover{border-color:#00FF88;background:#0e1a13}
+.upload-box.icon{font-size:36px;margin-bottom:8px}
+.upload-box h3{font-size:15px;font-weight:800}
+.upload-box p{font-size:12px;color:#666;margin-top:4px}
+input[type=file]{display:none}
+.btn{width:100%;padding:16px;background:#00FF88;color:#000;border:0;border-radius:14px;font-weight:900;font-size:15px;margin-top:14px;cursor:pointer}
+.btn:disabled{opacity:0.5}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
+.preview{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media(max-width:650px){.preview{grid-template-columns:1fr}}
+.card{background:#121212;border:1px solid #222;border-radius:16px;padding:12px;overflow:hidden}
+.card h4{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;font-weight:800}
+.card img{width:100%;border-radius:12px;background:repeating-conic-gradient(#1a1a1a 0% 25%, #222 0% 50%) 0 0 / 20px 20px;min-height:200px;object-fit:contain}
+.tools{display:flex;gap:8px;margin-top:14px}
+.tools button{flex:1;padding:12px;border-radius:12px;font-weight:800;font-size:13px;border:1px solid #2a2a2a;cursor:pointer}
+.white{background:#fff;color:#000;border:0}
+.whatsapp-card{margin-top:14px;background:linear-gradient(135deg,#00FF88,#00D632);border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;color:#000}
+.whatsapp-card b{font-size:14px}
+.whatsapp-card a{background:#000;color:#00FF88;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:900;font-size:12px}
+.progress{height:4px;background:#1a1a1a;border-radius:20px;overflow:hidden;margin-top:12px;display:none}
+.bar{height:100%;width:0%;background:#00FF88;transition:0.2s}
+</style>
+</head>
+<body>
+<div class="header"><a href="/">← Back to Tools</a><span style="font-size:11px;font-weight:900;color:#888">TOOL 05: BG REMOVER 🔥 V2</span><span class="badge">FREE</span></div>
+
+<div class="wrap">
+<div class="hero">
+<h1>Remove Background - Free</h1>
+<p>For product photos - Auto white & transparent - Works on phone</p>
 </div>
+
+<div id="uploadArea" class="upload-box" onclick="document.getElementById('file').click()">
+<div class="icon">🖼️</div>
+<h3>Tap to upload product photo</h3>
+<p>JPG, PNG • Max 10MB • Auto removes background</p>
+<input type="file" id="file" accept="image/*">
+</div>
+
+<div class="progress" id="prog"><div class="bar" id="bar"></div></div>
+
+<div class="preview" id="preview">
+<div class="card">
+<h4>Original</h4>
+<img id="orig">
+</div>
+<div class="card">
+<h4>Background Removed ✨</h4>
+<img id="result">
+<div class="tools">
+<button class="white" onclick="downloadImg()">⬇ Download PNG</button>
+<button class="btn2" onclick="whiteBg()">White BG</button>
+</div>
+</div>
+</div>
+
+<button class="btn" id="removeBtn" style="display:none" onclick="removeBG()">Remove Background</button>
+
+<div class="whatsapp-card">
+<div><b>Need eCommerce Site?</b><br><span style="font-size:12px">We build store for vendors - Fast</span></div>
+<a href="https://wa.me/2348165043865?text=Hi%20ClearCode%20-%20I%20need%20eCommerce%20site" target="_blank">WhatsApp 08165043865</a>
+</div>
+
+<p style="text-align:center;color:#444;font-size:10px;margin-top:18px">100% free • No upload to server • Works offline on your phone</p>
+</div>
+
 <script>
-async function removeBG(){
- let f=document.getElementById('file').files[0]; if(!f){alert('Pick image');return}
- let fd=new FormData(); fd.append('image',f);
- let btn=document.querySelector('button'); btn.textContent='Processing...';
- const r=await fetch('/api/remove-bg',{method:'POST',body:fd});
- const d=await r.json();
- btn.textContent='Remove Background';
- if(d.result){document.getElementById('out').src=d.result; document.getElementById('res').style.display='block';}
- else alert(d.error||'Error');
+let originalFile, removedDataUrl;
+const fileInput=document.getElementById('file');
+const origImg=document.getElementById('orig');
+const resImg=document.getElementById('result');
+const preview=document.getElementById('preview');
+const removeBtn=document.getElementById('removeBtn');
+const uploadArea=document.getElementById('uploadArea');
+const prog=document.getElementById('prog');
+const bar=document.getElementById('bar');
+
+uploadArea.addEventListener('dragover',e=>{e.preventDefault();uploadArea.classList.add('dragover')});
+uploadArea.addEventListener('dragleave',()=>uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop',e=>{
+ e.preventDefault(); uploadArea.classList.remove('dragover');
+ if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+fileInput.addEventListener('change',e=>{
+ if(e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+function handleFile(f){
+ originalFile=f;
+ if(f.size>10*1024*1024){alert('File too big - max 10MB');return;}
+ let r=new FileReader();
+ r.onload=e=>{
+  origImg.src=e.target.result;
+  preview.style.display='grid';
+  removeBtn.style.display='block';
+  resImg.src='';
+  removedDataUrl=null;
+  uploadArea.querySelector('h3').innerText=f.name;
+ };
+ r.readAsDataURL(f);
 }
-function download(){let a=document.createElement('a');a.href=document.getElementById('out').src;a.download='bg-removed.png';a.click();}
+
+async function removeBG(){
+ if(!originalFile) return;
+ removeBtn.innerText='Removing... ⏳'; removeBtn.disabled=true;
+ prog.style.display='block'; bar.style.width='20%';
+ try{
+  // Client-side white bg detection + transparent
+  let img=new Image();
+  img.src=origImg.src;
+  await img.decode();
+  bar.style.width='60%';
+  let canvas=document.createElement('canvas');
+  canvas.width=img.width; canvas.height=img.height;
+  let ctx=canvas.getContext('2d');
+  ctx.drawImage(img,0,0);
+  let id=ctx.getImageData(0,0,canvas.width,canvas.height);
+  let data=id.data;
+  // Simple white bg remover - works for product photos
+  for(let i=0;i<data.length;i+=4){
+   let r=data[i],g=data[i+1],b=data[i+2];
+   // If pixel is near white (for product photos)
+   if(r>210 && g>210 && b>210 && Math.abs(r-g)<20 && Math.abs(g-b)<20){
+    data[i+3]=0; // transparent
+   }
+  }
+  ctx.putImageData(id,0,0);
+  bar.style.width='90%';
+  removedDataUrl=canvas.toDataURL('image/png');
+  resImg.src=removedDataUrl;
+  bar.style.width='100%';
+  setTimeout(()=>prog.style.display='none',500);
+  removeBtn.innerText='✅ Done - Download Below';
+ }catch(e){
+  alert('Failed, try another photo with white background');
+  removeBtn.innerText='Remove Background';
+  removeBtn.disabled=false;
+  prog.style.display='none';
+ }
+}
+
+function whiteBg(){
+ if(!removedDataUrl) return alert('Remove background first');
+ let img=new Image();
+ img.src=removedDataUrl;
+ img.onload=()=>{
+  let c=document.createElement('canvas');
+  c.width=img.width; c.height=img.height;
+  let x=c.getContext('2d');
+  x.fillStyle='#ffffff'; x.fillRect(0,0,c.width,c.height);
+  x.drawImage(img,0,0);
+  resImg.src=c.toDataURL('image/png');
+  removedDataUrl=c.toDataURL('image/png');
+ }
+}
+
+function downloadImg(){
+ if(!removedDataUrl) return alert('Remove background first');
+ let a=document.createElement('a');
+ a.href=removedDataUrl;
+ a.download='clearcode-bg-removed.png';
+ a.click();
+}
 </script>
-<div style="background:#00ff88;color:#000;padding:15px;border-radius:12px;margin-top:20px;text-align:center">
-<b>Need eCommerce Site?</b> <a href="https://wa.me/2348165043865?text=Hi%20I%20need%20ecommerce%20site%20from%20BG%20tool" style="background:#000;color:#00ff88;padding:8px 12px;border-radius:6px;text-decoration:none">WhatsApp 08165043865</a>
-</div>
-</body></html>
+</body>
+</html>

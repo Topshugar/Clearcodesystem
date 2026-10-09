@@ -31,33 +31,53 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP DETECTION ---
+# --- GEO IP STRICT FILTER ---
 COUNTRY_TOOLS = {
- 'NG': ['pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc'],
- 'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text'],
+ 'NG': ['pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell'],
+ 'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text','usa_notify'],
  'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa'],
- 'DEFAULT': ['pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover']
 }
-COUNTRY_NAME = {'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','DEFAULT':'🌍 Global'}
+
+COUNTRY_NAME = {'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇺🇸 USA','AE':'🇸🇦 Saudi','QA':'🇸🇦 Saudi','KW':'🇸🇦 Saudi','BH':'🇸🇦 Saudi','OM':'🇸🇦 Saudi','EG':'🇸🇦 Saudi'}
 
 def get_country():
+    # Allow?country=US override for testing
+    test = request.args.get('country')
+    if test and len(test)==2:
+        return test.upper()
     try:
         cf = request.headers.get('CF-IPCountry')
-        if cf and len(cf)==2: return cf.upper()
+        if cf and len(cf)==2 and cf.upper()!='XX':
+            return cf.upper()
         ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
-        if ip in ['127.0.0.1','::1','']: return 'NG'
-        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=2)
+        if ip in ['127.0.0.1','::1','']:
+            return 'NG'
+        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=3)
         code = r.text.strip().upper()
         return code if len(code)==2 else 'NG'
     except:
         return 'NG'
 
-# --- HOME + ALL TOOLS WITH GEO ---
+def map_to_group(code):
+    code = code.upper()
+    if code in COUNTRY_TOOLS:
+        return code
+    if code in ['GH','KE','ZA','NG']:
+        return 'NG'
+    if code in ['US','CA','GB','AU']:
+        return 'US'
+    if code in ['SA','AE','QA','KW','BH','OM','EG']:
+        return 'SA'
+    return 'NG' # default to NG for others
+
+# --- HOME STRICT ---
 @app.route('/')
 def home():
-    country = get_country()
+    raw_country = get_country()
+    country = map_to_group(raw_country)
     allowed = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS['NG'])
-    return render_template('index.html', country=country, country_name=COUNTRY_NAME.get(country, '🇳🇬 Nigeria'), allowed=allowed, all_groups=COUNTRY_TOOLS)
+    display_name = COUNTRY_NAME.get(raw_country, COUNTRY_NAME.get(country, f'🌍 {country}'))
+    return render_template('index.html', country=country, raw_country=raw_country, country_name=display_name, allowed=allowed, all_groups=COUNTRY_TOOLS)
 
 @app.route('/unlock')
 def unlock():

@@ -18,7 +18,7 @@ def get_session(mode='human'):
             try:
                 human_session = new_session("u2net_human_seg")
             except:
-                human_session = True  # fallback
+                human_session = True
         elif cloth_session is None:
             try:
                 cloth_session = new_session("isnet-general-use")
@@ -31,7 +31,7 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- HOME + ALL 20 TOOLS ---
+# --- HOME + ALL 21 TOOLS ---
 @app.route('/')
 def home(): 
     return render_template('index.html')
@@ -101,6 +101,12 @@ def tip_calculator(): return render_template('tip_calculator.html')
 def whatsapp_broadcast(): 
     return render_template('whatsapp_broadcast.html')
 
+@app.route('/tool/background-check')
+@app.route('/tool/usa-background-check')
+@app.route('/tool/background_check')
+def background_check(): 
+    return render_template('usa_background_check.html')
+
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
     try:
@@ -122,20 +128,16 @@ def api_bg_remove():
         if not file:
             return jsonify({'error': 'No image uploaded'}), 400
         mode = request.form.get('mode', 'human')
-        
         if not get_session(mode):
             return jsonify({'error': 'AI loading, try again in 10s'}), 503
-            
         from rembg import remove
         input_img = Image.open(file.stream).convert('RGBA')
-
         if mode == 'human' and human_session and human_session != True:
             output = remove(input_img, session=human_session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10)
         elif cloth_session and cloth_session != True:
             output = remove(input_img, session=cloth_session, alpha_matting=True)
         else:
             output = remove(input_img)
-
         buf = io.BytesIO()
         output.save(buf, format='PNG')
         b64 = base64.b64encode(buf.getvalue()).decode()
@@ -148,7 +150,7 @@ def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
     outs = {
         'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),

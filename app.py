@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, Response
-import qrcode, os, io, base64
+import qrcode, os, io, base64, requests
 from datetime import datetime
 import paramiko
 from PIL import Image
@@ -31,10 +31,33 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- HOME + ALL 21 TOOLS ---
+# --- GEO IP DETECTION ---
+COUNTRY_TOOLS = {
+ 'NG': ['pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc'],
+ 'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text'],
+ 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa'],
+ 'DEFAULT': ['pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover']
+}
+COUNTRY_NAME = {'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','DEFAULT':'🌍 Global'}
+
+def get_country():
+    try:
+        cf = request.headers.get('CF-IPCountry')
+        if cf and len(cf)==2: return cf.upper()
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
+        if ip in ['127.0.0.1','::1','']: return 'NG'
+        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=2)
+        code = r.text.strip().upper()
+        return code if len(code)==2 else 'NG'
+    except:
+        return 'NG'
+
+# --- HOME + ALL TOOLS WITH GEO ---
 @app.route('/')
-def home(): 
-    return render_template('index.html')
+def home():
+    country = get_country()
+    allowed = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS['NG'])
+    return render_template('index.html', country=country, country_name=COUNTRY_NAME.get(country, '🇳🇬 Nigeria'), allowed=allowed, all_groups=COUNTRY_TOOLS)
 
 @app.route('/unlock')
 def unlock():
@@ -42,7 +65,7 @@ def unlock():
 
 @app.route('/tool/builder')
 @app.route('/tool/store-builder')
-def builder(): 
+def builder():
     return render_template('builder.html')
 
 @app.route('/tool/wa-qr')
@@ -102,29 +125,48 @@ def tip_calculator(): return render_template('tip_calculator.html')
 @app.route('/tool/whatsapp-broadcast')
 @app.route('/tool/whatsapp_broadcast')
 @app.route('/template/whatsapp_broadcast.html')
-def whatsapp_broadcast(): 
+def whatsapp_broadcast():
     return render_template('whatsapp_broadcast.html')
 
 @app.route('/tool/background-check')
 @app.route('/tool/usa-background-check')
 @app.route('/tool/background_check')
-def background_check(): 
+def background_check():
     return render_template('usa_background_check.html')
 
-# --- SEO: SITEMAP + ROBOTS ---
+# --- NEW SAUDI TOOLS ---
+@app.route('/tool/iqama-expiry')
+def iqama_expiry(): return render_template('iqama_expiry.html')
+
+@app.route('/tool/hijri-converter')
+def hijri_converter(): return render_template('hijri_converter.html')
+
+@app.route('/tool/gosi-calculator')
+def gosi_calculator(): return render_template('gosi_calculator.html')
+
+@app.route('/tool/zatca-qr')
+def zatca_qr(): return render_template('zatca_qr.html')
+
+@app.route('/tool/gpa-calculator')
+def gpa_calculator(): return render_template('gpa_calculator.html')
+
+@app.route('/tool/salary-sa')
+def salary_sa(): return render_template('salary_sa.html')
+
+# --- SEO: SITEMAP + ROBOTS - FIXED DOMAIN ---
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check']
+    tools = ['builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-    xml += '<url><loc>https://clearcode.quest/</loc><priority>1.0</priority></url>'
+    xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
-        xml += f'<url><loc>https://clearcode.quest/tool/{t}</loc><priority>0.8</priority></url>'
+        xml += f'<url><loc>https://clearcodesystem.onrender.com/tool/{t}</loc><priority>0.8</priority></url>'
     xml += '</urlset>'
     return Response(xml, mimetype='application/xml')
 
 @app.route('/robots.txt')
 def robots():
-    txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcode.quest/sitemap.xml"
+    txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
 @app.route('/api/qr', methods=['POST'])
@@ -152,9 +194,9 @@ def api_bg_remove():
             return jsonify({'error': 'AI loading, try again in 10s'}), 503
         from rembg import remove
         input_img = Image.open(file.stream).convert('RGBA')
-        if mode == 'human' and human_session and human_session != True:
+        if mode == 'human' and human_session and human_session!= True:
             output = remove(input_img, session=human_session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10)
-        elif cloth_session and cloth_session != True:
+        elif cloth_session and cloth_session!= True:
             output = remove(input_img, session=cloth_session, alpha_matting=True)
         else:
             output = remove(input_img)
@@ -170,7 +212,7 @@ def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
     outs = {
         'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html unlock.html',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html unlock.html iqama_expiry.html hijri_converter.html gosi_calculator.html zatca_qr.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),

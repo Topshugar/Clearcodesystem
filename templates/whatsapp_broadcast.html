@@ -1,92 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WhatsApp Broadcast - ClearCode | Tool 20</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp Broadcast - WhatsApp Filter</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#080808;color:#fff;font-family:system-ui,-apple-system,sans-serif;padding:16px}
-h2{font-size:22px}
-.small{color:#888;font-size:13px;margin:6px 0 16px}
-.card{background:#111;border:1px solid #222;border-radius:20px;padding:18px;margin-bottom:16px}
-.card h4{font-size:14px;margin-bottom:8px;color:#25D366}
-textarea,input{width:100%;background:#000;color:#fff;border:1px solid #2a2a2a;border-radius:12px;padding:14px;font-size:14px;margin-top:8px;outline:none}
-textarea:focus,input:focus{border-color:#25D366}
-.btn{background:#25D366;color:#000;border:none;padding:14px;border-radius:12px;font-weight:900;width:100%;margin-top:12px;font-size:14px;cursor:pointer}
-.btn2{background:#fff;color:#000}
-.list{background:#000;border:1px dashed #25D366;border-radius:12px;padding:12px;margin-top:12px;font-size:12px;white-space:pre-wrap;min-height:60px;color:#ccc}
-.timer{font-size:42px;font-weight:900;text-align:center;color:#25D366;letter-spacing:2px;margin:10px 0}
-.pill{display:inline-block;background:#1a2e1f;color:#25D366;border:1px solid #25D366;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
+h1{font-size:22px;font-weight:900}.sub{color:#888;font-size:12px;margin-top:4px}
+.card{background:#121212;border:1px solid #222;border-radius:16px;padding:14px;margin-top:16px}
+.label{color:#00FF88;font-weight:900;font-size:12px;margin-bottom:8px;display:block}
+textarea{width:100%;background:#080808;border:1px solid #333;border-radius:12px;padding:12px;color:#fff;min-height:120px;font-size:13px}
+.btn{width:100%;padding:14px;border-radius:12px;border:0;font-weight:900;margin-top:10px;cursor:pointer}
+.btn-green{background:#00FF88;color:#000}
+.btn-dark{background:#222;color:#fff;border:1px solid #333}
+.btn-blue{background:#25D366;color:#000}
+.import-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.small{font-size:11px;color:#888;margin-top:6px}
+#lists{margin-top:10px;background:#080808;border:1px dashed #00FF88;border-radius:12px;padding:12px;font-size:12px;white-space:pre-wrap;min-height:60px}
+.stat{display:flex;gap:8px;margin-top:8px}
+.stat div{background:#080808;border:1px solid #333;border-radius:8px;padding:6px 10px;font-size:11px}
+.stat b{color:#00FF88}
 </style>
 </head>
 <body>
-
-<h2>📢 WhatsApp Broadcast <span class="pill">SAFE • NO BAN</span></h2>
-<p class="small">Tool #20 - Send to 1000+ contacts safely. Split + Timer + Status Link</p>
+<h1>📢 WhatsApp Broadcast</h1>
+<div class="sub">SAFE • NO BAN - Import + WhatsApp Filter + Split 256</div>
 
 <div class="card">
-<h4>1️⃣ PASTE CONTACTS (Name,Number - one per line)</h4>
-<textarea id="contacts" rows="6" placeholder="Musa,08012345678&#10;Aisha,08098765432&#10;John,09011223344"></textarea>
-<button class="btn" onclick="split()">SPLIT INTO 256 (WhatsApp Limit)</button>
-<div id="output" class="list">Lists will appear here...</div>
+<span class="label">1 PASTE CONTACTS (Name,Number - one per line)</span>
+<textarea id="contacts" placeholder="Musa,08012345678&#10;Aisha,08098765432"></textarea>
+
+<div class="import-row">
+<button class="btn btn-dark" onclick="pickContacts()">📱 IMPORT PHONE</button>
+<label class="btn btn-dark" style="text-align:center;padding:14px">📂 IMPORT.VCF<input type="file" id="fileIn" accept=".vcf,.csv,.txt" hidden onchange="importFile(event)"></label>
+</div>
+
+<button class="btn btn-blue" onclick="filterWhatsApp()">✅ FILTER: WHATSAPP ONLY (Clean + Deduplicate)</button>
+
+<div class="stat">
+<div><b id="totalCount">0</b> Total</div>
+<div><b id="waCount">0</b> WhatsApp Valid</div>
+<div><b id="dupCount">0</b> Duplicates Removed</div>
+</div>
+
+<button class="btn btn-green" onclick="split256()">SPLIT INTO 256 (WhatsApp Limit)</button>
+<div id="lists">Lists will appear here...</div>
 </div>
 
 <div class="card">
-<h4>2️⃣ YOUR MESSAGE (use {{name}} for personalization)</h4>
-<textarea id="msg" rows="4">Hi {{name}} 👋
-New stock alert! Clean 4K product photos.
-Check here: clearcode.quest
-
-Reply YES to get price list.</textarea>
-<input id="waLink" readonly placeholder="Your wa.me status link will appear here">
-<button class="btn" onclick="genLink()">GENERATE STATUS LINK + COPY</button>
-<p class="small">Post this link on Status / Groups - Zero forward limit. Anyone taps = DM auto-filled.</p>
+<span class="label">2 YOUR MESSAGE</span>
+<textarea id="msg">Hi {{name}} 👋
+New stock alert! Clean 4K photos.
+Check: clearcode.quest</textarea>
+<input id="statusLink" style="width:100%;margin-top:8px;background:#080808;border:1px solid #333;border-radius:12px;padding:12px;color:#888" placeholder="wa.me link appears here" readonly>
+<button class="btn btn-green" onclick="genLink()">GENERATE STATUS LINK + COPY</button>
 </div>
 
 <div class="card">
-<h4>3️⃣ SAFE SPREADER - 5 CHATS / 2 MINS</h4>
-<div class="timer" id="timer">02:00</div>
-<p style="text-align:center;color:#888;font-size:12px;margin-bottom:10px">WhatsApp allows 5 forwards. Send to 5, then wait. This timer protects you.</p>
-<button class="btn" onclick="startTimer()">START 2-MIN TIMER</button>
-<button class="btn btn2" onclick="nextBatch()">I SENT TO 5 ✅ NEXT BATCH</button>
+<span class="label">3 SAFE SPREADER - 5 CHATS / 2 MINS</span>
+<div id="timer" style="font-size:48px;font-weight:900;color:#00FF88;text-align:center">02:00</div>
+<button class="btn btn-green" onclick="startTimer()">START 2-MIN TIMER</button>
+<button class="btn btn-dark" onclick="nextBatch()" style="background:#fff;color:#000">I SENT TO 5 ✅ NEXT BATCH</button>
 </div>
 
 <script>
-function split(){
- let raw=document.getElementById('contacts').value.trim()
- if(!raw){alert('Paste contacts first');return}
- let c=raw.split('\n').filter(x=>x.trim()!=='')
- let chunks=[]
- for(let i=0;i<c.length;i+=256) chunks.push(c.slice(i,i+256))
- let out=''
- chunks.forEach((ch,i)=>{
-  out+=`--- BROADCAST LIST ${i+1} (${ch.length} contacts) ---\nCreate new Broadcast in WhatsApp > Paste these:\n`+ch.join('\n')+'\n\n'
- })
- document.getElementById('output').innerText=out
-}
-function genLink(){
- let m=document.getElementById('msg').value.trim()
- if(!m){alert('Write message first');return}
- let clean=m.replaceAll('{{name}}','')
- let link='https://wa.me/?text='+encodeURIComponent(clean)
- document.getElementById('waLink').value=link
- navigator.clipboard.writeText(link).then(()=>{alert('✅ Status link copied! Post it now - No limit')})
-}
-let interval
-function startTimer(){
- let t=120
- clearInterval(interval)
- interval=setInterval(()=>{
-  t--
-  let mm=String(Math.floor(t/60)).padStart(2,'0')
-  let ss=String(t%60).padStart(2,'0')
-  document.getElementById('timer').innerText=mm+':'+ss
-  if(t<=0){clearInterval(interval);alert('✅ 2 mins done! You can send to next 5 now');document.getElementById('timer').innerText='02:00'}
- },1000)
-}
-function nextBatch(){ startTimer(); alert('Timer reset - send next 5') }
-</script>
+let batches=[], currentBatch=0, timerInt=null, timeLeft=120;
 
+function pickContacts(){
+ if(!('contacts' in navigator && 'ContactsManager' in window)){
+   alert('Not supported on this browser. Use Android Chrome + IMPORT.VCF from Google Contacts');
+   return;
+ }
+ navigator.contacts.select(['name','tel'],{multiple:true}).then(c=>{
+   let out='';
+   c.forEach(x=>{
+     let name=x.name[0]||'Customer';
+     (x.tel||[]).forEach(t=>{ if(t) out+=`${name},${t}\n`; });
+   });
+   document.getElementById('contacts').value+=out;
+   filterWhatsApp();
+ });
+}
+
+function importFile(e){
+ const file=e.target.files[0]; if(!file) return;
+ const r=new FileReader();
+ r.onload=ev=>{
+   let txt=ev.target.result, lines=[];
+   if(file.name.endsWith('.vcf')){
+     let name='';
+     txt.split('\n').forEach(line=>{
+       if(line.startsWith('FN:')) name=line.slice(3).trim();
+       if(line.includes('TEL')){ let num=line.split(':').pop(); if(num) lines.push(`${name||'Customer'},${num}`); }
+     });
+   }else{ lines=txt.split('\n').filter(l=>l.trim()); }
+   document.getElementById('contacts').value+=lines.join('\n')+'\n';
+   filterWhatsApp();
+ };
+ r.readAsText(file);
+}
+
+function cleanNumber(raw){
+  let n=raw.replace(/[^0-9+]/g,'');
+  if(!n) return null;
+  if(n.startsWith('0')) n='+234'+n.slice(1);
+  if(n.startsWith('234') &&!n.startsWith('+')) n='+'+n;
+  if(n.length<11) return null;
+  if(n.startsWith('+234') && n.length>=13) return n;
+  if(n.startsWith('+') && n.length>=12) return n;
+  return null;
+}
+
+function filterWhatsApp(){
+ let raw=document.getElementById('contacts').value.split('\n');
+ let seen=new Set(); let cleaned=[]; let dups=0;
+ raw.forEach(line=>{
+   if(!line.trim()) return;
+   let parts=line.split(',');
+   let name=parts[0]?.trim()||'Customer';
+   let numPart=parts.slice(1).join(',').trim()||name;
+   // if line is only number without comma
+   if(!numPart || parts.length==1){ numPart=name; name='Customer'; }
+   let clean=cleanNumber(numPart);
+   if(!clean) return;
+   if(seen.has(clean)){ dups++; return; }
+   seen.add(clean);
+   cleaned.push(`${name},${clean}`);
+ });
+ document.getElementById('contacts').value=cleaned.join('\n')+'\n';
+ document.getElementById('totalCount').innerText=raw.length;
+ document.getElementById('waCount').innerText=cleaned.length;
+ document.getElementById('dupCount').innerText=dups;
+}
+
+function split256(){
+ filterWhatsApp();
+ let raw=document.getElementById('contacts').value.trim().split('\n').filter(l=>l.trim());
+ batches=[];
+ for(let i=0;i<raw.length;i+=256) batches.push(raw.slice(i,i+256));
+ let html=`✅ WhatsApp Valid: ${raw.length} → ${batches.length} lists\n\n`;
+ batches.forEach((b,idx)=>{ html+=`--- LIST ${idx+1} (${b.length}) ---\n${b.join('\n')}\n\n`; });
+ document.getElementById('lists').innerText=html;
+}
+
+function genLink(){
+ let m=document.getElementById('msg').value;
+ let link='https://wa.me/?text='+encodeURIComponent(m);
+ document.getElementById('statusLink').value=link;
+ navigator.clipboard.writeText(link);
+ alert('Link copied - Post on Status!');
+}
+function startTimer(){
+ clearInterval(timerInt); timeLeft=120;
+ timerInt=setInterval(()=>{
+   timeLeft--; let mm=String(Math.floor(timeLeft/60)).padStart(2,'0'); let ss=String(timeLeft%60).padStart(2,'0');
+   document.getElementById('timer').innerText=`${mm}:${ss}`;
+   if(timeLeft<=0){ clearInterval(timerInt); document.getElementById('timer').innerText='READY ✅'; }
+ },1000);
+}
+function nextBatch(){
+ currentBatch++; if(currentBatch>=batches.length){ alert('All done!'); return; }
+ document.getElementById('lists').innerText=`NOW SEND LIST ${currentBatch+1}/${batches.length}:\n\n${batches[currentBatch].join('\n')}`;
+ startTimer();
+}
+</script>
 </body>
 </html>

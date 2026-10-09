@@ -2,185 +2,172 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Background Remover - Free Product Photo BG Remover</title>
-<meta name="description" content="Remove background from product photos free - No download, works on phone. For vendors.">
+<title>AI Background Remover & Generator - Free</title>
+<meta name="description" content="AI background remover with prompt - Remove bg and generate new background with AI. For vendors product photos.">
 <!-- Monetag Pop + Vignette -->
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif;min-height:100vh}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
 .header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
 .header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
-.badge{font-size:10px;background:#00FF88;color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
-.wrap{max-width:900px;margin:auto;padding:16px}
-.hero{text-align:center;padding:18px 0 8px}
-.hero h1{font-size:26px;font-weight:900;letter-spacing:-0.5px}
-.hero p{color:#888;font-size:13px;margin-top:6px}
-.upload-box{background:#121212;border:2px dashed #2a2a2a;border-radius:18px;padding:28px 16px;text-align:center;margin-top:18px;cursor:pointer;transition:0.2s}
+.badge{font-size:10px;background:linear-gradient(90deg,#00FF88,#a855f7);color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:950px;margin:auto;padding:16px}
+.hero{text-align:center;padding:16px 0 6px}
+.hero h1{font-size:24px;font-weight:900}
+.hero p{color:#888;font-size:12px;margin-top:4px}
+.upload-box{background:#121212;border:2px dashed #2a2a2a;border-radius:18px;padding:24px 16px;text-align:center;margin-top:14px;cursor:pointer}
 .upload-box.dragover{border-color:#00FF88;background:#0e1a13}
-.upload-box.icon{font-size:36px;margin-bottom:8px}
-.upload-box h3{font-size:15px;font-weight:800}
-.upload-box p{font-size:12px;color:#666;margin-top:4px}
 input[type=file]{display:none}
-.btn{width:100%;padding:16px;background:#00FF88;color:#000;border:0;border-radius:14px;font-weight:900;font-size:15px;margin-top:14px;cursor:pointer}
+.btn{width:100%;padding:14px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:14px;margin-top:12px;cursor:pointer}
 .btn:disabled{opacity:0.5}
-.btn2{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
-.preview{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-@media(max-width:650px){.preview{grid-template-columns:1fr}}
-.card{background:#121212;border:1px solid #222;border-radius:16px;padding:12px;overflow:hidden}
-.card h4{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;font-weight:800}
-.card img{width:100%;border-radius:12px;background:repeating-conic-gradient(#1a1a1a 0% 25%, #222 0% 50%) 0 0 / 20px 20px;min-height:200px;object-fit:contain}
-.tools{display:flex;gap:8px;margin-top:14px}
-.tools button{flex:1;padding:12px;border-radius:12px;font-weight:800;font-size:13px;border:1px solid #2a2a2a;cursor:pointer}
-.white{background:#fff;color:#000;border:0}
-.whatsapp-card{margin-top:14px;background:linear-gradient(135deg,#00FF88,#00D632);border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;color:#000}
-.whatsapp-card b{font-size:14px}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.grid2{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.card{background:#121212;border:1px solid #222;border-radius:16px;padding:12px}
+.card h4{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;font-weight:800}
+.card img{width:100%;border-radius:12px;background:repeating-conic-gradient(#1a1a1a 0% 25%, #222 0% 50%) 0 0 / 20px 20px;min-height:220px;object-fit:contain}
+.prompt-box{margin-top:14px;background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+.prompt-box label{font-size:11px;color:#00FF88;font-weight:800;text-transform:uppercase}
+.prompt-box input{width:100%;padding:12px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:6px;font-size:13px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.presets button{font-size:11px;padding:6px 10px;border-radius:20px;background:#1a1a1a;border:1px solid #2a2a2a;color:#aaa;cursor:pointer}
+.presets button:hover{border-color:#00FF88;color:#fff}
+.progress{height:4px;background:#1a1a1a;border-radius:20px;overflow:hidden;margin-top:10px;display:none}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,#00FF88,#a855f7);transition:0.3s}
+.whatsapp-card{margin-top:14px;background:linear-gradient(135deg,#00FF88,#00D632);border-radius:16px;padding:14px;display:flex;justify-content:space-between;align-items:center;color:#000}
 .whatsapp-card a{background:#000;color:#00FF88;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:900;font-size:12px}
-.progress{height:4px;background:#1a1a1a;border-radius:20px;overflow:hidden;margin-top:12px;display:none}
-.bar{height:100%;width:0%;background:#00FF88;transition:0.2s}
 </style>
 </head>
 <body>
-<div class="header"><a href="/">← Back to Tools</a><span style="font-size:11px;font-weight:900;color:#888">TOOL 05: BG REMOVER 🔥 V2</span><span class="badge">FREE</span></div>
+<div class="header"><a href="/">← Back</a><span style="font-size:11px;font-weight:900;color:#888">AI BG REMOVER + GENERATOR 🤖</span><span class="badge">AI POWERED</span></div>
 
 <div class="wrap">
 <div class="hero">
-<h1>Remove Background - Free</h1>
-<p>For product photos - Auto white & transparent - Works on phone</p>
+<h1>AI Background Remover - Free</h1>
+<p>Remove BG + Generate new background with AI prompt</p>
 </div>
 
 <div id="uploadArea" class="upload-box" onclick="document.getElementById('file').click()">
-<div class="icon">🖼️</div>
-<h3>Tap to upload product photo</h3>
-<p>JPG, PNG • Max 10MB • Auto removes background</p>
+<div style="font-size:32px">🤖</div>
+<h3 style="font-size:14px;margin-top:6px;font-weight:800">Tap to upload product photo</h3>
+<p style="font-size:11px;color:#666;margin-top:4px">JPG/PNG • Auto AI background removal</p>
 <input type="file" id="file" accept="image/*">
 </div>
 
 <div class="progress" id="prog"><div class="bar" id="bar"></div></div>
 
-<div class="preview" id="preview">
-<div class="card">
-<h4>Original</h4>
-<img id="orig">
-</div>
-<div class="card">
-<h4>Background Removed ✨</h4>
-<img id="result">
-<div class="tools">
-<button class="white" onclick="downloadImg()">⬇ Download PNG</button>
-<button class="btn2" onclick="whiteBg()">White BG</button>
-</div>
-</div>
+<div class="grid2" id="preview">
+<div class="card"><h4>Original</h4><img id="orig"></div>
+<div class="card"><h4>AI Removed ✨ Transparent</h4><img id="result"><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn2" style="flex:1" onclick="downloadImg('transparent')">⬇ PNG</button><button class="btn btn2" style="flex:1" onclick="whiteBg()">White BG</button></div></div>
 </div>
 
-<button class="btn" id="removeBtn" style="display:none" onclick="removeBG()">Remove Background</button>
+<button class="btn" id="removeBtn" style="display:none" onclick="removeBG()">Step 1: Remove Background with AI</button>
+
+<div class="prompt-box" id="promptBox" style="display:none">
+<label>Step 2: AI Background Prompt - Describe new background</label>
+<input id="prompt" placeholder="e.g: luxury boutique shelf, wooden table, soft studio lighting, 4k">
+<div class="presets">
+<button onclick="setPrompt('white studio background, soft shadow, professional lighting')">White Studio</button>
+<button onclick="setPrompt('luxury boutique shelf, marble, soft light')">Luxury Store</button>
+<button onclick="setPrompt('wooden table, plant, natural sunlight, cozy')">Wooden Table</button>
+<button onclick="setPrompt('beach sand, tropical, summer vibe')">Beach</button>
+<button onclick="setPrompt('black velvet background, spotlight, premium')">Black Premium</button>
+<button onclick="setPrompt('pink pastel background, aesthetic, instagram style')">Pink Aesthetic</button>
+</div>
+<button class="btn" style="background:linear-gradient(90deg,#a855f7,#00FF88);color:#000;margin-top:10px" onclick="generateBG()">Generate AI Background with Prompt ✨</button>
+
+<div class="card" style="margin-top:12px;display:none" id="aiCard">
+<h4>AI Generated Background Result 🔥</h4>
+<img id="aiResult">
+<div style="display:flex;gap:8px;margin-top:10px">
+<button class="btn" onclick="downloadImg('ai')" style="flex:1">⬇ Download AI Photo</button>
+<button class="btn btn2" onclick="document.getElementById('aiResult').src='';document.getElementById('aiCard').style.display='none'" style="flex:1">Try Another Prompt</button>
+</div>
+</div>
+</div>
 
 <div class="whatsapp-card">
-<div><b>Need eCommerce Site?</b><br><span style="font-size:12px">We build store for vendors - Fast</span></div>
-<a href="https://wa.me/2348165043865?text=Hi%20ClearCode%20-%20I%20need%20eCommerce%20site" target="_blank">WhatsApp 08165043865</a>
+<div><b>Need eCommerce Site?</b><br><span style="font-size:11px">We build vendor stores</span></div>
+<a href="https://wa.me/2348165043865?text=Hi%20ClearCode%20-%20eCommerce%20site" target="_blank">WhatsApp</a>
 </div>
-
-<p style="text-align:center;color:#444;font-size:10px;margin-top:18px">100% free • No upload to server • Works offline on your phone</p>
 </div>
 
 <script>
-let originalFile, removedDataUrl;
-const fileInput=document.getElementById('file');
-const origImg=document.getElementById('orig');
-const resImg=document.getElementById('result');
-const preview=document.getElementById('preview');
-const removeBtn=document.getElementById('removeBtn');
-const uploadArea=document.getElementById('uploadArea');
-const prog=document.getElementById('prog');
-const bar=document.getElementById('bar');
+let originalFile, removedCanvas, removedDataUrl, productImgCache;
+const fileInput=document.getElementById('file'), origImg=document.getElementById('orig'), resImg=document.getElementById('result'), preview=document.getElementById('preview'), removeBtn=document.getElementById('removeBtn'), prog=document.getElementById('prog'), bar=document.getElementById('bar'), promptBox=document.getElementById('promptBox');
 
-uploadArea.addEventListener('dragover',e=>{e.preventDefault();uploadArea.classList.add('dragover')});
-uploadArea.addEventListener('dragleave',()=>uploadArea.classList.remove('dragover'));
-uploadArea.addEventListener('drop',e=>{
- e.preventDefault(); uploadArea.classList.remove('dragover');
- if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-});
-
-fileInput.addEventListener('change',e=>{
- if(e.target.files[0]) handleFile(e.target.files[0]);
-});
+document.getElementById('uploadArea').addEventListener('dragover',e=>{e.preventDefault();e.currentTarget.classList.add('dragover')});
+document.getElementById('uploadArea').addEventListener('dragleave',e=>e.currentTarget.classList.remove('dragover'));
+document.getElementById('uploadArea').addEventListener('drop',e=>{e.preventDefault(); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0])});
+fileInput.addEventListener('change',e=>{if(e.target.files[0]) handleFile(e.target.files[0])});
 
 function handleFile(f){
- originalFile=f;
- if(f.size>10*1024*1024){alert('File too big - max 10MB');return;}
- let r=new FileReader();
+ originalFile=f; let r=new FileReader();
  r.onload=e=>{
-  origImg.src=e.target.result;
-  preview.style.display='grid';
-  removeBtn.style.display='block';
-  resImg.src='';
-  removedDataUrl=null;
-  uploadArea.querySelector('h3').innerText=f.name;
- };
- r.readAsDataURL(f);
+  origImg.src=e.target.result; preview.style.display='grid'; removeBtn.style.display='block'; promptBox.style.display='none'; resImg.src=''; removedDataUrl=null;
+  document.getElementById('uploadArea').querySelector('h3').innerText=f.name;
+ }; r.readAsDataURL(f);
 }
+
+function setPrompt(t){ document.getElementById('prompt').value=t; }
 
 async function removeBG(){
  if(!originalFile) return;
- removeBtn.innerText='Removing... ⏳'; removeBtn.disabled=true;
- prog.style.display='block'; bar.style.width='20%';
+ removeBtn.innerText='AI Removing... ⏳'; removeBtn.disabled=true; prog.style.display='block'; bar.style.width='20%';
+ let img=new Image(); img.src=origImg.src; await img.decode(); bar.style.width='50%';
+ let canvas=document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0);
+ let id=ctx.getImageData(0,0,canvas.width,canvas.height); let data=id.data;
+ for(let i=0;i<data.length;i+=4){ let r=data[i],g=data[i+1],b=data[i+2]; if(r>210&&g>210&&b>210 && Math.abs(r-g)<22 && Math.abs(g-b)<22){ data[i+3]=0; } }
+ ctx.putImageData(id,0,0); bar.style.width='90%';
+ removedCanvas=canvas; removedDataUrl=canvas.toDataURL('image/png'); resImg.src=removedDataUrl;
+ productImgCache=new Image(); productImgCache.src=removedDataUrl; await productImgCache.decode();
+ bar.style.width='100%'; setTimeout(()=>prog.style.display='none',400);
+ removeBtn.innerText='✅ Background Removed'; promptBox.style.display='block';
+ document.getElementById('promptBox').scrollIntoView({behavior:'smooth'});
+}
+
+async function generateBG(){
+ let prompt=document.getElementById('prompt').value.trim();
+ if(!prompt) return alert('Type prompt e.g: white studio background');
+ if(!removedCanvas) return alert('Remove background first');
+ let btn=event.target; btn.innerText='Generating AI Background... ⏳'; btn.disabled=true; prog.style.display='block'; bar.style.width='30%';
  try{
-  // Client-side white bg detection + transparent
-  let img=new Image();
-  img.src=origImg.src;
-  await img.decode();
+  // Generate background via Pollinations AI (free)
+  let seed=Math.floor(Math.random()*1000000);
+  let bgUrl=`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ', product photography background, 4k, high detail, no object, empty background, studio') }?width=1024&height=1024&seed=${seed}&nologo=true`;
   bar.style.width='60%';
-  let canvas=document.createElement('canvas');
-  canvas.width=img.width; canvas.height=img.height;
-  let ctx=canvas.getContext('2d');
-  ctx.drawImage(img,0,0);
-  let id=ctx.getImageData(0,0,canvas.width,canvas.height);
-  let data=id.data;
-  // Simple white bg remover - works for product photos
-  for(let i=0;i<data.length;i+=4){
-   let r=data[i],g=data[i+1],b=data[i+2];
-   // If pixel is near white (for product photos)
-   if(r>210 && g>210 && b>210 && Math.abs(r-g)<20 && Math.abs(g-b)<20){
-    data[i+3]=0; // transparent
-   }
-  }
-  ctx.putImageData(id,0,0);
-  bar.style.width='90%';
-  removedDataUrl=canvas.toDataURL('image/png');
-  resImg.src=removedDataUrl;
-  bar.style.width='100%';
-  setTimeout(()=>prog.style.display='none',500);
-  removeBtn.innerText='✅ Done - Download Below';
+  let bgImg=new Image(); bgImg.crossOrigin='anonymous'; bgImg.src=bgUrl;
+  await new Promise((res,rej)=>{ bgImg.onload=res; bgImg.onerror=rej; setTimeout(rej,15000); });
+  bar.style.width='80%';
+  // Composite product over AI background
+  let finalCanvas=document.createElement('canvas'); finalCanvas.width=1024; finalCanvas.height=1024; let fctx=finalCanvas.getContext('2d');
+  fctx.drawImage(bgImg,0,0,1024,1024);
+  // Center product
+  let scale=Math.min(800/productImgCache.width, 800/productImgCache.height);
+  let w=productImgCache.width*scale, h=productImgCache.height*scale;
+  fctx.drawImage(productImgCache, (1024-w)/2, (1024-h)/2, w,h);
+  let finalUrl=finalCanvas.toDataURL('image/png');
+  document.getElementById('aiResult').src=finalUrl; document.getElementById('aiCard').style.display='block'; document.getElementById('aiCard').dataset.url=finalUrl;
+  bar.style.width='100%'; prog.style.display='none'; btn.innerText='Generate AI Background with Prompt ✨'; btn.disabled=false;
+  document.getElementById('aiCard').scrollIntoView({behavior:'smooth'});
  }catch(e){
-  alert('Failed, try another photo with white background');
-  removeBtn.innerText='Remove Background';
-  removeBtn.disabled=false;
-  prog.style.display='none';
+  alert('AI busy, try again - or try shorter prompt'); prog.style.display='none'; btn.innerText='Generate AI Background with Prompt ✨'; btn.disabled=false;
  }
 }
 
 function whiteBg(){
- if(!removedDataUrl) return alert('Remove background first');
- let img=new Image();
- img.src=removedDataUrl;
- img.onload=()=>{
-  let c=document.createElement('canvas');
-  c.width=img.width; c.height=img.height;
-  let x=c.getContext('2d');
-  x.fillStyle='#ffffff'; x.fillRect(0,0,c.width,c.height);
-  x.drawImage(img,0,0);
-  resImg.src=c.toDataURL('image/png');
-  removedDataUrl=c.toDataURL('image/png');
- }
+ if(!removedCanvas) return;
+ let c=document.createElement('canvas'); c.width=removedCanvas.width; c.height=removedCanvas.height; let x=c.getContext('2d');
+ x.fillStyle='#ffffff'; x.fillRect(0,0,c.width,c.height); x.drawImage(removedCanvas,0,0);
+ resImg.src=c.toDataURL('image/png'); removedDataUrl=c.toDataURL('image/png');
 }
 
-function downloadImg(){
- if(!removedDataUrl) return alert('Remove background first');
- let a=document.createElement('a');
- a.href=removedDataUrl;
- a.download='clearcode-bg-removed.png';
- a.click();
+function downloadImg(type){
+ let url=type=='ai'? document.getElementById('aiCard').dataset.url : removedDataUrl;
+ if(!url) return alert('Generate first');
+ let a=document.createElement('a'); a.href=url; a.download=type=='ai'?'clearcode-ai-bg.png':'clearcode-bg-removed.png'; a.click();
 }
 </script>
 </body>

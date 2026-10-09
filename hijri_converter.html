@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hijri to Gregorian Converter - التقويم الهجري 2026</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px} .card{background:#121212;border:1px solid #222;border-radius:16px;padding:16px} input{width:100%;padding:12px;border-radius:10px;background:#080808;border:1px solid #333;color:#fff;margin-top:8px} .btn{width:100%;padding:14px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;margin-top:12px}</style>
+</head><body>
+<a href="/" style="color:#00FF88">← Home</a>
+<div class="card"><h2>🗓️ Hijri ↔ Gregorian</h2>
+<input type="date" id="gdate" onchange="toHijri()"><div id="hijriOut" style="margin-top:12px;font-size:22px;font-weight:900;color:#00FF88"></div>
+<p style="margin-top:12px;color:#888;font-size:11px">Hijri Today (approx): <span id="today"></span></p>
+</div>
+<script>
+function toHijri(){
+let d=new Date(document.getElementById('gdate').value);
+if(!d.getTime()) return;
+let hijri = new Intl.DateTimeFormat('ar-SA-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(d);
+document.getElementById('hijriOut').innerText=hijri;
+}
+document.getElementById('today').innerText=new Intl.DateTimeFormat('ar-SA-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(new Date());
+</script>
+</body></html>

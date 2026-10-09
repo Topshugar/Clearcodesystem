@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Delivery Fee Calculator - Premium 4K + Slider</title>
-<meta name="description" content="Lagos delivery fee calculator with receipt 4K">
+<title>Delivery Fee Calculator Lagos - Dispatch Rider Price + 4K Receipt 2026 | ClearCode</title>
+<meta name="description" content="Free Lagos delivery fee calculator. Calculate dispatch rider fee by KM, weight, urgent. Generate 4K receipt to send customer on WhatsApp.">
+<meta name="keywords" content="delivery fee calculator lagos, dispatch rider calculator, delivery price nigeria, waybill calculator lagos">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://clearcode.quest/tool/delivery-fee">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Delivery Fee Calculator Lagos + 4K","url":"https://clearcode.quest/tool/delivery-fee","applicationCategory":"BusinessApplication","offers":{"@type":"Offer","price":"0"}}
+</script>
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -16,6 +22,9 @@ body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
 .wrap{max-width:1000px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
 @media(max-width:850px){.wrap{grid-template-columns:1fr}}
 .panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+.seo-mini{background:#0F0F0F;border:1px solid #222;border-radius:10px;padding:10px;margin-bottom:10px}
+.seo-mini h1{font-size:13px;font-weight:900}
+.seo-mini p{font-size:10px;color:#888;margin-top:3px;line-height:1.4}
 label{font-size:10px;color:#888;text-transform:uppercase;margin-top:10px;display:block;font-weight:800}
 input,select{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px;font-weight:700}
 .btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
@@ -32,12 +41,16 @@ input,select{width:100%;padding:11px;background:#080808;border:1px solid #333;co
 .compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:11}
 .label-before{left:10px;background:#000;color:#fff}
 .label-after{right:10px;background:#00FF88;color:#000}
+.faq{background:#0F0F0F;border:1px solid #222;border-radius:10px;padding:10px;margin-top:10px}
+.faq b{font-size:10px;color:#00FF88}
+.faq p{font-size:10px;color:#666;margin:3px 0 8px}
 </style>
 </head>
 <body>
-<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">DELIVERY FEE V3 - PREMIUM + 4K + SLIDER</span><span class="badge">LAGOS • 4K</span></div>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">DELIVERY FEE V3 - SEO FIXED 2026</span><span class="badge">LAGOS • 4K</span></div>
 <div class="wrap">
 <div class="panel">
+<div class="seo-mini"><h1>Delivery Fee Calculator Lagos - Dispatch Rider Price</h1><p>Calculate delivery fee by area, KM, weight, urgent. Free receipt in 4K HD to send customer on WhatsApp.</p></div>
 <label>From (Area)</label>
 <select id="from"><option>Ikeja</option><option>Yaba</option><option>Lekki</option><option>Ikoyi</option><option>Surulere</option><option>Mainland</option><option>Island</option><option>Ajah</option><option>Ikorodu</option><option>Festac</option></select>
 <label>To (Area)</label>
@@ -49,9 +62,10 @@ input,select{width:100%;padding:11px;background:#080808;border:1px solid #333;co
 <label>Urgent?</label>
 <select id="urgent" onchange="calc()"><option value="1">Normal - 24hrs</option><option value="1.5">Urgent - 3hrs (+50%)</option><option value="2">Express - 1hr (+100%)</option></select>
 <button class="btn" onclick="calc()">Calculate Delivery Fee</button>
-<button class="btn btn4k" onclick="download4k()">🔥 Download Receipt 4K</button>
+<button class="btn btn4k" onclick="download4k()">🔥 Download Receipt 4K HD</button>
 <button class="btn btn2" onclick="toggleSlider()">↔️ Before / After Slider</button>
 <button class="btn btn2" onclick="shareWA()">📱 Share on WhatsApp</button>
+<div class="faq"><b>Q: How is delivery fee calculated?</b><p>Base ₦1500 + ₦120 per KM x weight x urgency. Fair for Lagos fuel price.</p><p>Related: <a href="/tool/pos-charges" style="color:#00FF88">POS Charges</a> | <a href="/" style="color:#00FF88">All Tools</a></p></div>
 </div>
 <div style="position:relative">
 <div id="receipt" class="receipt">
@@ -95,7 +109,7 @@ function calc(){
  document.getElementById('compareAfter').innerHTML=document.getElementById('receipt').innerHTML;
 }
 async function download4k(){
- let canvas=await html2canvas(document.getElementById('receipt'),{scale:4}); let a=document.createElement('a'); a.href=canvas.toDataURL(); a.download='delivery-receipt-4k.png'; a.click();
+ let canvas=await html2canvas(document.getElementById('receipt'),{scale:4}); let a=document.createElement('a'); a.href=canvas.toDataURL(); a.download='clearcode-delivery-receipt-4k.png'; a.click();
 }
 function toggleSlider(){
  let r=document.getElementById('receipt'), c=document.getElementById('compareWrap');

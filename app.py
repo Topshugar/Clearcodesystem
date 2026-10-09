@@ -2,6 +2,22 @@ from flask import Flask, render_template, request, jsonify
 import qrcode, os, io, base64
 from datetime import datetime
 import paramiko
+from PIL import Image
+
+# --- Try load rembg - if not installed, fallback won't crash app ---
+try:
+    from rembg import remove, new_session
+    try:
+        human_session = new_session("u2net_human_seg")
+        cloth_session = new_session("isnet-general-use")
+    except:
+        human_session = None
+        cloth_session = None
+    REMBG_AVAILABLE = True
+except ImportError:
+    REMBG_AVAILABLE = False
+    human_session = None
+    cloth_session = None
 
 app = Flask(__name__)
 
@@ -11,9 +27,8 @@ def home():
     return render_template('index.html')
 
 @app.route('/tool/builder')
-@app.route('/tool/store-builder')  # <--- FIX for your new homepage
+@app.route('/tool/store-builder')
 def builder(): 
-    # your file is builder.html not store_builder.html
     return render_template('builder.html')
 
 @app.route('/tool/wa-qr')
@@ -85,36 +100,61 @@ def gen_qr():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# --- API: RULER TERMINAL (V2 + MORE COMMANDS FOR RETENTION) ---
+# --- API: BG REMOVE - REAL HUMAN MODEL - FIXES YOUR SCREENSHOT ---
+@app.route('/api/bg-remove', methods=['POST'])
+def api_bg_remove():
+    try:
+        if not REMBG_AVAILABLE:
+            return jsonify({'error': 'rembg not installed - add rembg + onnxruntime to requirements.txt'}), 500
+
+        file = request.files.get('image')
+        if not file:
+            return jsonify({'error': 'No image uploaded'}), 400
+
+        mode = request.form.get('mode', 'human')
+        input_img = Image.open(file.stream).convert('RGBA')
+
+        if mode == 'human' and human_session:
+            # Best for your hoodie photo - locks on person
+            output = remove(input_img, session=human_session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10)
+        elif cloth_session:
+            output = remove(input_img, session=cloth_session, alpha_matting=True)
+        else:
+            output = remove(input_img)
+
+        buf = io.BytesIO()
+        output.save(buf, format='PNG')
+        b64 = base64.b64encode(buf.getvalue()).decode()
+        return jsonify({'result': f'data:image/png;base64,{b64}'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# --- API: RULER TERMINAL ---
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    
-    # Premium outputs to keep user typing = more Monetag views
     outs = {
-        'help': 'Available: help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime, monetag',
-        'ls': 'builder.html  wa_qr.html  invoice.html  bg_remover.html  pos_charges.html  delivery_fee.html  price_tag.html  profit_calculator.html  debt_book.html  clear_shell.html  ruler_terminal.html  gamer_tag.html  sensitivity.html  clan_logo.html  tournament.html  paycheck.html  fake_text.html  tip_calculator.html  usa_notify.html',
+        'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),
         'clear': '__CLEAR__',
-        'free': 'Mem: 3.8Gi total, 1.2Gi used, 2.2Gi free - ClearCode VPS',
-        'df': 'Filesystem 50G Used 12G Avail 36G Use% 25% Mounted on /',
-        'uptime': 'up 12 days, 4:23, 1 user, load average: 0.08 - ClearCode VPS',
-        'vendors': '5,231+ vendors using ClearCode tools - 19 tools premium 4K',
-        'banner': ' ██████╗██╗     ███████╗ █████╗ ██████╗  ██████╗ ██████╗ ██████╗ ███████╗\n██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝\n██║     ██║     █████╗  ███████║██████╔╝██║     ██║   ██║██║  ██║█████╗\n██║     ██║     ██╔══╝  ██╔══██║██╔══██╗██║     ██║   ██║██║  ██║██╔══╝\n╚██████╗███████╗███████╗██║  ██║██║  ██║╚██████╗╚██████╔╝██████╔╝███████╗',
-        'neofetch': 'root@clearcode-vps\nOS: Ubuntu 22.04 LTS\nHost: ClearCode VPS\nUptime: 12 days\nMemory: 1.2GiB / 3.8GiB\nDisk: 12G / 50G',
-        'hack': '[ACCESS GRANTED] - ClearCode premium terminal - fake hacker mode for TikTok',
-        'matrix': '010101010101 - MATRIX MODE - Record this for content',
-        'monetag': 'Monetag Active - Zone 11970643 + Vignette 11988352 - Keep typing to trigger',
+        'free': 'Mem: 3.8Gi total, 1.2Gi used, 2.2Gi free',
+        'df': 'Filesystem 50G Used 12G Avail 36G Use% 25% /',
+        'uptime': 'up 12 days - ClearCode VPS',
+        'vendors': '5,231+ vendors using ClearCode',
+        'neofetch': 'root@clearcode-vps\nOS: Ubuntu 22.04 LTS\nUptime: 12 days\nMemory: 1.2GiB / 3.8GiB',
+        'hack': '[ACCESS GRANTED] ClearCode premium',
+        'matrix': '010101 MATRIX MODE',
     }
     if cmd.startswith('echo '):
         return jsonify({'output': cmd[5:]})
     if cmd == '':
         return jsonify({'output': ''})
-    return jsonify({'output': outs.get(cmd, f'Command not found: {cmd} - type help')})
+    return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
-# --- API: CLEAR-SHELL REAL VPS (your current exec method - works without upgrade) ---
+# --- API: CLEAR-SHELL REAL VPS ---
 @app.route('/api/clear-shell', methods=['POST'])
 def shell_api():
     d = request.json
@@ -125,16 +165,15 @@ def shell_api():
         cmd = d.get('cmd','').strip()
         if not host or not pwd or not cmd:
             return jsonify({'output': 'Error: host, password and command required'})
-        
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(host, username=user, password=pwd, timeout=8, banner_timeout=8, auth_timeout=8)
         stdin, stdout, stderr = client.exec_command(cmd, timeout=10)
         out = stdout.read().decode(errors='ignore') + stderr.read().decode(errors='ignore')
         client.close()
-        return jsonify({'output': out or '(No output - command executed)'})
+        return jsonify({'output': out or '(No output)'})
     except Exception as e:
-        return jsonify({'output': f'Error: {str(e)} - Check IP/user/password'})
+        return jsonify({'output': f'Error: {str(e)}'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -4,7 +4,6 @@ from datetime import datetime
 import paramiko
 from PIL import Image
 
-# --- FIX FOR 512Mi - LAZY LOAD (no crash at boot) ---
 REMBG_AVAILABLE = False
 human_session = None
 cloth_session = None
@@ -31,9 +30,9 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP STRICT FILTER ---
+# --- GEO IP STRICT FILTER - UPDATED ---
 COUNTRY_TOOLS = {
- 'NG': ['pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell'],
  'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text','usa_notify'],
  'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa'],
 }
@@ -41,7 +40,6 @@ COUNTRY_TOOLS = {
 COUNTRY_NAME = {'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇺🇸 USA','AE':'🇸🇦 Saudi','QA':'🇸🇦 Saudi','KW':'🇸🇦 Saudi','BH':'🇸🇦 Saudi','OM':'🇸🇦 Saudi','EG':'🇸🇦 Saudi'}
 
 def get_country():
-    # Allow?country=US override for testing
     test = request.args.get('country')
     if test and len(test)==2:
         return test.upper()
@@ -68,9 +66,8 @@ def map_to_group(code):
         return 'US'
     if code in ['SA','AE','QA','KW','BH','OM','EG']:
         return 'SA'
-    return 'NG' # default to NG for others
+    return 'NG'
 
-# --- HOME STRICT ---
 @app.route('/')
 def home():
     raw_country = get_country()
@@ -144,7 +141,6 @@ def tip_calculator(): return render_template('tip_calculator.html')
 
 @app.route('/tool/whatsapp-broadcast')
 @app.route('/tool/whatsapp_broadcast')
-@app.route('/template/whatsapp_broadcast.html')
 def whatsapp_broadcast():
     return render_template('whatsapp_broadcast.html')
 
@@ -154,7 +150,7 @@ def whatsapp_broadcast():
 def background_check():
     return render_template('usa_background_check.html')
 
-# --- NEW SAUDI TOOLS ---
+# --- SAUDI ---
 @app.route('/tool/iqama-expiry')
 def iqama_expiry(): return render_template('iqama_expiry.html')
 
@@ -173,10 +169,20 @@ def gpa_calculator(): return render_template('gpa_calculator.html')
 @app.route('/tool/salary-sa')
 def salary_sa(): return render_template('salary_sa.html')
 
-# --- SEO: SITEMAP + ROBOTS - FIXED DOMAIN ---
+# --- NEW NIGERIA HIGH TRAFFIC ---
+@app.route('/tool/nepa-calculator')
+def nepa_calculator(): return render_template('nepa_calculator.html')
+
+@app.route('/tool/cac-checker')
+def cac_checker(): return render_template('cac_checker.html')
+
+@app.route('/tool/fuel-calculator')
+def fuel_calculator(): return render_template('fuel_calculator.html')
+
+# --- SEO ---
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
@@ -232,7 +238,7 @@ def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
     outs = {
         'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html unlock.html iqama_expiry.html hijri_converter.html gosi_calculator.html zatca_qr.html',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html usa_background_check.html unlock.html iqama_expiry.html hijri_converter.html gosi_calculator.html zatca_qr.html nepa_calculator.html cac_checker.html fuel_calculator.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),

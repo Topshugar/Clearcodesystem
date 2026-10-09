@@ -1,97 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Debt Book - Premium 4K + Slider</title>
+<meta name="description" content="Track who owes you - 4K debt report">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<title>Debt Book</title>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-body{margin:0;background:#060606;color:#fff;font-family:Arial;padding:12px}
-.card{background:#111;border:1px solid #1d1d1d;border-radius:16px;padding:14px;margin:10px 0}
-input,button{width:100%;padding:14px;margin:6px 0;border-radius:12px;border:1px solid #222;background:#0a0a0a;color:#fff;box-sizing:border-box}
-button{font-weight:bold;border:0;font-size:15px}
-.btn-add{background:#a855f7;color:#fff}
-.btn-pay{background:#00ff88;color:#000;padding:6px 10px;width:auto;font-size:12px;border-radius:8px}
-.btn-del{background:#ff3b3b;color:#fff;padding:6px 10px;width:auto;font-size:12px;border-radius:8px}
-.btn-wa{background:#25D366;color:#000;padding:6px 10px;width:auto;font-size:12px;border-radius:8px}
-.item{background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:12px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
-.total{background:#a855f7;color:#fff;padding:18px;border-radius:16px;text-align:center;font-weight:bold;font-size:22px;margin:10px 0}
-small{color:#888}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:9px;background:linear-gradient(90deg,#FF4444,#FF8C00);color:#fff;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:1000px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
+@media(max-width:850px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+label{font-size:10px;color:#888;text-transform:uppercase;margin-top:10px;display:block;font-weight:800}
+input{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px;font-weight:700}
+.btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.btn4k{background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000}
+.btn-red{background:#331a1a;color:#ff6666;border:1px solid #442222}
+.debt-list{max-height:300px;overflow:auto;margin-top:10px}
+.debt-item{background:#0F0F0F;border:1px solid #222;border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.debt-item b{font-size:13px}
+.debt-item span{font-size:11px;color:#888}
+.report{background:#fff;color:#000;border-radius:16px;padding:20px;min-height:500px}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.row.total{font-weight:900;font-size:18px;background:#000;color:#fff;padding:14px;border-radius:12px;border-bottom:0;margin-top:10px}
+.compare-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;min-height:500px;background:#fff;display:none}
+.compare-after{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:inset(0 0 0 50%);background:#fff}
+.compare-slider{position:absolute;top:0;left:50%;width:3px;height:100%;background:#00FF88;z-index:10}
+.compare-handle{position:absolute;top:50%;left:50%;width:36px;height:36px;background:#00FF88;border:3px solid #000;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;cursor:ew-resize}
+.compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:11}
+.label-before{left:10px;background:#000;color:#fff}
+.label-after{right:10px;background:#00FF88;color:#000}
 </style>
 </head>
 <body>
-<a href="/" style="color:#a855f7;text-decoration:none">← System</a>
-<h2 style="margin:10px 0 0">Debt Book 📒</h2>
-<small>Saved on your phone only - offline</small>
-
-<div id="total" class="total">Total Owed: ₦0</div>
-
-<div class="card">
-<input id="name" placeholder="Customer Name e.g. Mama Nkechi">
-<input id="phone" placeholder="Phone e.g. 080... (optional)">
-<input id="amount" type="number" placeholder="Amount Owed e.g. 5000">
-<input id="item" placeholder="Item e.g. 2 shoes (optional)">
-<button class="btn-add" onclick="addDebt()">+ ADD DEBT</button>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">DEBT BOOK V3 - PREMIUM + 4K + SLIDER</span><span class="badge">DEBT • 4K</span></div>
+<div class="wrap">
+<div class="panel">
+<label>Customer Name</label>
+<input id="cName" placeholder="e.g Chidera">
+<label>Amount Owed (₦)</label>
+<input id="cAmount" type="number" placeholder="5000">
+<label>What they bought</label>
+<input id="cItem" placeholder="e.g 2 bags">
+<button class="btn" onclick="addDebt()">+ Add to Debt Book</button>
+<div class="debt-list" id="debtList"></div>
+<button class="btn btn4k" onclick="download4k()">🔥 Download 4K Debt Report</button>
+<button class="btn btn2" onclick="toggleSlider()">↔️ Before / After Slider</button>
+<button class="btn btn-red" onclick="clearAll()">Clear All</button>
 </div>
-
-<div id="list"></div>
-
-<div class="card" style="text-align:center">
-<button onclick="clearAll()" style="background:#222;color:#fff">Clear All Debts</button>
-<small>Tip: Tap WhatsApp to remind customer</small>
+<div style="position:relative">
+<div id="report" class="report">
+<div style="display:flex;justify-content:space-between"><h2 style="font-weight:900">Debt Book Report</h2><span id="countBadge" style="background:#FF4444;color:#fff;font-size:10px;padding:4px 10px;border-radius:20px;font-weight:900">0 PEOPLE</span></div>
+<div style="font-size:11px;color:#888;margin-top:2px" id="dateText"></div>
+<div style="margin-top:16px" id="reportList"></div>
+<div class="row total"><span>Total Owed to You</span><span id="rTotal">₦0</span></div>
+<div style="margin-top:12px;background:#f5f5f5;border-radius:10px;padding:10px;font-size:10px;color:#666">Send this report to debtors on WhatsApp • ClearCode Debt Book • 08165043865 • clearcode.quest/tool/debt-book</div>
 </div>
-
+<div class="compare-wrap" id="compareWrap">
+<div style="padding:20px;color:#aaa;background:#f5f5f5;height:100%">NO DEBT - BLANK</div>
+<div class="compare-after" id="compareAfter" style="padding:20px"></div>
+<div class="compare-slider" id="compareSlider"><div class="compare-handle">↔</div></div>
+<span class="compare-label label-before">BLANK</span><span class="compare-label label-after">YOUR DEBT BOOK • 4K</span>
+</div>
+</div>
+</div>
 <script>
-let debts = JSON.parse(localStorage.getItem('cc_debts')||'[]');
-function save(){ localStorage.setItem('cc_debts', JSON.stringify(debts)); render(); }
+let debts=JSON.parse(localStorage.getItem('cc_debts')||'[]');
+function save(){ localStorage.setItem('cc_debts', JSON.stringify(debts)); }
 function addDebt(){
- let name=document.getElementById('name').value.trim();
- let phone=document.getElementById('phone').value.trim();
- let amount=parseFloat(document.getElementById('amount').value);
- let item=document.getElementById('item').value.trim();
- if(!name||!amount){ alert('Enter name and amount'); return; }
- debts.unshift({id:Date.now(), name, phone, amount, item, date:new Date().toLocaleDateString()});
- document.getElementById('name').value=''; document.getElementById('phone').value=''; document.getElementById('amount').value=''; document.getElementById('item').value='';
- save();
+ let name=document.getElementById('cName').value.trim();
+ let amt=parseFloat(document.getElementById('cAmount').value)||0;
+ let item=document.getElementById('cItem').value.trim();
+ if(!name||!amt) return alert('Enter name and amount');
+ debts.push({name,amount:amt,item,date:new Date().toLocaleDateString()});
+ document.getElementById('cName').value=''; document.getElementById('cAmount').value=''; document.getElementById('cItem').value='';
+ save(); render();
 }
-function payDebt(id){
- let d=debts.find(x=>x.id===id);
- let pay=prompt(`How much did ${d.name} pay? Owed: ₦${d.amount}`, d.amount);
- if(!pay) return;
- pay=parseFloat(pay);
- d.amount -= pay;
- if(d.amount<=0){ if(confirm(`${d.name} cleared debt! Remove?`)){ debts=debts.filter(x=>x.id!==id); } else { d.amount=0; } }
- save();
-}
-function deleteDebt(id){ if(confirm('Delete this debt?')){ debts=debts.filter(x=>x.id!==id); save(); } }
-function waRemind(id){
- let d=debts.find(x=>x.id===id);
- let msg=`Hello ${d.name}, you have an outstanding balance of ₦${d.amount.toLocaleString()}${d.item?' for '+d.item:''} as of ${d.date}. Please pay at your convenience. - From ClearCode System`;
- let url=d.phone?`https://wa.me/234${d.phone.slice(-10)}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`;
- window.open(url,'_blank');
-}
-function clearAll(){ if(confirm('Clear ALL debts?')){ debts=[]; save(); } }
+function removeDebt(i){ debts.splice(i,1); save(); render(); }
+function clearAll(){ if(confirm('Clear all debts?')){ debts=[]; save(); render(); } }
 function render(){
- let list=document.getElementById('list');
- let total=debts.reduce((s,x)=>s+x.amount,0);
- document.getElementById('total').innerText=`Total Owed: ₦${total.toLocaleString()} | ${debts.length} debtors`;
- if(debts.length===0){ list.innerHTML='<p style="text-align:center;color:#555;margin:30px">No debts yet</p>'; return; }
- list.innerHTML=debts.map(d=>`
-  <div class="item">
-   <div>
-    <b>${d.name}</b> <small>${d.date}</small><br>
-    <span style="color:#a855f7;font-weight:bold">₦${d.amount.toLocaleString()}</span> ${d.item?`<small>${d.item}</small>`:''}<br>
-    ${d.phone?`<small>📞 ${d.phone}</small>`:''}
-   </div>
-   <div style="display:flex;flex-direction:column;gap:6px">
-    <button class="btn-pay" onclick="payDebt(${d.id})">PAY</button>
-    <button class="btn-wa" onclick="waRemind(${d.id})">WA</button>
-    <button class="btn-del" onclick="deleteDebt(${d.id})">X</button>
-   </div>
-  </div>`).join('');
+ let list=document.getElementById('debtList'); list.innerHTML='';
+ let reportList=document.getElementById('reportList'); reportList.innerHTML='';
+ let total=0;
+ debts.forEach((d,i)=>{
+  total+=d.amount;
+  list.innerHTML+=`<div class="debt-item"><div><b>${d.name}</b><br><span>${d.item||'Debt'} • ${d.date}</span></div><div style="display:flex;align-items:center;gap:6px"><b>₦${d.amount.toLocaleString()}</b><button onclick="removeDebt(${i})" style="background:#331a1a;border:0;color:#ff6666;padding:4px 8px;border-radius:6px;cursor:pointer">✕</button></div></div>`;
+  reportList.innerHTML+=`<div class="row"><span><b>${d.name}</b> - ${d.item||''}<br><span style="font-size:10px;color:#888">${d.date}</span></span><b>₦${d.amount.toLocaleString()}</b></div>`;
+ });
+ document.getElementById('rTotal').innerText='₦'+total.toLocaleString();
+ document.getElementById('countBadge').innerText=debts.length+' PEOPLE';
+ document.getElementById('dateText').innerText=new Date().toLocaleString();
+ document.getElementById('compareAfter').innerHTML=document.getElementById('report').innerHTML;
 }
-render();
+async function download4k(){ let c=await html2canvas(document.getElementById('report'),{scale:4}); let a=document.createElement('a'); a.href=c.toDataURL(); a.download='debt-book-4k.png'; a.click(); }
+function toggleSlider(){ let r=document.getElementById('report'), c=document.getElementById('compareWrap'); if(c.style.display=='block'){c.style.display='none'; r.style.display='block'} else {c.style.display='block'; r.style.display='none'; render(); initSlider()} }
+function initSlider(){ let w=document.getElementById('compareWrap'), a=document.getElementById('compareAfter'), s=document.getElementById('compareSlider'), d=false; function u(x){ let rect=w.getBoundingClientRect(); let p=Math.max(5,Math.min(95,((x-rect.left)/rect.width)*100)); a.style.clipPath=`inset(0 0 0 ${p}%)`; s.style.left=p+'%'; } w.onmousedown=e=>{d=true; u(e.clientX)}; window.onmouseup=()=>d=false; window.onmousemove=e=>{if(d) u(e.clientX)}; w.ontouchstart=e=>{d=true; u(e.touches[0].clientX)}; w.ontouchmove=e=>{if(d) u(e.touches[0].clientX)}; }
+render(); initSlider();
 </script>
 </body>
-  </html>
+</html>

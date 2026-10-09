@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tip Calculator USA - Calculate Tip + Split Bill</title>
+<meta name="description" content="Free USA tip calculator - Calculate 15%, 18%, 20%, 25% tip. Split bill between friends. Best tip calculator for restaurants.">
+<meta name="keywords" content="tip calculator, tip calculator usa, 20 percent tip, split bill calculator, how much to tip">
+<!-- Monetag Pop + Vignette -->
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,sans-serif}
+.header{padding:14px;background:#0F0F0F;display:flex;justify-content:space-between;border-bottom:1px solid #1a1a1a;position:sticky;top:0;z-index:10}
+.wrap{max-width:900px;margin:auto;padding:16px;display:grid;grid-template-columns:1fr 360px;gap:16px}
+@media(max-width:750px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:20px}
+label{font-size:11px;color:#888;margin-top:14px;display:block;text-transform:uppercase;font-weight:800;letter-spacing:0.5px}
+input{width:100%;padding:14px;background:#080808;border:1px solid #333;color:#fff;border-radius:12px;margin-top:6px;font-size:16px;font-weight:700}
+.tip-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:8px}
+.tip-btn{padding:14px;background:#1a1a1a;border:1px solid #333;color:#fff;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px}
+.tip-btn.active{background:#00FF88;color:#000;border-color:#00FF88}
+.people{display:flex;align-items:center;gap:12px;margin-top:8px}
+.people button{width:44px;height:44px;border-radius:12px;background:#1a1a1a;border:1px solid #333;color:#fff;font-size:20px;font-weight:900;cursor:pointer}
+.result{background:#fff;color:#000;border-radius:20px;padding:22px}
+.result-row{display:flex;justify-content:space-between;margin-top:14px;padding-bottom:14px;border-bottom:1px solid #eee}
+.result-row.total{border-bottom:0;font-weight:900;font-size:20px;margin-top:16px}
+.big{font-size:28px;font-weight:900}
+.small{font-size:12px;color:#666}
+.btn{width:100%;padding:14px;background:#00FF88;color:#000;border:0;font-weight:900;border-radius:12px;margin-top:14px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header"><a href="/" style="color:#888;text-decoration:none">← Tools</a><span style="color:#00FF88;font-weight:900;font-size:12px">TIP CALCULATOR USA</span><div style="width:40px"></div></div>
+
+<div class="wrap">
+<div class="panel">
+<label>Bill Amount ($)</label>
+<input id="bill" type="number" value="85" inputmode="decimal" oninput="calc()">
+
+<label>Select Tip %</label>
+<div class="tip-grid">
+<button class="tip-btn" onclick="setTip(15)">15%</button>
+<button class="tip-btn" onclick="setTip(18)">18%</button>
+<button class="tip-btn active" id="t20" onclick="setTip(20)">20%</button>
+<button class="tip-btn" onclick="setTip(25)">25%</button>
+</div>
+<label>Custom Tip %</label>
+<input id="custom" type="number" placeholder="e.g 22" oninput="customTip()">
+
+<label>Split Between (People)</label>
+<div class="people">
+<button onclick="changeP(-1)">-</button>
+<input id="people" value="1" style="text-align:center" readonly>
+<button onclick="changeP(1)">+</button>
+<span style="color:#888;font-size:12px" id="ptext">1 person</span>
+</div>
+
+<button class="btn" onclick="calc()">CALCULATE TIP</button>
+<p style="font-size:10px;color:#555;text-align:center;margin-top:10px">Built for USA restaurants - ClearCode.quest</p>
+</div>
+
+<div class="panel result">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h3 style="font-size:14px">Summary</h3><span style="background:#00FF88;color:#000;font-size:10px;padding:4px 8px;border-radius:20px;font-weight:900">USA 2026</span>
+</div>
+
+<div class="result-row"><span class="small">Bill Amount</span><span id="rBill" style="font-weight:800">$85.00</span></div>
+<div class="result-row"><span class="small">Tip (<span id="rTipP">20</span>%)</span><span id="rTip" class="big" style="color:#00A651">$17.00</span></div>
+<div class="result-row"><span class="small">Total to Pay</span><span id="rTotal" style="font-weight:800">$102.00</span></div>
+<div class="result-row total"><span>Each Person Pays</span><span id="rEach" class="big">$102.00</span></div>
+
+<div style="margin-top:20px;background:#f5f5f5;border-radius:12px;padding:12px">
+<p style="font-size:11px;color:#666;font-weight:700">USA TIPPING GUIDE:</p>
+<p style="font-size:11px;color:#888;margin-top:6px;line-height:1.5">• Bad service: 15%<br>• Good service: 18-20%<br>• Excellent: 22-25%<br>• Bars: $1-2 per drink</p>
+</div>
+
+</div>
+</div>
+
+<script>
+let tip=20;
+function setTip(v){
+ tip=v;
+ document.querySelectorAll('.tip-btn').forEach(b=>b.classList.remove('active'));
+ if(v==15) document.querySelectorAll('.tip-btn')[0].classList.add('active');
+ if(v==18) document.querySelectorAll('.tip-btn')[1].classList.add('active');
+ if(v==20) document.getElementById('t20').classList.add('active');
+ if(v==25) document.querySelectorAll('.tip-btn')[3].classList.add('active');
+ document.getElementById('custom').value='';
+ calc();
+}
+function customTip(){
+ let c=parseFloat(document.getElementById('custom').value);
+ if(c>0){ tip=c; document.querySelectorAll('.tip-btn').forEach(b=>b.classList.remove('active')); calc(); }
+}
+function changeP(d){
+ let p=parseInt(document.getElementById('people').value)||1;
+ p=Math.max(1, Math.min(20, p+d));
+ document.getElementById('people').value=p;
+ document.getElementById('ptext').innerText=p==1?'1 person':p+' people';
+ calc();
+}
+function calc(){
+ let bill=parseFloat(document.getElementById('bill').value)||0;
+ let people=parseInt(document.getElementById('people').value)||1;
+ let tipAmt=bill*tip/100;
+ let total=bill+tipAmt;
+ let each=total/people;
+ document.getElementById('rBill').innerText='$'+bill.toFixed(2);
+ document.getElementById('rTipP').innerText=tip;
+ document.getElementById('rTip').innerText='$'+tipAmt.toFixed(2);
+ document.getElementById('rTotal').innerText='$'+total.toFixed(2);
+ document.getElementById('rEach').innerText='$'+each.toFixed(2);
+}
+calc();
+</script>
+</body>
+</html>

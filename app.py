@@ -4,20 +4,30 @@ from datetime import datetime
 import paramiko
 from PIL import Image
 
-# --- Try load rembg - if not installed, fallback won't crash app ---
-try:
-    from rembg import remove, new_session
+# --- FIX FOR 512Mi - LAZY LOAD (no crash at boot) ---
+REMBG_AVAILABLE = False
+human_session = None
+cloth_session = None
+
+def get_session(mode='human'):
+    global human_session, cloth_session, REMBG_AVAILABLE
     try:
-        human_session = new_session("u2net_human_seg")
-        cloth_session = new_session("isnet-general-use")
-    except:
-        human_session = None
-        cloth_session = None
-    REMBG_AVAILABLE = True
-except ImportError:
-    REMBG_AVAILABLE = False
-    human_session = None
-    cloth_session = None
+        from rembg import remove, new_session
+        REMBG_AVAILABLE = True
+        if mode == 'human' and human_session is None:
+            try:
+                human_session = new_session("u2net_human_seg")
+            except:
+                human_session = True  # fallback
+        elif cloth_session is None:
+            try:
+                cloth_session = new_session("isnet-general-use")
+            except:
+                cloth_session = True
+        return True
+    except Exception as e:
+        print(f"rembg init error: {e}")
+        return False
 
 app = Flask(__name__)
 
@@ -85,14 +95,12 @@ def fake_text(): return render_template('fake_text.html')
 @app.route('/tool/tip-calculator')
 def tip_calculator(): return render_template('tip_calculator.html')
 
-# --- NEW TOOL #20 ---
 @app.route('/tool/whatsapp-broadcast')
 @app.route('/tool/whatsapp_broadcast')
 @app.route('/template/whatsapp_broadcast.html')
 def whatsapp_broadcast(): 
     return render_template('whatsapp_broadcast.html')
 
-# --- API: QR GENERATOR ---
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
     try:
@@ -107,23 +115,23 @@ def gen_qr():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# --- API: BG REMOVE - REAL HUMAN MODEL ---
 @app.route('/api/bg-remove', methods=['POST'])
 def api_bg_remove():
     try:
-        if not REMBG_AVAILABLE:
-            return jsonify({'error': 'rembg not installed - add rembg + onnxruntime to requirements.txt'}), 500
-
         file = request.files.get('image')
         if not file:
             return jsonify({'error': 'No image uploaded'}), 400
-
         mode = request.form.get('mode', 'human')
+        
+        if not get_session(mode):
+            return jsonify({'error': 'AI loading, try again in 10s'}), 503
+            
+        from rembg import remove
         input_img = Image.open(file.stream).convert('RGBA')
 
-        if mode == 'human' and human_session:
+        if mode == 'human' and human_session and human_session != True:
             output = remove(input_img, session=human_session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10)
-        elif cloth_session:
+        elif cloth_session and cloth_session != True:
             output = remove(input_img, session=cloth_session, alpha_matting=True)
         else:
             output = remove(input_img)
@@ -135,7 +143,6 @@ def api_bg_remove():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# --- API: RULER TERMINAL ---
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
@@ -160,7 +167,6 @@ def ruler_api():
         return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
-# --- API: CLEAR-SHELL REAL VPS ---
 @app.route('/api/clear-shell', methods=['POST'])
 def shell_api():
     d = request.json

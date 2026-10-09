@@ -21,7 +21,7 @@ except ImportError:
 
 app = Flask(__name__)
 
-# --- HOME + ALL 19 TOOLS ---
+# --- HOME + ALL 20 TOOLS ---
 @app.route('/')
 def home(): 
     return render_template('index.html')
@@ -85,6 +85,13 @@ def fake_text(): return render_template('fake_text.html')
 @app.route('/tool/tip-calculator')
 def tip_calculator(): return render_template('tip_calculator.html')
 
+# --- NEW TOOL #20 ---
+@app.route('/tool/whatsapp-broadcast')
+@app.route('/tool/whatsapp_broadcast')
+@app.route('/template/whatsapp_broadcast.html')
+def whatsapp_broadcast(): 
+    return render_template('whatsapp_broadcast.html')
+
 # --- API: QR GENERATOR ---
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
@@ -100,7 +107,7 @@ def gen_qr():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# --- API: BG REMOVE - REAL HUMAN MODEL - FIXES YOUR SCREENSHOT ---
+# --- API: BG REMOVE - REAL HUMAN MODEL ---
 @app.route('/api/bg-remove', methods=['POST'])
 def api_bg_remove():
     try:
@@ -115,7 +122,6 @@ def api_bg_remove():
         input_img = Image.open(file.stream).convert('RGBA')
 
         if mode == 'human' and human_session:
-            # Best for your hoodie photo - locks on person
             output = remove(input_img, session=human_session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10)
         elif cloth_session:
             output = remove(input_img, session=cloth_session, alpha_matting=True)
@@ -135,7 +141,7 @@ def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
     outs = {
         'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
-        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html',
+        'ls': 'builder.html wa_qr.html invoice.html bg_remover.html usa_notify.html pos_charges.html delivery_fee.html price_tag.html profit_calculator.html debt_book.html clear_shell.html ruler_terminal.html gamer_tag.html sensitivity.html clan_logo.html tournament.html paycheck.html fake_text.html tip_calculator.html whatsapp_broadcast.html',
         'pwd': '/home/clearcode/vendors',
         'whoami': 'clearcode-vendor',
         'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),

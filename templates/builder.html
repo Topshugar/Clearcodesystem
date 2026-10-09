@@ -1,28 +1,158 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8">
-<meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>APK Builder - Tool 01</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Store Builder - Premium 4K + Slider - Free</title>
+<meta name="description" content="Build your online store in 60 seconds - 4K banner">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-body{background:#000;color:#fff;font-family:Arial;padding:15px;margin:0}
-.top{padding:10px 0;border-bottom:1px solid #222;margin-bottom:15px;display:flex;justify-content:space-between}
-input{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:8px 0;box-sizing:border-box}
-button{width:100%;padding:15px;border-radius:12px;border:none;background:#00ff88;color:#000;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
-.card{background:#0f0f0f;border:1px solid #222;border-radius:14px;padding:16px;margin-top:14px}
-.small{color:#666;font-size:12px}
-</style></head><body>
-<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span class="small">Tool 01: APK Builder</span></div>
-<h3>Website → Android App</h3>
-<p class="small">Enter your business website, we generate APK</p>
-<form action="/generate" method="POST">
-<input name="app_name" placeholder="App Name e.g My Store" required maxlength="25">
-<input name="url" placeholder="https://your-website.com" required type="url">
-<input name="phone" placeholder="Your WhatsApp 080..." required>
-<button type="submit">Generate APK → Download</button>
-</form>
-<div class="card small">Your leads are saved. After generate, test APK then contact customer on WhatsApp.</div>
-<div style="background:#00ff88;color:#000;padding:15px;border-radius:12px;margin-top:20px;text-align:center">
-<b>Need Professional App?</b><br><small>Remove ads, add logo, splash</small><br>
-<a href="https://wa.me/2348165043865?text=Hi%20I%20need%20pro%20app" style="display:inline-block;background:#000;color:#00ff88;padding:10px 20px;border-radius:8px;text-decoration:none;margin-top:8px;font-weight:bold">WhatsApp 08165043865</a>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:9px;background:linear-gradient(90deg,#00FF88,#a855f7);color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:1100px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px;max-height:92vh;overflow:auto}
+label{font-size:10px;color:#888;text-transform:uppercase;margin-top:10px;display:block;font-weight:800}
+input,select,textarea{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px;font-weight:600}
+textarea{resize:none}
+.btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.btn4k{background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.style-btn{padding:10px;border-radius:10px;border:1px solid #2a2a2a;background:#1a1a1a;color:#fff;font-size:11px;font-weight:800;cursor:pointer;text-align:center}
+.style-btn.active{border-color:#00FF88;background:#00FF88;color:#000}
+.product-row{background:#0F0F0F;border:1px solid #222;border-radius:10px;padding:8px;margin-top:8px;display:grid;grid-template-columns:1fr 80px 30px;gap:6px;align-items:center}
+.product-row input{margin-top:0;padding:8px;font-size:12px}
+.store-preview{background:#fff;color:#000;border-radius:16px;overflow:hidden;min-height:600px}
+.banner{height:180px;background:linear-gradient(135deg,#000,#333);color:#fff;display:flex;align-items:center;padding:20px;position:relative;overflow:hidden}
+.banner h1{font-size:28px;font-weight:900;line-height:1.1}
+.banner p{font-size:12px;opacity:0.7;margin-top:4px}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
+.prod-card{border:1px solid #eee;border-radius:12px;overflow:hidden}
+.prod-card img{width:100%;height:120px;object-fit:cover;background:#f5f5f5}
+.prod-info{padding:10px}
+.prod-info b{font-size:13px}
+.prod-info div{font-size:11px;color:#888}
+.price{color:#00A651;font-weight:900;font-size:14px;margin-top:4px}
+.compare-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;min-height:600px;background:#fff;display:none}
+.compare-after{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:inset(0 0 0 50%);background:#fff;overflow:auto}
+.compare-slider{position:absolute;top:0;left:50%;width:3px;height:100%;background:#00FF88;z-index:10}
+.compare-handle{position:absolute;top:50%;left:50%;width:36px;height:36px;background:#00FF88;border:3px solid #000;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;cursor:ew-resize}
+.compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:11}
+.label-before{left:10px;background:#000;color:#fff}
+.label-after{right:10px;background:#00FF88;color:#000}
+</style>
+</head>
+<body>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">STORE BUILDER V3 - PREMIUM + 4K + SLIDER</span><span class="badge">SHOPIFY KILLER • 4K</span></div>
+
+<div class="wrap">
+<div class="panel">
+<label>Store Name</label>
+<input id="sName" value="ClearCode Boutique" oninput="render()">
+
+<label>Store Slogan</label>
+<input id="sSlogan" value="Luxury Bags • Fast Delivery in Lagos" oninput="render()">
+
+<label>Choose Theme</label>
+<div class="style-grid">
+<button class="style-btn active" onclick="setTheme('black')">Black Pro</button>
+<button class="style-btn" onclick="setTheme('luxury')">Gold Luxury</button>
+<button class="style-btn" onclick="setTheme('minimal')">Minimal White</button>
+<button class="style-btn" onclick="setTheme('neon')">Neon</button>
 </div>
-</body></html>
+
+<label>WhatsApp Number</label>
+<input id="sWA" value="08165043865" oninput="render()">
+
+<label>AI Store Banner Prompt</label>
+<input id="bannerPrompt" placeholder="e.g luxury boutique, marble, gold">
+<button class="btn btn2" style="font-size:11px;padding:8px" onclick="genBanner()">✨ Generate AI Banner Background</button>
+
+<label>Products</label>
+<div id="prodInputs"></div>
+<button class="btn btn2" onclick="addProd()">+ Add Product</button>
+
+<button class="btn" onclick="downloadStore()">⬇ Download Store Banner HD</button>
+<button class="btn btn4k" onclick="download4k()">🔥 Upscale to 4K - For Instagram</button>
+<button class="btn btn2" onclick="toggleSlider()">↔️ Before / After Slider</button>
+<button class="btn" style="background:#25D366;color:#000" onclick="shareStore()">📱 Share Store on WhatsApp</button>
+</div>
+
+<div style="position:relative">
+<div id="store" class="store-preview">
+<div class="banner" id="banner">
+<div style="z-index:2"><h1 id="pName">ClearCode Boutique</h1><p id="pSlogan">Luxury Bags • Fast Delivery in Lagos</p><div style="margin-top:10px;background:#00FF88;color:#000;display:inline-block;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:900" id="pWA">Chat: 08165043865</div></div>
+<img id="bannerAI" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.6;display:none">
+</div>
+<div class="products" id="pProducts"></div>
+<div style="padding:12px;text-align:center;font-size:10px;color:#888;border-top:1px solid #f0f0f0">Powered by ClearCode.quest • Free Online Store Builder • 08165043865</div>
+</div>
+
+<div class="compare-wrap" id="compareWrap">
+<div style="padding:20px;color:#aaa;background:#f5f5f5;height:100%;display:flex;align-items:center;justify-content:center">BLANK STORE TEMPLATE</div>
+<div class="compare-after" id="compareAfter"></div>
+<div class="compare-slider" id="compareSlider"><div class="compare-handle">↔</div></div>
+<span class="compare-label label-before">BLANK TEMPLATE</span><span class="compare-label label-after">YOUR STORE • 4K</span>
+</div>
+</div>
+</div>
+
+<script>
+let theme='black', products=[{name:'Luxury Bag',price:25000,img:''},{name:'Heels',price:18000,img:''}], bannerImg=null;
+
+function setTheme(t){
+ theme=t; document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active');
+ let banner=document.getElementById('banner');
+ if(t=='black') banner.style.background='linear-gradient(135deg,#000,#222)';
+ if(t=='luxury') banner.style.background='linear-gradient(135deg,#FFD700,#B45309)';
+ if(t=='minimal') { banner.style.background='#fff'; banner.style.color='#000'; }
+ else banner.style.color='#fff';
+ if(t=='neon') banner.style.background='linear-gradient(135deg,#080808,#00FF88)';
+ render();
+}
+
+function addProd(){ products.push({name:'New Product',price:10000,img:''}); renderInputs(); render(); }
+function removeProd(i){ products.splice(i,1); renderInputs(); render(); }
+
+function renderInputs(){
+ let html=''; products.forEach((p,i)=>{
+  html+=`<div class="product-row"><input value="${p.name}" placeholder="Product name" oninput="products[${i}].name=this.value;render()"><input type="number" value="${p.price}" oninput="products[${i}].price=parseInt(this.value)||0;render()"><button onclick="removeProd(${i})" style="background:#331a1a;border:0;color:#ff6666;padding:6px;border-radius:6px;cursor:pointer">✕</button></div>`;
+ });
+ document.getElementById('prodInputs').innerHTML=html;
+}
+
+function render(){
+ document.getElementById('pName').innerText=document.getElementById('sName').value||'Your Store';
+ document.getElementById('pSlogan').innerText=document.getElementById('sSlogan').value||'Slogan';
+ document.getElementById('pWA').innerText='Chat: '+(document.getElementById('sWA').value||'');
+ let prodWrap=document.getElementById('pProducts'); prodWrap.innerHTML='';
+ products.forEach(p=>{
+  prodWrap.innerHTML+=`<div class="prod-card"><div style="height:120px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:30px">${p.img?'👜':'🛍️'}</div><div class="prod-info"><b>${p.name}</b><div>Available • Fast delivery</div><div class="price">₦${(p.price||0).toLocaleString()}</div></div></div>`;
+ });
+ document.getElementById('compareAfter').innerHTML=document.getElementById('store').innerHTML;
+}
+
+async function genBanner(){
+ let prompt=document.getElementById('bannerPrompt').value.trim();
+ if(!prompt) return alert('Type prompt e.g luxury boutique marble');
+ let url=`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt+', store banner, aesthetic, 4k, luxury') }?width=800&height=300&seed=${Math.floor(Math.random()*1000000)}&nologo=true`;
+ let img=new Image(); img.crossOrigin='anonymous'; img.src=url;
+ await new Promise((res,rej)=>{img.onload=res; img.onerror=rej; setTimeout(rej,15000);});
+ document.getElementById('bannerAI').src=url; document.getElementById('bannerAI').style.display='block';
+ bannerImg=img;
+}
+
+async function downloadStore(){ let c=await html2canvas(document.getElementById('store'),{scale:2}); let a=document.createElement('a'); a.href=c.toDataURL(); a.download='my-store-hd.png'; a.click(); }
+async function download4k(){ let c=await html2canvas(document.getElementById('store'),{scale:4}); let a=document.createElement('a'); a.href=c.toDataURL(); a.download='my-store-4k.png'; a.click(); alert('✅ 4K Store downloaded - Share on Instagram!'); }
+function shareStore(){ let name=document.getElementById('sName').value; window.open('https://wa.me/?text=Check my online store: '+name+' - Built with ClearCode.quest - Order via WhatsApp '+document.getElementById('sWA').value); }
+function toggleSlider(){ let s=document.getElementById('store'), c=document.getElementById('compareWrap'); if(c.style.display=='block'){c.style.display='none'; s.style.display='block'} else {c.style.display='block'; s.style.display='none'; render(); initSlider()} }
+function initSlider(){ let w=document.getElementById('compareWrap'), a=document.getElementById('compareAfter'), sl=document.getElementById('compareSlider'), d=false; function u(x){ let r=w.getBoundingClientRect(); let p=Math.max(5,Math.min(95,((x-r.left)/r.width)*100)); a.style.clipPath=`inset(0 0 0 ${p}%)`; sl.style.left=p+'%'; } w.onmousedown=e=>{d=true; u(e.clientX)}; window.onmouseup=()=>d=false; window.onmousemove=e=>{if(d) u(e.clientX)}; w.ontouchstart=e=>{d=true; u(e.touches[0].clientX)}; w.ontouchmove=e=>{if(d) u(e.touches[0].clientX)}; }
+renderInputs(); render(); initSlider();
+</script>
+</body>
+</html>

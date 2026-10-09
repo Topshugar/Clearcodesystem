@@ -1,55 +1,110 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8"><meta name="monetag" content="7c196691a3e21ac5aec6567991b655c2">
-<title>POS Charges Calculator - Tool 07</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POS Charges Calculator - Premium 4K + Slider</title>
+<meta name="description" content="POS charges calculator - 4K receipt">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<style>body{margin:0;background:#070707;color:#fff;font-family:Arial;padding:0}
-.top{padding:12px 15px;border-bottom:1px solid #1c1c1c;display:flex;justify-content:space-between}
-.wrap{padding:18px 15px}.card{background:#121212;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
-input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #222;background:#0f0f0f;color:#fff;margin:7px 0;font-size:15px}
-button{width:100%;padding:15px;border-radius:14px;border:none;background:#ffcc00;color:#000;font-weight:bold;font-size:15px;margin-top:12px}
-.result{background:#111a0a;border:1px solid #ffcc00;border-radius:14px;padding:16px;margin-top:14px;display:none}
-.result h3{margin:0;color:#ffcc00}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #222;font-size:14px}
-.row b{color:#fff}.total{font-size:18px;color:#ffcc00}.small{color:#555;font-size:11px;text-align:center;margin-top:15px}</style></head><body>
-<div class="top"><a href="/" style="color:#3b82f6;text-decoration:none">← System</a><span style="color:#666;font-size:11px">Tool 07: POS</span></div>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:Inter,system-ui,sans-serif}
+.header{padding:14px 16px;background:#0F0F0F;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.header a{color:#00FF88;text-decoration:none;font-size:13px;font-weight:800}
+.badge{font-size:9px;background:linear-gradient(90deg,#00FF88,#00D632);color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.wrap{max-width:1000px;margin:auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:14px}
+@media(max-width:850px){.wrap{grid-template-columns:1fr}}
+.panel{background:#121212;border:1px solid #222;border-radius:16px;padding:14px}
+label{font-size:10px;color:#888;text-transform:uppercase;margin-top:10px;display:block;font-weight:800}
+input,select{width:100%;padding:11px;background:#080808;border:1px solid #333;color:#fff;border-radius:10px;margin-top:4px;font-size:13px;font-weight:700}
+.btn{width:100%;padding:12px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900;font-size:13px;margin-top:10px;cursor:pointer}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+.btn4k{background:linear-gradient(90deg,#FFD700,#FF8C00);color:#000}
+.preset{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.preset button{font-size:11px;padding:6px 10px;border-radius:20px;background:#1a1a1a;border:1px solid #2a2a2a;color:#aaa;cursor:pointer}
+.receipt{background:#fff;color:#000;border-radius:16px;padding:20px;min-height:480px}
+.receipt h2{font-size:22px;font-weight:900}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.row.total{font-weight:900;font-size:18px;border-bottom:0;margin-top:10px;background:#000;color:#fff;padding:14px;border-radius:12px}
+.compare-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;min-height:500px;background:#fff;display:none}
+.compare-after{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:inset(0 0 0 50%);background:#fff}
+.compare-slider{position:absolute;top:0;left:50%;width:3px;height:100%;background:#00FF88;z-index:10}
+.compare-handle{position:absolute;top:50%;left:50%;width:36px;height:36px;background:#00FF88;border:3px solid #000;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;cursor:ew-resize}
+.compare-label{position:absolute;top:10px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900;z-index:11}
+.label-before{left:10px;background:#000;color:#fff}
+.label-after{right:10px;background:#00FF88;color:#000}
+</style>
+</head>
+<body>
+<div class="header"><a href="/">← Back</a><span style="font-size:10px;font-weight:900;color:#888">POS CHARGES V3 - PREMIUM + 4K + SLIDER</span><span class="badge">POS • 4K</span></div>
 <div class="wrap">
-<h2 style="margin:0">POS Charges Calculator 💳</h2><p style="color:#777;font-size:13px">Calculate POS charge instantly. For vendors & POS business.</p>
-<div class="card">
-<label>Amount to withdraw / transfer (₦)</label>
-<input id="amount" type="number" placeholder="e.g 5000" oninput="calc()">
-<label>Your POS charge type</label>
-<select id="type" onchange="calc()">
-<option value="100-5000">Standard: ₦100 for ₦1000-₦5000</option>
-<option value="200-10000">₦200 for ₦6000-₦10000</option>
-<option value="300-15000">₦300 for ₦11000-₦15000</option>
-<option value="custom">Custom charge</option>
-</select>
-<div id="customBox" style="display:none"><input id="customCharge" type="number" placeholder="Enter your charge e.g 100" oninput="calc()"></div>
-<button onclick="calc()">CALCULATE CHARGE</button>
-<div id="result" class="result"></div>
+<div class="panel">
+<label>Amount Customer Wants (or to withdraw)</label>
+<input id="amount" type="number" value="10000" oninput="calc()">
+<div class="preset">
+<button onclick="setAmt(1000)">₦1k</button><button onclick="setAmt(5000)">₦5k</button><button onclick="setAmt(10000)">₦10k</button><button onclick="setAmt(20000)">₦20k</button><button onclick="setAmt(50000)">₦50k</button>
 </div>
-<div class="card" style="font-size:13px;line-height:1.5"><b>📋 Normal POS Charges in Nigeria (2025):</b><br>
-• ₦1000 - ₦5000 → ₦100<br>• ₦6000 - ₦10000 → ₦200<br>• ₦11000 - ₦20000 → ₦300<br>• ₦21000+ → ₦400+<br><br>Tip: Always tell customer total before transaction.</div>
-<div style="background:#111;border:1px dashed #333;padding:14px;border-radius:14px;text-align:center;margin-top:15px">
-<b>Need POS Business Flyer / Website?</b><br><a href="https://wa.me/2348165043865?text=Hi%20I%20need%20POS%20flyer/website" style="display:inline-block;margin-top:10px;background:#ffcc00;color:#000;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:bold">WhatsApp 08165043865</a></div>
-<p class="small">Built for Naija hustle 🇳🇬 — ClearCode System</p>
+<label>Type</label>
+<select id="type" onchange="calc()"><option value="withdraw">Withdrawal</option><option value="transfer">Transfer / Deposit</option><option value="bills">Bills Payment</option></select>
+<label>Your Charge Mode</label>
+<select id="mode" onchange="calc()"><option value="standard">Standard POS - 1% + ₦100</option><option value="cheap">Cheap - ₦100 flat under 5k</option><option value="premium">Premium - 1.5% (Lekki, Ikoyi)</option><option value="custom">Custom %</option></select>
+<div id="customBox" style="display:none"><label>Custom %</label><input id="customP" type="number" value="1.5" step="0.1" oninput="calc()"></div>
+<button class="btn" onclick="calc()">Calculate POS Charge</button>
+<button class="btn btn4k" onclick="download4k()">🔥 Download Receipt 4K</button>
+<button class="btn btn2" onclick="toggleSlider()">↔️ Before / After Slider</button>
+<button class="btn btn2" onclick="shareWA()">📱 Share Charges on WhatsApp</button>
+</div>
+<div style="position:relative">
+<div id="receipt" class="receipt">
+<div style="display:flex;justify-content:space-between"><h2>POS Receipt</h2><span style="background:#00FF88;color:#000;font-size:10px;padding:4px 10px;border-radius:20px;font-weight:900">SUCCESS</span></div>
+<div style="font-size:11px;color:#888;margin-top:4px" id="dateText"></div>
+<div style="margin-top:16px">
+<div class="row"><span>Transaction Type</span><b id="rType">Withdrawal</b></div>
+<div class="row"><span>Amount</span><b id="rAmount">₦10,000</b></div>
+<div class="row"><span>Your Charge</span><b id="rCharge" style="color:#00A651">₦200</b></div>
+<div class="row"><span>Customer Pays</span><b id="rPays">₦10,200</b></div>
+<div class="row"><span>You Receive</span><b id="rYou">₦10,000</b></div>
+<div class="row total"><span>Profit (Your Charge)</span><span id="rProfit">₦200</span></div>
+</div>
+<div style="margin-top:16px;background:#f5f5f5;border-radius:10px;padding:10px;font-size:10px;color:#666;line-height:1.5">• Charges include POS fee • No refund after transaction<br>Generated by ClearCode.quest/tool/pos-charges • 08165043865</div>
+</div>
+<div class="compare-wrap" id="compareWrap">
+<div style="padding:20px;color:#aaa;background:#f5f5f5;height:100%">BLANK RECEIPT</div>
+<div class="compare-after" id="compareAfter" style="padding:20px"></div>
+<div class="compare-slider" id="compareSlider"><div class="compare-handle">↔</div></div>
+<span class="compare-label label-before">BLANK</span><span class="compare-label label-after">YOUR RECEIPT • 4K</span>
+</div>
+</div>
 </div>
 <script>
+function setAmt(v){document.getElementById('amount').value=v; calc();}
 function calc(){
  let amt=parseFloat(document.getElementById('amount').value)||0;
  let type=document.getElementById('type').value;
- document.getElementById('customBox').style.display=type==='custom'?'block':'none';
+ let mode=document.getElementById('mode').value;
  let charge=0;
- if(type==='custom'){charge=parseFloat(document.getElementById('customCharge').value)||0;}
- else if(amt<=5000) charge=100;
- else if(amt<=10000) charge=200;
- else if(amt<=20000) charge=300;
- else if(amt<=50000) charge=500;
- else charge=1000;
- if(amt===0) return;
- let total=amt+charge;
- document.getElementById('result').style.display='block';
- document.getElementById('result').innerHTML=`<h3>Result</h3><div class="row"><span>Amount</span><b>₦${amt.toLocaleString()}</b></div><div class="row"><span>POS Charge</span><b>₦${charge.toLocaleString()}</b></div><div class="row total"><span>Total to Collect</span><b>₦${total.toLocaleString()}</b></div><div class="row" style="border:none"><span>Customer gets</span><b>₦${amt.toLocaleString()}</b></div><br><button onclick="share()" style="background:#fff">Share Result on WhatsApp</button>`;
+ document.getElementById('customBox').style.display=mode=='custom'?'block':'none';
+ if(mode=='standard'){ if(amt<=5000) charge=100; else charge=Math.round(amt*0.01)+100; }
+ else if(mode=='cheap'){ if(amt<=5000) charge=100; else charge=200; }
+ else if(mode=='premium'){ charge=Math.round(amt*0.015); }
+ else if(mode=='custom'){ let p=parseFloat(document.getElementById('customP').value)||1; charge=Math.round(amt*p/100); }
+ charge=Math.max(50,charge);
+ let pays=amt+charge;
+ document.getElementById('rType').innerText=type.charAt(0).toUpperCase()+type.slice(1);
+ document.getElementById('rAmount').innerText='₦'+amt.toLocaleString();
+ document.getElementById('rCharge').innerText='₦'+charge.toLocaleString();
+ document.getElementById('rPays').innerText='₦'+pays.toLocaleString();
+ document.getElementById('rYou').innerText='₦'+amt.toLocaleString();
+ document.getElementById('rProfit').innerText='₦'+charge.toLocaleString();
+ document.getElementById('dateText').innerText=new Date().toLocaleString();
+ document.getElementById('compareAfter').innerHTML=document.getElementById('receipt').innerHTML;
 }
-function share(){let r=document.getElementById('result').innerText; window.open(`https://wa.me/?text=${encodeURIComponent('POS Calculation:\n'+r+'\n\nvia clearcodesystem.onrender.com')}`);}
+async function download4k(){ let canvas=await html2canvas(document.getElementById('receipt'),{scale:4}); let a=document.createElement('a'); a.href=canvas.toDataURL(); a.download='pos-receipt-4k.png'; a.click(); }
+function toggleSlider(){ let r=document.getElementById('receipt'), c=document.getElementById('compareWrap'); if(c.style.display=='block'){c.style.display='none'; r.style.display='block'} else {c.style.display='block'; r.style.display='none'; calc(); initSlider()} }
+function shareWA(){ let t=document.getElementById('rCharge').innerText; let a=document.getElementById('rAmount').innerText; window.open('https://wa.me/?text=POS Charge for '+a+' is '+t+' - ClearCode'); }
+function initSlider(){ let wrap=document.getElementById('compareWrap'), after=document.getElementById('compareAfter'), slider=document.getElementById('compareSlider'), drag=false; function up(x){ let rect=wrap.getBoundingClientRect(); let p=Math.max(5,Math.min(95,((x-rect.left)/rect.width)*100)); after.style.clipPath=`inset(0 0 0 ${p}%)`; slider.style.left=p+'%'; } wrap.onmousedown=e=>{drag=true; up(e.clientX)}; window.onmouseup=()=>drag=false; window.onmousemove=e=>{if(drag) up(e.clientX)}; wrap.ontouchstart=e=>{drag=true; up(e.touches[0].clientX)}; wrap.ontouchmove=e=>{if(drag) up(e.touches[0].clientX)}; }
+calc(); initSlider();
 </script>
-</body></html>
+</body>
+</html>

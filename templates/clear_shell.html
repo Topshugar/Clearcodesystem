@@ -1,34 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClearShell - Free VPS SSH in Browser | JuiceSSH Alternative</title>
+<title>Free SSH in Browser - ClearShell VPS SSH Client Online 2026 | ClearCode</title>
+<meta name="description" content="Free SSH client in browser. Connect to VPS from phone, run commands, no app needed. JuiceSSH alternative. Works on mobile.">
+<meta name="keywords" content="ssh in browser free, vps ssh online, ssh client browser, connect vps from phone, juicessh alternative free, online ssh terminal">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://clearcode.quest/tool/clear-shell">
+<meta property="og:title" content="Free SSH in Browser - Connect VPS from Phone">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"ClearShell SSH in Browser","url":"https://clearcode.quest/tool/clear-shell","applicationCategory":"DeveloperApplication","offers":{"@type":"Offer","price":"0"}}
+</script>
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 body{margin:0;background:#0A0A0A;color:#00FF88;font-family:monospace}
-.header{padding:15px;background:#111;border-bottom:1px solid #00FF8833;position:sticky;top:0}
+.header{padding:15px;background:#111;border-bottom:1px solid #00FF8833;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
 input{padding:12px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;font-family:monospace}
 #term{background:#000;border:1px solid #00FF8833;padding:15px;height:320px;overflow:auto;white-space:pre-wrap;margin:15px;border-radius:8px;font-size:13px}
 .btn{padding:12px 20px;background:#00FF88;color:#000;border:0;font-weight:bold;border-radius:6px;cursor:pointer}
-.btn2{padding:8px 12px;background:#111;color:#00FF88;border:1px solid #00FF88;border-radius:6px;font-size:12px;margin:2px}
-.seo{background:#0F0F0F;padding:20px;margin-top:20px}
-.seo h2{color:#fff;font-size:18px}
-.seo p{color:#888;font-size:13px;line-height:1.6;font-family:Inter,sans-serif}
+.btn2{padding:8px 12px;background:#111;color:#00FF88;border:1px solid #00FF88;border-radius:6px;font-size:12px;margin:2px;cursor:pointer}
+.seo{background:#0F0F0F;padding:20px;margin-top:20px;font-family:Inter,sans-serif}
+.seo h1{color:#fff;font-size:18px;font-weight:900}
+.seo h2{color:#fff;font-size:14px;margin-top:14px}
+.seo p{color:#888;font-size:12px;line-height:1.6;margin-top:4px}
+.faq{margin-top:12px}
 </style>
 </head>
 <body>
-<div class="header"><a href="/" style="color:#888;text-decoration:none">< Back</a><h2>> ClearShell_ <span style="font-size:11px;color:#888">V2 + Monetag Active</span></h2></div>
+<div class="header"><div><a href="/" style="color:#888;text-decoration:none">< Back</a><span style="margin-left:10px;font-weight:900">ClearShell_</span> <span style="font-size:9px;color:#888;background:#111;padding:4px 8px;border-radius:20px">V2 SEO FIXED 2026</span></div></div>
 <div style="padding:15px">
-<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="host" placeholder="VPS IP" style="flex:1"><input id="user" value="root" style="width:80px"><input id="pass" type="password" placeholder="Password" style="flex:1"><button class="btn" style="background:#222;color:#888" onclick="saveServer()">SAVE</button></div>
-<div id="term">$ ClearShell V2 ready...</div>
-<div style="display:flex;flex-wrap:wrap;gap:4px;padding:0 15px"><button class="btn2" onclick="quick('ls')">ls</button><button class="btn2" onclick="quick('free -h')">free -h</button><button class="btn2" onclick="quick('df -h')">df -h</button><button class="btn2" onclick="quick('ps aux')">ps aux</button><button class="btn2" onclick="quick('uptime')">uptime</button></div>
-<div style="display:flex;gap:8px;margin-top:10px"><input id="cmd" placeholder="Enter command" style="flex:1"><button class="btn" onclick="run()">SEND</button></div>
+<h1 style="font-size:14px;color:#fff;font-family:Inter,sans-serif;font-weight:900">Free SSH in Browser - Connect VPS from Phone</h1>
+<p style="font-size:11px;color:#666;font-family:Inter,sans-serif;margin-top:4px">JuiceSSH alternative, no app. Run linux commands from phone browser.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><input id="host" placeholder="VPS IP e.g 192.168.1.1" style="flex:1"><input id="user" value="root" style="width:80px"><input id="pass" type="password" placeholder="Password" style="flex:1"><button class="btn" style="background:#222;color:#888" onclick="saveServer()">SAVE</button></div>
+<div id="term">$ ClearShell V2 ready... Enter VPS IP + Password + Command</div>
+<div style="display:flex;flex-wrap:wrap;gap:4px;padding:0 15px"><button class="btn2" onclick="quick('ls')">ls</button><button class="btn2" onclick="quick('free -h')">free -h</button><button class="btn2" onclick="quick('df -h')">df -h</button><button class="btn2" onclick="quick('ps aux')">ps aux</button><button class="btn2" onclick="quick('uptime')">uptime</button><button class="btn2" onclick="quick('pwd')">pwd</button></div>
+<div style="display:flex;gap:8px;margin-top:10px"><input id="cmd" placeholder="Enter linux command e.g ls" style="flex:1"><button class="btn" onclick="run()">SEND</button></div>
 </div>
-<div class="seo"><h2>What is VPS?</h2><p>VPS is Virtual Private Server. Your own computer online. For vendors, use Hostinger $5.99, Contabo €4.50. Paste IP above to connect. No password saved on server.</p></div>
+<div class="seo">
+<h1>What is ClearShell SSH in Browser?</h1>
+<p>Free online SSH client that lets you connect to your VPS from phone browser. No download like JuiceSSH. Perfect for vendors hosting ClearCode.</p>
+<h2>Is it safe?</h2>
+<p>Yes. Password is never saved on server, only in your browser. Uses Paramiko secure SSH.</p>
+<h2>Best VPS for vendors?</h2>
+<p>Hostinger $5.99/mo, Contabo €4.50/mo, Hetzner €4.15. All work with ClearShell.</p>
+<div class="faq"><b style="color:#00FF88;font-size:11px">Q: Free SSH without app?</b><p style="font-size:11px;color:#666">Yes, 100% free SSH terminal in browser. Works on Android & iPhone.</p><p style="margin-top:10px;font-size:11px">Related: <a href="/tool/ruler-terminal" style="color:#00FF88">Ruler Terminal</a> | <a href="/">All Tools</a></p></div>
+</div>
 <script>
 const term=document.getElementById('term');const hostI=document.getElementById('host');const userI=document.getElementById('user');const passI=document.getElementById('pass');const cmdI=document.getElementById('cmd');
 let saved=JSON.parse(localStorage.getItem('clear_shell_saved')||'null');if(saved){hostI.value=saved.host||'';userI.value=saved.user||'root';}
-function saveServer(){localStorage.setItem('clear_shell_saved',JSON.stringify({host:hostI.value.trim(),user:userI.value.trim()}));alert('Saved!');}
+function saveServer(){localStorage.setItem('clear_shell_saved',JSON.stringify({host:hostI.value.trim(),user:userI.value.trim()}));alert('Saved! IP cached locally');}
 function quick(c){cmdI.value=c;run();}
 async function run(){let host=hostI.value.trim();let user=userI.value.trim()||'root';let pass=passI.value;let cmd=cmdI.value.trim();if(!host||!pass||!cmd)return alert('Fill IP, Password, Command');term.innerHTML+=`\n\n$ ${cmd}\n> connecting...`;term.scrollTop=term.scrollHeight;try{let res=await fetch('/api/clear-shell',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host,user,pass,cmd})});let data=await res.json();term.innerHTML+=`\n${data.output}`;}catch(e){term.innerHTML+=`\nError: ${e.message}`;}term.scrollTop=term.scrollHeight;cmdI.value='';}
 </script>

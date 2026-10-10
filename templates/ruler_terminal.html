@@ -1,17 +1,78 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ruler Terminal V2 - Fake Hacker Terminal for Content</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruler Terminal V3 - Online Linux Terminal Simulator | ClearCodeSystem</title>
+<meta name="description" content="Free online Linux terminal simulator - practice bash, cloud hosting, VPS, SSH commands">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<style>body{margin:0;background:#000;color:#00FF88;font-family:monospace}#term{padding:15px;height:90vh;overflow:auto}input{background:#000;color:#00FF88;border:0;outline:0;width:80%;font-family:monospace}</style>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{background:#000;color:#00FF88;font-family:'Courier New',monospace;height:100vh;display:flex;flex-direction:column}
+.top{padding:10px 14px;background:#0F0F0F;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center}
+.top a{color:#00FF88;text-decoration:none;font-size:12px}.logo{font-weight:900;color:#fff}.logo span{color:#00FF88}
+.term{flex:1;padding:14px;overflow-y:auto;font-size:13px;line-height:1.6}
+.line{margin-bottom:4px}.prompt{color:#00FF88}.cmd{color:#fff}
+.input-row{display:flex;padding:10px;background:#080808;border-top:1px solid #222;align-items:center}
+.input-row span{color:#00FF88;margin-right:8px}
+input{background:transparent;border:0;color:#fff;outline:none;flex:1;font-family:monospace;font-size:14px}
+.ads{padding:6px;background:#121212;text-align:center;font-size:9px;color:#555}
+</style>
 </head>
 <body>
-<div id="term">> Ruler Terminal V2 - Type 'help' for commands<br>> Monetag Active - Zone 11970643<br><br></div>
-<div style="padding:10px;background:#111;display:flex"><span>> </span><input id="cmd" autofocus placeholder="type help"></div>
+<div class="top"><div class="logo">ClearCode<span>System</span> Terminal</div><a href="/">← Tools</a></div>
+<div class="ads">Cloud Hosting VPS • Dedicated Server • Domain Registration • SSL Certificate • Linux Hosting $2.99</div>
+<div class="term" id="term">
+<div class="line">> Ruler Terminal V3 - Type 'help' for commands</div>
+<div class="line">> Monetag Active - Zone 11970643 + 11988352</div>
+<div class="line">> System: Ubuntu 22.04 LTS - 4 vCPU - 8GB RAM - High Performance Cloud VPS</div>
+<div class="line">> Try: help, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime, cloud, pricing, vps, hosting</div>
+<div class="line"><br></div>
+</div>
+<div class="input-row"><span>user@clearcode:~$</span><input id="in" autofocus autocomplete="off" placeholder="type command..."></div>
 <script>
-const term=document.getElementById('term');const cmdI=document.getElementById('cmd');
-cmdI.addEventListener('keydown',async e=>{if(e.key==='Enter'){let cmd=cmdI.value;term.innerHTML+=`> ${cmd}<br>`;try{let r=await fetch('/api/ruler-terminal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd})});let d=await r.json();if(d.output==='__CLEAR__')term.innerHTML='';else term.innerHTML+=`${d.output}<br>`;}catch(e){term.innerHTML+=`Error<br>`;}term.scrollTop=term.scrollHeight;cmdI.value='';}});
+const term=document.getElementById('term');
+const input=document.getElementById('in');
+const cmds={
+help:`Available: help, clear, ls, pwd, date, echo [text], whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime, cloud, vps, hosting, pricing, ping google.com, cat secrets.txt`,
+ls:`Documents Downloads public_html node_modules package.json.env clearcode-vpn monetag-ads`,
+pwd:`/home/user/clearcodesystem`,
+date:new Date().toString(),
+whoami:`user - ClearCodeSystem Premium - Cloud Hosting Active`,
+uptime:`up 14 days, 4:32 - Cloud VPS Uptime 99.99% - High Availability`,
+free:`Mem: 8GB total - 2.1GB used - 5.9GB free - Swap 2GB - Best Cloud Hosting 2026`,
+df:`Filesystem Size Used Avail - /dev/sda1 80G 12G 68G - SSD VPS Storage`,
+banner:`
+ ██████╗██╗ ███████╗ █████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██║ ██╔════╝██╔══██╗██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝
+██║ ██║ █████╗ ███████║██████╔╝██║ ██║ ██║██║ ██║███████╗
+██║ ██║ ██╔══╝ ██╔══██║██╔══██╗██║ ██║ ██║██║ ██║╚════██║
+╚██████╗███████╗███████╗██║ ██║██║ ██║╚██████╗╚██████╔╝██████╔╝███████║
+ • Gulf CPC $5+ • USA Hosting $3+ • Cloud VPS`,
+vendors:`Vendors: Hostinger, Namecheap, Cloudways, DigitalOcean, Vultr, Linode - Best Deals Inside`,
+cloud:`Cloud Hosting Comparison 2026: AWS Lightsail $3.5, DigitalOcean $4, Hostinger $2.99 - Get VPS Now`,
+vps:`Best VPS Hosting: 4 vCPU 8GB RAM SSD $8.99/mo - Free Domain + SSL - 99.9% Uptime Guarantee`,
+hosting:`Best Web Hosting 2026 - Shared $1.99 - WordPress $2.99 - Cloud $8.99 - Dedicated $49 - Free Migration`,
+pricing:`Pricing: Starter $2.99, Business $8.99, Premium $19.99 - Includes Free SSL, CDN, Daily Backup, 24/7 Support`,
+'hack':`[ACCESS GRANTED] Fetching monetag ads... Zone 11970643 loading... Stay 30s = + $0.05 RPM`,
+'matrix':`0101010101010101010101 - CLOUD VPS MATRIX - HOSTING MATRIX - 010101`,
+'ping google.com':`PING google.com 64 bytes - time=12ms - Cloudflare CDN Active - Fast Hosting`,
+'cat secrets.txt':`SECRET: Use VPN to switch countries - NG 22 tools - SA 6 - AE 7 - KW 6 - QA 6 - US 7 - High CPC Keywords`,
+neofetch:`OS: Ubuntu 22.04 - Host: ClearCodeSystem - Uptime: 14d - Packages: 54 tools - Shell: zsh - CPU: Intel Xeon - GPU: Tesla - Memory: 8GB`
+};
+input.addEventListener('keydown',e=>{
+if(e.key==='Enter'){
+let v=input.value.trim(); if(!v) return;
+let low=v.toLowerCase();
+let row=document.createElement('div'); row.className='line'; row.innerHTML=`<span class=prompt>user@clearcode:~$</span> <span class=cmd>${v}</span>`; term.appendChild(row);
+let out='';
+if(low.startsWith('echo ')) out=v.slice(5);
+else if(low==='clear'){term.innerHTML=''; input.value=''; return;}
+else if(cmds[low]) out=cmds[low];
+else if(low.startsWith('cat ')||low.startsWith('ping ')) out=cmds[low]||cmds['cat secrets.txt'];
+else out=`Command not found: ${v} - Type 'help' - Cloud hosting help at clearcodesystem`;
+let r=document.createElement('div'); r.className='line'; r.style.whiteSpace='pre-wrap'; r.textContent='> '+out; term.appendChild(r);
+term.scrollTop=term.scrollHeight; input.value='';
+if(Math.random()>0.6){ setTimeout(()=>{ window.scrollTo(0,1); }, 500); }
+}
+});
 </script>
 </body>
 </html>

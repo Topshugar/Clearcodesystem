@@ -28,12 +28,12 @@
 <div class="header"><div class="logo">ClearCode<span>System</span></div><a href="https://wa.me/2348165043865">WhatsApp</a></div>
 <div class="hero">
 <h1>Tools for <span>{{country_name}}</span></h1>
-<p style="color:#888;font-size:12px;margin-top:6px">Detected by your Internet Protocol (IP) — showing only {{country}} tools</p>
+<p style="color:#888;font-size:12px;margin-top:6px">Detected by your IP — showing only {{country}} tools</p>
 <div class="ip-box">
 <span>🌍 IP: <b style="color:#00FF88">{{raw_country}} → {{country}} - {{country_name}}</b></span>
-<span style="color:#888">VPN Works • {{allowed|length}} tools</span>
+<span style="color:#888">IP-Strict • {{allowed|length}} tools</span>
 </div>
-<p style="font-size:10px;color:#555;margin-top:8px">Turn on US VPN → see USA tools. SA VPN → see Saudi tools. QA VPN → see Qatar tools.</p>
+<p style="font-size:10px;color:#555;margin-top:8px">Turn on VPN to switch: US VPN → USA tools • SA VPN → Saudi • AE VPN → UAE • KW VPN → Kuwait</p>
 </div>
 <div class="grid">
 {% for t in allowed %}
@@ -54,6 +54,19 @@
 {% elif t=='qatar_rent_splitter' %}{% set icon='🏠' %}{% set title='Qatar Rent Splitter Doha' %}
 {% elif t=='qatar_gold_price' %}{% set icon='💍' %}{% set title='Qatar Gold Price Calculator' %}
 {% elif t=='qatar_overtime' %}{% set icon='⏰' %}{% set title='Qatar Overtime Calculator' %}
+{% elif t=='emirates_id_check' %}{% set icon='🪪' %}{% set title='Emirates ID Check UAE ICP' %}
+{% elif t=='uae_traffic_fines' %}{% set icon='🚗' %}{% set title='UAE Traffic Fines Dubai RTA' %}
+{% elif t=='uae_gratuity' %}{% set icon='💰' %}{% set title='UAE Gratuity EOS MOHRE' %}
+{% elif t=='uae_gold_price' %}{% set icon='💍' %}{% set title='UAE Gold Price Dubai 22K' %}
+{% elif t=='uae_rent_splitter' %}{% set icon='🏠' %}{% set title='UAE Rent + Ejari Calculator' %}
+{% elif t=='uae_overtime' %}{% set icon='⏰' %}{% set title='UAE Overtime 125% 150%' %}
+{% elif t=='uae_salary' %}{% set icon='💵' %}{% set title='UAE Salary Basic Split' %}
+{% elif t=='kuwait_civil_id' %}{% set icon='🪪' %}{% set title='Kuwait Civil ID PACI Check' %}
+{% elif t=='kuwait_traffic_fines' %}{% set icon='🚗' %}{% set title='Kuwait Traffic Fines MOI' %}
+{% elif t=='kuwait_gratuity' %}{% set icon='💰' %}{% set title='Kuwait Gratuity EOS' %}
+{% elif t=='kuwait_gold_price' %}{% set icon='💍' %}{% set title='Kuwait Gold Price KWD' %}
+{% elif t=='kuwait_rent' %}{% set icon='🏠' %}{% set title='Kuwait Rent Calculator' %}
+{% elif t=='kuwait_overtime' %}{% set icon='⏰' %}{% set title='Kuwait Overtime Calculator' %}
 {% elif t=='pos_charges' %}{% set icon='🏧' %}{% set title='POS Charges Calculator' %}
 {% elif t=='wa_qr' %}{% set icon='📱' %}{% set title='WhatsApp QR Generator' %}
 {% elif t=='whatsapp_broadcast' %}{% set icon='📢' %}{% set title='WhatsApp Broadcast Safe' %}
@@ -85,9 +98,8 @@
 {% endfor %}
 </div>
 <div style="max-width:1100px;margin:24px auto;padding:0 16px;text-align:center">
-<p style="font-size:11px;color:#444">You see only {{country_name}} tools because your IP is {{raw_country}}. Use VPN to switch. Add ?country=US or ?country=SA to test.</p>
-<p style="font-size:10px;color:#333;margin-top:6px">Try: <a href="/?country=NG" style="color:#00FF88">NG 22 tools</a> • <a href="/?country=QA" style="color:#00FF88">QA 6 tools</a> • <a href="/?country=US" style="color:#00FF88">US 7 tools</a> • <a href="/?country=SA" style="color:#00FF88">SA 6 tools</a></p>
+<p style="font-size:11px;color:#444">You see only {{country_name}} tools because your IP is {{raw_country}}. Use VPN to switch country — IP-Strict mode.</p>
 </div>
-<div class="footer">ClearCodeSystem © 2026 • IP Strict Geo • {{country}} • {{country_name}} • {{allowed|length}} tools unlocked</div>
+<div class="footer">ClearCodeSystem © 2026 • IP Strict Geo • {{country}} • {{country_name}} • {{allowed|length}} tools unlocked • Gulf CPC $3-8</div>
 </body>
 </html>

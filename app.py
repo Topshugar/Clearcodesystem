@@ -26,9 +26,9 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# 9 COUNTRIES - 80 TOOLS - FIXED TEMPLATES
+# 9 COUNTRIES - 81 TOOLS - FIXED TEMPLATES
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package'],
  'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt'],
  'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt'],
  'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt'],
@@ -45,11 +45,9 @@ COUNTRY_NAME = {
 'GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇬🇧 UK','AU':'🇺🇸 USA','EG':'🇸🇦 Saudi'
 }
 
-# Cache IP -> country to avoid ipapi rate limit
 IP_CACHE = {}
 
 def get_country():
-    # Allow?country=BH for testing & SEO
     forced = request.args.get('country') or request.args.get('c')
     if forced and forced.upper() in COUNTRY_TOOLS:
         return forced.upper()
@@ -175,6 +173,8 @@ def jamb_calculator(): return render_template('jamb_calculator.html')
 def waec_calculator(): return render_template('waec_calculator.html')
 @app.route('/tool/nin-validator')
 def nin_validator(): return render_template('nin_validator.html')
+@app.route('/tool/lagos-rent-package')
+def lagos_rent_package(): return render_template('lagos_rent_package.html')
 
 # QATAR
 @app.route('/tool/qid-check')
@@ -220,7 +220,7 @@ def kuwait_rent(): return render_template('kuwait_rent.html')
 @app.route('/tool/kuwait-overtime')
 def kuwait_overtime(): return render_template('kuwait_overtime.html')
 
-# BAHRAIN - NEW SEO FILES (FIXED)
+# BAHRAIN
 @app.route('/tool/bahrain-cpr-check')
 def bahrain_cpr_check(): return render_template('bahrain_cpr_check.html')
 @app.route('/tool/bahrain-traffic-fines')
@@ -234,7 +234,7 @@ def bahrain_rent(): return render_template('bahrain_rent.html')
 @app.route('/tool/bahrain-overtime')
 def bahrain_overtime(): return render_template('bahrain_overtime.html')
 
-# OMAN - NEW SEO FILES (FIXED)
+# OMAN
 @app.route('/tool/oman-civil-check')
 def oman_civil_check(): return render_template('oman_civil_check.html')
 @app.route('/tool/oman-traffic-fines')
@@ -248,7 +248,7 @@ def oman_rent(): return render_template('oman_rent.html')
 @app.route('/tool/oman-overtime')
 def oman_overtime(): return render_template('oman_overtime.html')
 
-# UK - NEW SEO FILES (FIXED)
+# UK
 @app.route('/tool/uk-paycheck')
 def uk_paycheck(): return render_template('uk_paycheck.html')
 @app.route('/tool/uk-rent-splitter')
@@ -260,7 +260,7 @@ def uk_vat_calculator(): return render_template('uk_vat_calculator.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','lagos-rent-package','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
@@ -273,7 +273,47 @@ def robots():
     txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
-# API - keep but secure shell
+# ========== BACKEND APIS ==========
+
+# NEW: LAGOS RENT PACKAGE API
+@app.route('/api/lagos-rent', methods=['POST'])
+def api_lagos_rent():
+    try:
+        data = request.json
+        rent = float(data.get('rent', 0))
+        if rent <= 0: return jsonify({'error':'Invalid rent'}), 400
+        location = data.get('location', 'mainland').lower()
+        config = {
+            'mainland': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5},
+            'yaba': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5},
+            'ikeja': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10},
+            'lekki': {'agreement':10, 'commission':10, 'damages':15, 'caution':15, 'legal':10},
+            'vi': {'agreement':15, 'commission':15, 'damages':15, 'caution':15, 'legal':10},
+        }
+        c = config.get(location, config['mainland'])
+        agreement = rent * c['agreement']/100
+        commission = rent * c['commission']/100
+        damages = rent * c['damages']/100
+        caution = rent * c['caution']/100
+        legal = rent * c['legal']/100
+        inspection = 10000 if location in ['lekki','vi'] else 5000
+        if location == 'mainland': inspection = 3000
+
+        total = rent + agreement + commission + damages + caution + legal + inspection
+        monthly = total / 12
+
+        # Optional: log leads to console for you
+        print(f"[LEAD] Lagos Rent: {rent} - {location} - Total: {total} - IP: {request.remote_addr}")
+
+        return jsonify({
+            'rent': rent, 'agreement': agreement, 'commission': commission,
+            'damages': damages, 'caution': caution, 'legal': legal,
+            'inspection': inspection, 'total': total, 'monthly': monthly,
+            'location': location, 'percent': c
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
     try:
@@ -312,14 +352,13 @@ def api_bg_remove():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
+    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
 @app.route('/api/clear-shell', methods=['POST'])
 def shell_api():
-    # SECURITY: Add secret to block abuse
     d = request.json
     if d.get('secret')!= 'CLEARCODE2026':
         return jsonify({'output': 'Error: Unauthorized. Add secret.'})

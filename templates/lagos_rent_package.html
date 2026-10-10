@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lagos Total Rent Package Calculator 2026 - How Much is Total? | ClearCode</title>
+<meta name="description" content="If rent is 500k how much is total package in Lagos? Calculate Agreement Commission Damages Caution Legal. Mainland Ikeja Yaba Lekki VI.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
+.card{max-width:500px;margin:20px auto;background:#121212;border:1px solid #222;border-radius:20px;padding:18px}
+input,select{width:100%;padding:14px;background:#080808;border:1px solid #333;border-radius:12px;color:#fff;margin-top:10px;font-size:16px}
+button{width:100%;padding:14px;background:#00FF88;color:#000;border:none;border-radius:12px;font-weight:900;margin-top:14px;font-size:15px}
+.result{margin-top:16px;background:#0a0a0a;border:1px dashed #00FF88;border-radius:12px;padding:14px}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1a1a1a;font-size:13px} .row.total{font-weight:900;font-size:16px;color:#00FF88;border:none}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="font-weight:900">🏠 Lagos Rent Package Calculator</h2>
+<p style="font-size:11px;color:#888;margin-top:4px">Enter rent, get total package (Agreement + Commission + Damages)</p>
+
+<label style="font-size:11px;margin-top:12px;display:block">Annual Rent (₦)</label>
+<input id="rent" type="number" placeholder="500000" value="500000">
+
+<label style="font-size:11px;margin-top:12px;display:block">Location</label>
+<select id="loc">
+<option value="mainland">Mainland - Surulere, Agege, Alimosho (cheapest)</option>
+<option value="yaba">Yaba, Ebute Metta</option>
+<option value="ikeja">Ikeja, Ogba, Allen</option>
+<option value="lekki">Lekki, Ajah, Sangotedo (15% charges)</option>
+<option value="vi">VI, Ikoyi, Banana (most expensive)</option>
+</select>
+
+<button onclick="calc()">Calculate Total Package</button>
+
+<div id="res" class="result" style="display:none"></div>
+
+<button onclick="shareWA()" style="background:#222;color:#fff;margin-top:10px">📱 Share on WhatsApp</button>
+<a href="https://wa.me/2348165043865?text=I need agent in Lagos" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:#00FF88;text-decoration:none">Need Agent? Chat us</a>
+</div>
+
+<script>
+let last = null
+async function calc(){
+ const rent = document.getElementById('rent').value
+ const location = document.getElementById('loc').value
+ const r = await fetch('/api/lagos-rent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rent, location})})
+ const d = await r.json()
+ if(d.error){alert(d.error);return}
+ last = d
+ document.getElementById('res').style.display='block'
+ document.getElementById('res').innerHTML=`
+  <div class="row"><span>Rent</span><b>₦${d.rent.toLocaleString()}</b></div>
+  <div class="row"><span>Agreement (${d.percent.agreement}%)</span><span>₦${d.agreement.toLocaleString()}</span></div>
+  <div class="row"><span>Commission (${d.percent.commission}%)</span><span>₦${d.commission.toLocaleString()}</span></div>
+  <div class="row"><span>Damages (${d.percent.damages}%)</span><span>₦${d.damages.toLocaleString()}</span></div>
+  <div class="row"><span>Caution (${d.percent.caution}%)</span><span>₦${d.caution.toLocaleString()}</span></div>
+  <div class="row"><span>Legal (${d.percent.legal}%)</span><span>₦${d.legal.toLocaleString()}</span></div>
+  <div class="row"><span>Inspection</span><span>₦${d.inspection.toLocaleString()}</span></div>
+  <div class="row total"><span>TOTAL PACKAGE</span><span>₦${d.total.toLocaleString()}</span></div>
+  <div class="row total" style="font-size:12px;color:#888"><span>Monthly</span><span>₦${Math.round(d.monthly).toLocaleString()}/mo</span></div>
+  <p style="font-size:10px;color:#555;margin-top:8px">Location: ${location.toUpperCase()} - Prices based on 2026 Lagos market</p>
+ `
+}
+function shareWA(){
+ if(!last) return alert('Calculate first')
+ const txt = `🏠 Lagos Rent Package%0ARent: ₦${last.rent.toLocaleString()}%0ATotal Package: ₦${last.total.toLocaleString()}%0AMonthly: ₦${Math.round(last.monthly).toLocaleString()}%0A%0ACalc: https://clearcodesystem.onrender.com/tool/lagos-rent-package`
+ window.open(`https://wa.me/?text=${txt}`)
+}
+calc()
+</script>
+</body></html>

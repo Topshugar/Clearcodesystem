@@ -30,9 +30,9 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP STRICT FILTER - UPDATED WITH 6 NEW NG TOOLS ---
+# --- GEO IP STRICT FILTER - 22 NG TOOLS ---
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell'],
  'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text','usa_notify'],
  'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa'],
 }
@@ -78,11 +78,9 @@ def home():
 
 @app.route('/unlock')
 def unlock(): return render_template('unlock.html')
-
 @app.route('/tool/builder')
 @app.route('/tool/store-builder')
 def builder(): return render_template('builder.html')
-
 @app.route('/tool/wa-qr')
 def wa_qr(): return render_template('wa_qr.html')
 @app.route('/tool/invoice')
@@ -119,16 +117,13 @@ def paycheck(): return render_template('paycheck.html')
 def fake_text(): return render_template('fake_text.html')
 @app.route('/tool/tip-calculator')
 def tip_calculator(): return render_template('tip_calculator.html')
-
 @app.route('/tool/whatsapp-broadcast')
 @app.route('/tool/whatsapp_broadcast')
 def whatsapp_broadcast(): return render_template('whatsapp_broadcast.html')
-
 @app.route('/tool/background-check')
 @app.route('/tool/usa-background-check')
 @app.route('/tool/background_check')
 def background_check(): return render_template('usa_background_check.html')
-
 # SAUDI
 @app.route('/tool/iqama-expiry')
 def iqama_expiry(): return render_template('iqama_expiry.html')
@@ -143,7 +138,7 @@ def gpa_calculator(): return render_template('gpa_calculator.html')
 @app.route('/tool/salary-sa')
 def salary_sa(): return render_template('salary_sa.html')
 
-# NEW NG HIGH TRAFFIC - 6 TOOLS
+# NEW NG HIGH TRAFFIC - 9 TOOLS
 @app.route('/tool/nepa-calculator')
 def nepa_calculator(): return render_template('nepa_calculator.html')
 @app.route('/tool/cac-checker')
@@ -156,10 +151,16 @@ def rent_splitter(): return render_template('rent_splitter.html')
 def land_converter(): return render_template('land_converter.html')
 @app.route('/tool/paye-calculator')
 def paye_calculator(): return render_template('paye_calculator.html')
+@app.route('/tool/jamb-calculator')
+def jamb_calculator(): return render_template('jamb_calculator.html')
+@app.route('/tool/waec-calculator')
+def waec_calculator(): return render_template('waec_calculator.html')
+@app.route('/tool/nin-validator')
+def nin_validator(): return render_template('nin_validator.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
@@ -210,14 +211,7 @@ def api_bg_remove():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {
-        'help': 'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime',
-        'ls': 'nepa_calculator.html cac_checker.html fuel_calculator.html rent_splitter.html land_converter.html paye_calculator.html builder.html wa_qr.html invoice.html bg_remover.html',
-        'pwd': '/home/clearcode/vendors',
-        'whoami': 'clearcode-vendor',
-        'date': datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),
-        'clear': '__CLEAR__',
-    }
+    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'nepa_calculator.html cac_checker.html fuel_calculator.html rent_splitter.html land_converter.html paye_calculator.html jamb_calculator.html waec_calculator.html nin_validator.html builder.html wa_qr.html invoice.html bg_remover.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})

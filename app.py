@@ -30,7 +30,7 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP STRICT FILTER - 22 NG + 6 QA ---
+# --- GEO IP STRICT FILTER - IP ONLY - NO BYPASS ---
 COUNTRY_TOOLS = {
  'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell'],
  'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text','usa_notify'],
@@ -41,9 +41,7 @@ COUNTRY_TOOLS = {
 COUNTRY_NAME = {'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','QA':'🇶🇦 Qatar','GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇺🇸 USA','AE':'🇸🇦 Saudi','KW':'🇸🇦 Saudi','BH':'🇸🇦 Saudi','OM':'🇸🇦 Saudi','EG':'🇸🇦 Saudi'}
 
 def get_country():
-    test = request.args.get('country')
-    if test and len(test)==2:
-        return test.upper()
+    # STRICT IP ONLY - NO?country= TEST
     try:
         cf = request.headers.get('CF-IPCountry')
         if cf and len(cf)==2 and cf.upper()!='XX':
@@ -51,7 +49,7 @@ def get_country():
         ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
         if ip in ['127.0.0.1','::1','']:
             return 'NG'
-        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=3)
+        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=2.5)
         code = r.text.strip().upper()
         return code if len(code)==2 else 'NG'
     except:

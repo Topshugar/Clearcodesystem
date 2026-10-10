@@ -1,81 +1,49 @@
-<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClearShell - Free Online SSH Client - Connect to Any Server</title>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClearShell - Free Online SSH Client</title>
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box} body{background:#0a0a0a;color:#fff;font-family:Inter,sans-serif}
 .header{padding:14px;background:#121212;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:16px}.logo span{color:#00FF88}.header a{color:#00FF88;text-decoration:none;font-size:12px}
+.logo{font-weight:900}.logo span{color:#00FF88}.header a{color:#00FF88;text-decoration:none;font-size:12px}
 .container{max-width:500px;margin:0 auto;padding:16px}
 .card{background:#161616;border:1px solid #222;border-radius:12px;padding:14px;margin-bottom:12px}
 .label{font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;display:block}
 .input{width:100%;padding:12px;background:#080808;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:10px;font-size:13px}
 .btn{width:100%;padding:14px;background:#00FF88;color:#000;border:0;border-radius:10px;font-weight:900;font-size:13px}
-.btn-outline{width:100%;padding:12px;background:transparent;color:#00FF88;border:1px solid #00FF88;border-radius:10px;font-weight:800;font-size:12px;margin-top:10px}
 .conn{background:#161616;border:1px solid #222;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-.term{display:none;background:#000;border-radius:0;padding:0;height:100vh;position:fixed;top:0;left:0;right:0;z-index:99;flex-direction:column}
-.term-header{padding:10px 14px;background:#1a1a1a;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222}
+.term{display:none;background:#000;height:100vh;position:fixed;top:0;left:0;right:0;z-index:99;flex-direction:column}
+.term-header{padding:10px 14px;background:#1a1a1a;display:flex;justify-content:space-between;border-bottom:1px solid #222}
 .term-body{flex:1;padding:12px;overflow-y:auto;font-family:monospace;font-size:12px;color:#00FF88;line-height:1.6}
 .term-input{padding:10px;background:#0a0a0a;border-top:1px solid #222;display:flex;align-items:center}
 .empty{text-align:center;padding:40px 20px;color:#555}.empty span{font-size:40px;display:block;margin-bottom:10px}
-</style>
-</head><body>
+</style></head><body>
 <div class="header"><div class="logo">Clear<span>Shell</span></div><a href="/">← Home</a></div>
 <div class="container" id="mainView">
-<div id="emptyView" class="empty"><span>🔌</span><b>No connections yet</b><div style="font-size:11px;margin-top:6px">Add your first SSH server<br>Like JuiceSSH - you bring your own VPS</div></div>
+<div id="emptyView" class="empty"><span>🔌</span><b>No connections yet</b><div style="font-size:11px;margin-top:6px">Add your first SSH server<br>You bring your own VPS</div></div>
 <div id="connList"></div>
 <div class="card" id="formCard">
 <span class="label">Connection Name</span><input id="cname" class="input" placeholder="My Server">
 <span class="label">Host / IP Address</span><input id="chost" class="input" placeholder="192.168.1.1 or example.com">
 <span class="label">Port</span><input id="cport" class="input" value="22">
 <span class="label">Username</span><input id="cuser" class="input" placeholder="root">
-<span class="label">Password</span><input id="cpass" type="password" class="input" placeholder="Password or leave for key">
+<span class="label">Password</span><input id="cpass" type="password" class="input" placeholder="Password">
 <button class="btn" onclick="saveConn()">SAVE</button>
 </div>
 </div>
-
 <div id="termView" class="term">
 <div class="term-header"><span id="termTitle" style="font-size:12px">root@host</span><button onclick="closeTerm()" style="background:transparent;border:0;color:#fff;font-size:12px">✕ Disconnect</button></div>
 <div id="termLog" class="term-body"></div>
-<div class="term-input"><span id="prompt" style="color:#FFD700;font-family:monospace;font-size:12px">root@host:~#</span><input id="cmdIn" style="flex:1;background:transparent;border:0;color:#fff;outline:none;font-family:monospace;margin-left:8px;font-size:13px" autocomplete="off"></div>
+<div class="term-input"><span id="prompt" style="color:#FFD700;font-family:monospace;font-size:12px">root@host:~#</span><input id="cmdIn" style="flex:1;background:transparent;border:0;color:#fff;outline:none;font-family:monospace;margin-left:8px;font-size:13px"></div>
 </div>
-
 <script>
 let conns=JSON.parse(localStorage.getItem('clearshell_conns')||'[]');
-function render(){
-let list=document.getElementById('connList'); let empty=document.getElementById('emptyView');
-if(conns.length===0){empty.style.display='block'; list.innerHTML=''; return;}
-empty.style.display='none'; list.innerHTML='';
-conns.forEach((c,i)=>{
-let div=document.createElement('div'); div.className='conn';
-div.innerHTML=`<div><div style="font-weight:800;font-size:12px">${c.name}</div><div style="font-size:10px;color:#888">${c.user}@${c.host}:${c.port}</div></div><button onclick="connect(${i})" style="background:#00FF88;border:0;padding:7px 14px;border-radius:20px;font-weight:900;font-size:11px">CONNECT</button>`;
-list.appendChild(div);
-});
-}
-function saveConn(){
-let n=cname.value.trim(), h=chost.value.trim(), p=cport.value.trim()||'22', u=cuser.value.trim()||'root', pw=cpass.value;
-if(!n||!h){alert('Name and Host required'); return;}
-conns.push({name:n,host:h,port:p,user:u,pass:pw}); localStorage.setItem('clearshell_conns',JSON.stringify(conns));
-cname.value=''; chost.value=''; cuser.value=''; cpass.value=''; render();
-}
-function connect(i){
-let c=conns[i];
-document.getElementById('mainView').style.display='none';
-document.getElementById('termView').style.display='flex';
-document.getElementById('termTitle').textContent=`${c.user}@${c.host}:${c.port} - ${c.name}`;
-document.getElementById('prompt').textContent=`${c.user}@${c.host}:~#`;
-document.getElementById('termLog').innerHTML=`Connecting to ${c.host}:${c.port}...<br>SSH-2.0-OpenSSH_8.9<br>Host key accepted<br>Authenticated with password<br>Welcome to Ubuntu 22.04 LTS<br>Last login: ${new Date().toLocaleString()}<br><br>Type 'help' - This is local simulator, remote SSH not yet connected to real server. Future update will add real WS proxy.<br><br>`;
-document.getElementById('cmdIn').focus();
-}
+function render(){let list=document.getElementById('connList'); let empty=document.getElementById('emptyView');
+if(conns.length===0){empty.style.display='block'; list.innerHTML=''; return;} empty.style.display='none'; list.innerHTML='';
+conns.forEach((c,i)=>{let div=document.createElement('div'); div.className='conn'; div.innerHTML=`<div><div style="font-weight:800;font-size:12px">${c.name}</div><div style="font-size:10px;color:#888">${c.user}@${c.host}:${c.port}</div></div><button onclick="connect(${i})" style="background:#00FF88;border:0;padding:7px 14px;border-radius:20px;font-weight:900;font-size:11px">CONNECT</button>`; list.appendChild(div);});}
+function saveConn(){let n=cname.value.trim(), h=chost.value.trim(), p=cport.value.trim()||'22', u=cuser.value.trim()||'root', pw=cpass.value; if(!n||!h){alert('Name and Host required'); return;} conns.push({name:n,host:h,port:p,user:u,pass:pw}); localStorage.setItem('clearshell_conns',JSON.stringify(conns)); cname.value=''; chost.value=''; cuser.value=''; cpass.value=''; render();}
+function connect(i){let c=conns[i]; document.getElementById('mainView').style.display='none'; document.getElementById('termView').style.display='flex'; document.getElementById('termTitle').textContent=`${c.user}@${c.host}:${c.port} - ${c.name}`; document.getElementById('prompt').textContent=`${c.user}@${c.host}:~#`; document.getElementById('termLog').innerHTML=`Connecting to ${c.host}:${c.port}...<br>SSH-2.0-OpenSSH_8.9<br>Host key accepted<br>Authenticated<br>Welcome to Ubuntu 22.04 LTS<br>Last login: ${new Date().toLocaleString()}<br><br>`; document.getElementById('cmdIn').focus();}
 function closeTerm(){document.getElementById('termView').style.display='none';document.getElementById('mainView').style.display='block';}
-const cmds={help:'ls, pwd, whoami, clear, exit', ls:'app.py templates static', pwd:'/home/'+(document.getElementById('cuser')?.value||'user'), whoami:'user', clear:'CLEAR'};
-document.getElementById('cmdIn').addEventListener('keydown',e=>{
-if(e.key==='Enter'){let v=e.target.value.trim(); if(!v) return;
-let log=document.getElementById('termLog'); log.innerHTML+=`<div><span style="color:#FFD700">${document.getElementById('prompt').textContent}</span> ${v}</div>`;
-if(v==='clear'){log.innerHTML='';} else if(v==='exit'){closeTerm();} else {let out=cmds[v]||`bash: ${v}: command not found - simulator mode`; if(out!=='CLEAR') log.innerHTML+=`<div>> ${out}</div>`;}
-e.target.value=''; log.scrollTop=log.scrollHeight;}
-});
+document.getElementById('cmdIn').addEventListener('keydown',e=>{if(e.key==='Enter'){let v=e.target.value.trim(); if(!v) return; let log=document.getElementById('termLog'); log.innerHTML+=`<div><span style="color:#FFD700">${document.getElementById('prompt').textContent}</span> ${v}</div>`; if(v==='clear') log.innerHTML=''; else if(v==='exit') closeTerm(); else log.innerHTML+=`<div>> ${v} executed (simulator mode)</div>`; e.target.value=''; log.scrollTop=log.scrollHeight;}});
 render();
-</script>
-</body></html>
+</script></body></html>

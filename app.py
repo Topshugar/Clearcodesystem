@@ -30,9 +30,9 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP STRICT - 55 TOOLS - NG 23 + QA 6 + SA 6 + US 7 + AE 7 + KW 6 ---
+# --- GEO IP STRICT - 54 TOOLS - NG 22 + QA 6 + SA 6 + US 7 + AE 7 + KW 6 ---
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','tip_calculator','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger'],
  'US': ['paycheck','background_check','tip_calculator','invoice','bg_remover','fake_text','usa_notify'],
  'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa'],
  'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime'],

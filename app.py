@@ -30,14 +30,14 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP STRICT - 55 TOOLS - NG 23 + QA 7 + SA 7 + US 5 + AE 8 + KW 7 - BUILDER IN ALL ---
+# --- GEO IP STRICT - 56 TOOLS - NG 24 + QA 8 + SA 8 + US 6 + AE 9 + KW 8 - BUILDER + RECEIPT IN ALL ---
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder'],
- 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder'],
- 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder'],
- 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder'],
- 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder'],
- 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt'],
+ 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt'],
+ 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt'],
+ 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt'],
+ 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt'],
+ 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt'],
 }
 
 COUNTRY_NAME = {
@@ -90,6 +90,9 @@ def unlock(): return render_template('unlock.html')
 @app.route('/tool/builder')
 @app.route('/tool/store-builder')
 def builder(): return render_template('builder.html')
+@app.route('/tool/pos-receipt')
+@app.route('/tool/receipt-generator')
+def pos_receipt(): return render_template('pos_receipt.html')
 @app.route('/tool/wa-qr')
 def wa_qr(): return render_template('wa_qr.html')
 @app.route('/tool/invoice')
@@ -211,7 +214,7 @@ def kuwait_overtime(): return render_template('kuwait_overtime.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:

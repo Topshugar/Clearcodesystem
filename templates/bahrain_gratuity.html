@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bahrain Gratuity Calculator EOS - End of Service Bahrain Labor Law 2026</title>
+<meta name="description" content="Calculate Bahrain end of service gratuity EOS per Bahrain labor law - half month for first 3 years, full month after.">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}.card{max-width:500px;margin:30px auto;background:#121212;border:1px solid #222;border-radius:18px;padding:20px}label{font-size:10px;color:#888;display:block;margin-top:10px}input,select{width:100%;padding:12px;background:#080808;border:1px solid #222;color:#fff;border-radius:10px;margin-top:4px}.btn{width:100%;background:#00FF88;color:#000;padding:12px;border-radius:12px;font-weight:900;border:0;margin-top:14px;cursor:pointer}#result{margin-top:14px;background:#0a0a0a;border:1px solid #00FF88;border-radius:12px;padding:14px;display:none}</style>
+</head>
+<body>
+<div class="card">
+<h2>🇧🇭 Bahrain Gratuity EOS</h2><p style="font-size:11px;color:#888">Bahrain Labor Law - Article 116</p>
+<label>Basic Salary BHD</label><input id="salary" type="number" placeholder="e.g. 300">
+<label>Years of Service</label><input id="years" type="number" placeholder="e.g. 4.5" step="0.1">
+<label>Reason</label><select id="reason"><option value="full">Resignation / Termination (full)</option><option value="resign1">Resigned < 3 years (partial)</option></select>
+<button class="btn" onclick="calc()">CALCULATE BHD →</button>
+<div id="result"></div>
+<a href="/" style="display:block;margin-top:12px;color:#888;font-size:11px;text-decoration:none">← Home</a>
+</div>
+<script>
+function calc(){
+let sal=parseFloat(document.getElementById('salary').value)||0;
+let yrs=parseFloat(document.getElementById('years').value)||0;
+if(!sal||!yrs){alert('Enter salary and years');return}
+let gratuity=0;
+if(yrs<=3){ gratuity = (sal/2)*yrs; } else { gratuity = (sal/2)*3 + sal*(yrs-3); }
+let r=document.getElementById('result');
+r.style.display='block';
+r.innerHTML=`<b style="color:#00FF88;font-size:18px">BHD ${gratuity.toFixed(3)}</b><br><span style="font-size:11px;color:#aaa">First 3 years: half month per year<br>After 3 years: full month per year<br>${yrs} years × BHD ${sal}</span>`;
+}
+</script>
+</body>
+</html>

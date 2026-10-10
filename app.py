@@ -30,7 +30,7 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# --- GEO IP STRICT - 56 TOOLS - NG 24 + QA 8 + SA 8 + US 6 + AE 9 + KW 8 - BUILDER + RECEIPT IN ALL ---
+# --- 9 COUNTRIES - 80 TOOLS - BH+OM+UK ADDED - ALL REUSE EXISTING TEMPLATES ---
 COUNTRY_TOOLS = {
  'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt'],
  'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt'],
@@ -38,11 +38,16 @@ COUNTRY_TOOLS = {
  'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt'],
  'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt'],
  'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt'],
+ # NEW HIGH CPC
+ 'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt'],
+ 'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt'],
+ 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt'],
 }
 
 COUNTRY_NAME = {
 'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','QA':'🇶🇦 Qatar','AE':'🇦🇪 UAE','KW':'🇰🇼 Kuwait',
-'GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇺🇸 USA','BH':'🇸🇦 Saudi','OM':'🇸🇦 Saudi','EG':'🇸🇦 Saudi'
+'BH':'🇧🇭 Bahrain','OM':'🇴🇲 Oman','UK':'🇬🇧 UK',
+'GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇬🇧 UK','AU':'🇺🇸 USA','EG':'🇸🇦 Saudi'
 }
 
 def get_country():
@@ -65,9 +70,9 @@ def map_to_group(code):
         return code
     if code in ['GH','KE','ZA','NG']:
         return 'NG'
-    if code in ['US','CA','GB','AU']:
+    if code in ['US','CA','AU']:
         return 'US'
-    if code in ['SA','BH','OM','EG']:
+    if code in ['SA','EG']:
         return 'SA'
     if code in ['QA']:
         return 'QA'
@@ -75,6 +80,12 @@ def map_to_group(code):
         return 'AE'
     if code in ['KW']:
         return 'KW'
+    if code in ['BH']:
+        return 'BH'
+    if code in ['OM']:
+        return 'OM'
+    if code in ['GB','UK']:
+        return 'UK'
     return 'NG'
 
 @app.route('/')
@@ -93,6 +104,8 @@ def builder(): return render_template('builder.html')
 @app.route('/tool/pos-receipt')
 @app.route('/tool/receipt-generator')
 def pos_receipt(): return render_template('pos_receipt.html')
+
+# CORE
 @app.route('/tool/wa-qr')
 def wa_qr(): return render_template('wa_qr.html')
 @app.route('/tool/invoice')
@@ -151,7 +164,7 @@ def zatca_qr(): return render_template('zatca_qr.html')
 def gpa_calculator(): return render_template('gpa_calculator.html')
 @app.route('/tool/salary-sa')
 def salary_sa(): return render_template('salary_sa.html')
-# NG 9
+# NG
 @app.route('/tool/nepa-calculator')
 def nepa_calculator(): return render_template('nepa_calculator.html')
 @app.route('/tool/cac-checker')
@@ -170,7 +183,7 @@ def jamb_calculator(): return render_template('jamb_calculator.html')
 def waec_calculator(): return render_template('waec_calculator.html')
 @app.route('/tool/nin-validator')
 def nin_validator(): return render_template('nin_validator.html')
-# QATAR 6
+# QATAR
 @app.route('/tool/qid-check')
 def qid_check(): return render_template('qid_check.html')
 @app.route('/tool/qatar-traffic-fines')
@@ -183,7 +196,7 @@ def qatar_rent_splitter(): return render_template('qatar_rent_splitter.html')
 def qatar_gold_price(): return render_template('qatar_gold_price.html')
 @app.route('/tool/qatar-overtime')
 def qatar_overtime(): return render_template('qatar_overtime.html')
-# UAE 7
+# UAE
 @app.route('/tool/emirates-id-check')
 def emirates_id_check(): return render_template('emirates_id_check.html')
 @app.route('/tool/uae-traffic-fines')
@@ -198,7 +211,7 @@ def uae_rent_splitter(): return render_template('uae_rent_splitter.html')
 def uae_overtime(): return render_template('uae_overtime.html')
 @app.route('/tool/uae-salary')
 def uae_salary(): return render_template('uae_salary.html')
-# KUWAIT 6
+# KUWAIT
 @app.route('/tool/kuwait-civil-id')
 def kuwait_civil_id(): return render_template('kuwait_civil_id.html')
 @app.route('/tool/kuwait-traffic-fines')
@@ -211,10 +224,45 @@ def kuwait_gold_price(): return render_template('kuwait_gold_price.html')
 def kuwait_rent(): return render_template('kuwait_rent.html')
 @app.route('/tool/kuwait-overtime')
 def kuwait_overtime(): return render_template('kuwait_overtime.html')
+# BAHRAIN - REUSE QATAR/KUWAIT TEMPLATES (NO NEW HTML NEEDED)
+@app.route('/tool/bahrain-cpr-check')
+def bahrain_cpr_check(): return render_template('qid_check.html')
+@app.route('/tool/bahrain-traffic-fines')
+def bahrain_traffic_fines(): return render_template('qatar_traffic_fines.html')
+@app.route('/tool/bahrain-gratuity')
+def bahrain_gratuity(): return render_template('qatar_gratuity.html')
+@app.route('/tool/bahrain-gold-price')
+def bahrain_gold_price(): return render_template('kuwait_gold_price.html')
+@app.route('/tool/bahrain-rent')
+def bahrain_rent(): return render_template('qatar_rent_splitter.html')
+@app.route('/tool/bahrain-overtime')
+def bahrain_overtime(): return render_template('qatar_overtime.html')
+# OMAN - REUSE
+@app.route('/tool/oman-civil-check')
+def oman_civil_check(): return render_template('emirates_id_check.html')
+@app.route('/tool/oman-traffic-fines')
+def oman_traffic_fines(): return render_template('uae_traffic_fines.html')
+@app.route('/tool/oman-gratuity')
+def oman_gratuity(): return render_template('uae_gratuity.html')
+@app.route('/tool/oman-gold-price')
+def oman_gold_price(): return render_template('uae_gold_price.html')
+@app.route('/tool/oman-rent')
+def oman_rent(): return render_template('uae_rent_splitter.html')
+@app.route('/tool/oman-overtime')
+def oman_overtime(): return render_template('uae_overtime.html')
+# UK - REUSE US TEMPLATES
+@app.route('/tool/uk-paycheck')
+def uk_paycheck(): return render_template('paycheck.html')
+@app.route('/tool/uk-rent-splitter')
+def uk_rent_splitter(): return render_template('rent_splitter.html')
+@app.route('/tool/uk-tip-calculator')
+def uk_tip_calculator(): return render_template('tip_calculator.html')
+@app.route('/tool/uk-vat-calculator')
+def uk_vat_calculator(): return render_template('profit_calculator.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','gamer-tag','sensitivity','clan-logo','tournament','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:

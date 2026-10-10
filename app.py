@@ -14,23 +14,19 @@ def get_session(mode='human'):
         from rembg import remove, new_session
         REMBG_AVAILABLE = True
         if mode == 'human' and human_session is None:
-            try:
-                human_session = new_session("u2net_human_seg")
-            except:
-                human_session = True
+            try: human_session = new_session("u2net_human_seg")
+            except: human_session = True
         elif cloth_session is None:
-            try:
-                cloth_session = new_session("isnet-general-use")
-            except:
-                cloth_session = True
+            try: cloth_session = new_session("isnet-general-use")
+            except: cloth_session = True
         return True
     except Exception as e:
-        print(f"rembg init error: {e}")
+        print(f"rembg error: {e}")
         return False
 
 app = Flask(__name__)
 
-# --- 9 COUNTRIES - 80 TOOLS - BH+OM+UK ADDED - ALL REUSE EXISTING TEMPLATES ---
+# 9 COUNTRIES - 80 TOOLS - FIXED TEMPLATES
 COUNTRY_TOOLS = {
  'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt'],
  'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt'],
@@ -38,7 +34,6 @@ COUNTRY_TOOLS = {
  'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt'],
  'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt'],
  'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt'],
- # NEW HIGH CPC
  'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt'],
  'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt'],
  'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt'],
@@ -50,42 +45,44 @@ COUNTRY_NAME = {
 'GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇬🇧 UK','AU':'🇺🇸 USA','EG':'🇸🇦 Saudi'
 }
 
+# Cache IP -> country to avoid ipapi rate limit
+IP_CACHE = {}
+
 def get_country():
+    # Allow?country=BH for testing & SEO
+    forced = request.args.get('country') or request.args.get('c')
+    if forced and forced.upper() in COUNTRY_TOOLS:
+        return forced.upper()
     try:
         cf = request.headers.get('CF-IPCountry')
         if cf and len(cf)==2 and cf.upper()!='XX':
             return cf.upper()
         ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
-        if ip in ['127.0.0.1','::1','']:
+        if ip in ['127.0.0.1','::1',''] or ip.startswith('192.'):
             return 'NG'
-        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=2.5)
+        if ip in IP_CACHE:
+            return IP_CACHE[ip]
+        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=2)
         code = r.text.strip().upper()
-        return code if len(code)==2 else 'NG'
+        if len(code)==2:
+            IP_CACHE[ip]=code
+            return code
+        return 'NG'
     except:
         return 'NG'
 
 def map_to_group(code):
     code = code.upper()
-    if code in COUNTRY_TOOLS:
-        return code
-    if code in ['GH','KE','ZA','NG']:
-        return 'NG'
-    if code in ['US','CA','AU']:
-        return 'US'
-    if code in ['SA','EG']:
-        return 'SA'
-    if code in ['QA']:
-        return 'QA'
-    if code in ['AE']:
-        return 'AE'
-    if code in ['KW']:
-        return 'KW'
-    if code in ['BH']:
-        return 'BH'
-    if code in ['OM']:
-        return 'OM'
-    if code in ['GB','UK']:
-        return 'UK'
+    if code in COUNTRY_TOOLS: return code
+    if code in ['GH','KE','ZA','NG']: return 'NG'
+    if code in ['US','CA','AU']: return 'US'
+    if code in ['SA','EG']: return 'SA'
+    if code in ['QA']: return 'QA'
+    if code in ['AE']: return 'AE'
+    if code in ['KW']: return 'KW'
+    if code in ['BH']: return 'BH'
+    if code in ['OM']: return 'OM'
+    if code in ['GB','UK']: return 'UK'
     return 'NG'
 
 @app.route('/')
@@ -96,6 +93,7 @@ def home():
     display_name = COUNTRY_NAME.get(raw_country, COUNTRY_NAME.get(country, f'🌍 {country}'))
     return render_template('index.html', country=country, raw_country=raw_country, country_name=display_name, allowed=allowed, all_groups=COUNTRY_TOOLS)
 
+# -- STATIC ROUTES --
 @app.route('/unlock')
 def unlock(): return render_template('unlock.html')
 @app.route('/tool/builder')
@@ -105,7 +103,7 @@ def builder(): return render_template('builder.html')
 @app.route('/tool/receipt-generator')
 def pos_receipt(): return render_template('pos_receipt.html')
 
-# CORE
+# CORE TOOLS
 @app.route('/tool/wa-qr')
 def wa_qr(): return render_template('wa_qr.html')
 @app.route('/tool/invoice')
@@ -130,14 +128,6 @@ def clear_shell(): return render_template('clear_shell.html')
 def market_ledger(): return render_template('market_ledger.html')
 @app.route('/tool/usa-notify')
 def usa_notify(): return render_template('usa_notify.html')
-@app.route('/tool/gamer-tag')
-def gamer_tag(): return render_template('gamer_tag.html')
-@app.route('/tool/sensitivity')
-def sensitivity(): return render_template('sensitivity.html')
-@app.route('/tool/clan-logo')
-def clan_logo(): return render_template('clan_logo.html')
-@app.route('/tool/tournament')
-def tournament(): return render_template('tournament.html')
 @app.route('/tool/paycheck')
 def paycheck(): return render_template('paycheck.html')
 @app.route('/tool/fake-text')
@@ -151,6 +141,7 @@ def whatsapp_broadcast(): return render_template('whatsapp_broadcast.html')
 @app.route('/tool/usa-background-check')
 @app.route('/tool/background_check')
 def background_check(): return render_template('usa_background_check.html')
+
 # SAUDI
 @app.route('/tool/iqama-expiry')
 def iqama_expiry(): return render_template('iqama_expiry.html')
@@ -164,6 +155,7 @@ def zatca_qr(): return render_template('zatca_qr.html')
 def gpa_calculator(): return render_template('gpa_calculator.html')
 @app.route('/tool/salary-sa')
 def salary_sa(): return render_template('salary_sa.html')
+
 # NG
 @app.route('/tool/nepa-calculator')
 def nepa_calculator(): return render_template('nepa_calculator.html')
@@ -183,6 +175,7 @@ def jamb_calculator(): return render_template('jamb_calculator.html')
 def waec_calculator(): return render_template('waec_calculator.html')
 @app.route('/tool/nin-validator')
 def nin_validator(): return render_template('nin_validator.html')
+
 # QATAR
 @app.route('/tool/qid-check')
 def qid_check(): return render_template('qid_check.html')
@@ -196,6 +189,7 @@ def qatar_rent_splitter(): return render_template('qatar_rent_splitter.html')
 def qatar_gold_price(): return render_template('qatar_gold_price.html')
 @app.route('/tool/qatar-overtime')
 def qatar_overtime(): return render_template('qatar_overtime.html')
+
 # UAE
 @app.route('/tool/emirates-id-check')
 def emirates_id_check(): return render_template('emirates_id_check.html')
@@ -211,6 +205,7 @@ def uae_rent_splitter(): return render_template('uae_rent_splitter.html')
 def uae_overtime(): return render_template('uae_overtime.html')
 @app.route('/tool/uae-salary')
 def uae_salary(): return render_template('uae_salary.html')
+
 # KUWAIT
 @app.route('/tool/kuwait-civil-id')
 def kuwait_civil_id(): return render_template('kuwait_civil_id.html')
@@ -224,41 +219,44 @@ def kuwait_gold_price(): return render_template('kuwait_gold_price.html')
 def kuwait_rent(): return render_template('kuwait_rent.html')
 @app.route('/tool/kuwait-overtime')
 def kuwait_overtime(): return render_template('kuwait_overtime.html')
-# BAHRAIN - REUSE QATAR/KUWAIT TEMPLATES (NO NEW HTML NEEDED)
+
+# BAHRAIN - NEW SEO FILES (FIXED)
 @app.route('/tool/bahrain-cpr-check')
-def bahrain_cpr_check(): return render_template('qid_check.html')
+def bahrain_cpr_check(): return render_template('bahrain_cpr_check.html')
 @app.route('/tool/bahrain-traffic-fines')
-def bahrain_traffic_fines(): return render_template('qatar_traffic_fines.html')
+def bahrain_traffic_fines(): return render_template('bahrain_traffic_fines.html')
 @app.route('/tool/bahrain-gratuity')
-def bahrain_gratuity(): return render_template('qatar_gratuity.html')
+def bahrain_gratuity(): return render_template('bahrain_gratuity.html')
 @app.route('/tool/bahrain-gold-price')
-def bahrain_gold_price(): return render_template('kuwait_gold_price.html')
+def bahrain_gold_price(): return render_template('bahrain_gold_price.html')
 @app.route('/tool/bahrain-rent')
-def bahrain_rent(): return render_template('qatar_rent_splitter.html')
+def bahrain_rent(): return render_template('bahrain_rent.html')
 @app.route('/tool/bahrain-overtime')
-def bahrain_overtime(): return render_template('qatar_overtime.html')
-# OMAN - REUSE
+def bahrain_overtime(): return render_template('bahrain_overtime.html')
+
+# OMAN - NEW SEO FILES (FIXED)
 @app.route('/tool/oman-civil-check')
-def oman_civil_check(): return render_template('emirates_id_check.html')
+def oman_civil_check(): return render_template('oman_civil_check.html')
 @app.route('/tool/oman-traffic-fines')
-def oman_traffic_fines(): return render_template('uae_traffic_fines.html')
+def oman_traffic_fines(): return render_template('oman_traffic_fines.html')
 @app.route('/tool/oman-gratuity')
-def oman_gratuity(): return render_template('uae_gratuity.html')
+def oman_gratuity(): return render_template('oman_gratuity.html')
 @app.route('/tool/oman-gold-price')
-def oman_gold_price(): return render_template('uae_gold_price.html')
+def oman_gold_price(): return render_template('oman_gold_price.html')
 @app.route('/tool/oman-rent')
-def oman_rent(): return render_template('uae_rent_splitter.html')
+def oman_rent(): return render_template('oman_rent.html')
 @app.route('/tool/oman-overtime')
-def oman_overtime(): return render_template('uae_overtime.html')
-# UK - REUSE US TEMPLATES
+def oman_overtime(): return render_template('oman_overtime.html')
+
+# UK - NEW SEO FILES (FIXED)
 @app.route('/tool/uk-paycheck')
-def uk_paycheck(): return render_template('paycheck.html')
+def uk_paycheck(): return render_template('uk_paycheck.html')
 @app.route('/tool/uk-rent-splitter')
-def uk_rent_splitter(): return render_template('rent_splitter.html')
+def uk_rent_splitter(): return render_template('uk_rent_splitter.html')
 @app.route('/tool/uk-tip-calculator')
-def uk_tip_calculator(): return render_template('tip_calculator.html')
+def uk_tip_calculator(): return render_template('uk_tip_calculator.html')
 @app.route('/tool/uk-vat-calculator')
-def uk_vat_calculator(): return render_template('profit_calculator.html')
+def uk_vat_calculator(): return render_template('uk_vat_calculator.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
@@ -266,7 +264,7 @@ def sitemap():
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
-        xml += f'<url><loc>https://clearcodesystem.onrender.com/tool/{t}</loc><priority>0.8</priority></url>'
+        xml += f'<url><loc>https://clearcodesystem.onrender.com/tool/{t}</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>'
     xml += '</urlset>'
     return Response(xml, mimetype='application/xml')
 
@@ -275,6 +273,7 @@ def robots():
     txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
+# API - keep but secure shell
 @app.route('/api/qr', methods=['POST'])
 def gen_qr():
     try:
@@ -292,13 +291,13 @@ def gen_qr():
 def api_bg_remove():
     try:
         file = request.files.get('image')
-        if not file: return jsonify({'error': 'No image uploaded'}), 400
+        if not file: return jsonify({'error': 'No image'}), 400
         mode = request.form.get('mode', 'human')
-        if not get_session(mode): return jsonify({'error': 'AI loading, try again in 10s'}), 503
+        if not get_session(mode): return jsonify({'error': 'AI loading'}), 503
         from rembg import remove
         input_img = Image.open(file.stream).convert('RGBA')
         if mode == 'human' and human_session and human_session!= True:
-            output = remove(input_img, session=human_session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10)
+            output = remove(input_img, session=human_session, alpha_matting=True)
         elif cloth_session and cloth_session!= True:
             output = remove(input_img, session=cloth_session, alpha_matting=True)
         else:
@@ -313,14 +312,17 @@ def api_bg_remove():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
+    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
 @app.route('/api/clear-shell', methods=['POST'])
 def shell_api():
+    # SECURITY: Add secret to block abuse
     d = request.json
+    if d.get('secret')!= 'CLEARCODE2026':
+        return jsonify({'output': 'Error: Unauthorized. Add secret.'})
     try:
         host = d.get('host','').strip()
         user = d.get('user','root').strip()

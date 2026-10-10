@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarketLedger - Nigeria Market Price Tracker & Daily Sales Ledger | ClearCodeSystem</title>
+<meta name="description" content="Track market prices in Lagos, Onitsha, Kano, Aba. Daily sales ledger for Nigerian traders - pepper, rice, garri, oil">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{background:#0a0a0a;color:#fff;font-family:Inter,sans-serif}
+.top{padding:14px;background:#111;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900}.logo span{color:#00FF88}.top a{color:#00FF88;text-decoration:none;font-size:12px}
+.container{max-width:600px;margin:0 auto;padding:14px}
+.card{background:#161616;border:1px solid #222;border-radius:14px;padding:14px;margin-bottom:12px}
+.label{font-size:10px;color:#888;text-transform:uppercase;margin-bottom:6px;display:block}
+.input, select{width:100%;padding:12px;background:#080808;border:1px solid #333;border-radius:10px;color:#fff;margin-bottom:10px;font-size:13px}
+.btn{width:100%;padding:13px;background:#00FF88;color:#000;border:0;border-radius:10px;font-weight:900;font-size:13px}
+.row{display:flex;gap:8px}.row .card{flex:1;text-align:center}
+.price{font-size:18px;font-weight:900;color:#00FF88}
+.small{font-size:10px;color:#777}
+table{width:100%;border-collapse:collapse;font-size:12px} th{color:#888;font-size:9px;text-align:left;padding:8px;border-bottom:1px solid #222} td{padding:10px 8px;border-bottom:1px solid #151515}
+.badge{background:#1a2e1a;color:#00FF88;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800}
+.ads{font-size:9px;color:#555;text-align:center;padding:8px;background:#111;border:1px dashed #222;border-radius:8px;margin-bottom:12px}
+</style>
+</head><body>
+<div class="top"><div class="logo">Market<span>Ledger</span> 🇳🇬</div><a href="/">← Tools</a></div>
+<div class="container">
+<div class="ads">Business Loan • POS System • Market Prices • Wholesale Deals Lagos • Bulk Rice Supplier</div>
+
+<div class="row">
+<div class="card"><div class="small">TODAY'S PROFIT</div><div class="price" id="profit">₦0</div><div class="small">+12% vs yesterday</div></div>
+<div class="card"><div class="small">TOTAL SALES</div><div class="price" id="sales">₦0</div><div class="small" id="count">0 items</div></div>
+</div>
+
+<div class="card">
+<span class="label">Add Market Item (Lagos, Onitsha, Kano, Aba Prices)</span>
+<div class="row" style="gap:6px">
+<select id="item" style="flex:1"><option>Rice (50kg)</option><option>Garri (1 paint)</option><option>Pepper (1 basket)</option><option>Palm Oil (25L)</option><option>Tomatoes (1 basket)</option><option>Onions (1 bag)</option><option>Beans (1 bag)</option><option>Groundnut Oil (25L)</option><option>Maggi Carton</option><option>Spaghetti (1 carton)</option></select>
+<select id="market" style="flex:1"><option>Mile 12 Lagos</option><option>Onitsha Main</option><option>Kano Dawanau</option><option>Aba Ariaria</option><option>Computer Village</option><option>Balogun Market</option><option>Ogbete Enugu</option></select>
+</div>
+<div class="row" style="gap:6px">
+<input id="buy" class="input" type="number" placeholder="Buy Price ₦"><input id="sell" class="input" type="number" placeholder="Sell Price ₦"><input id="qty" class="input" type="number" value="1" style="width:60px">
+</div>
+<button class="btn" onclick="addItem()">+ ADD TO LEDGER</button>
+</div>
+
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:12px">Daily Ledger - <span id="today"></span></b><span class="badge">LIVE</span></div>
+<table><thead><tr><th>ITEM / MARKET</th><th>BUY</th><th>SELL</th><th>PROFIT</th></tr></thead><tbody id="tbody"><tr><td colspan="4" style="text-align:center;color:#444;padding:20px">No sales yet - add your first item</td></tr></tbody></table>
+<button onclick="clearLedger()" style="margin-top:12px;width:100%;background:transparent;border:1px solid #333;color:#777;padding:10px;border-radius:8px;font-size:11px">Clear Today</button>
+</div>
+
+<div class="card" style="background:#0f1a0f;border:1px solid #1e3a1e">
+<div style="font-size:11px;font-weight:900;color:#00FF88;margin-bottom:8px">🔥 HOT MARKET PRICES TODAY (Lagos)</div>
+<div style="font-size:11px;line-height:1.8;color:#aaa">
+Rice 50kg: ₦62k - ₦68k • Garri 1 paint: ₦2,800 • Pepper basket: ₦18k • Palm Oil 25L: ₦32k • Tomatoes basket: ₦28k • Update your buy price above to calculate profit
+</div>
+</div>
+</div>
+
+<script>
+document.getElementById('today').textContent=new Date().toLocaleDateString('en-NG');
+let ledger=JSON.parse(localStorage.getItem('marketledger')||'[]');
+function render(){
+let tbody=document.getElementById('tbody'), totalSales=0, totalProfit=0;
+if(ledger.length===0){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:#444;padding:20px">No sales yet - add your first item</td></tr>';}
+else{tbody.innerHTML=''; ledger.forEach((r,i)=>{
+let profit=(r.sell-r.buy)*r.qty; totalSales+=r.sell*r.qty; totalProfit+=profit;
+tbody.innerHTML+=`<tr><td><b>${r.item}</b><div style="font-size:9px;color:#666">${r.market} x${r.qty}</div></td><td>₦${r.buy.toLocaleString()}</td><td>₦${r.sell.toLocaleString()}</td><td style="color:#00FF88">₦${profit.toLocaleString()}</td></tr>`;
+});}
+document.getElementById('sales').textContent='₦'+totalSales.toLocaleString();
+document.getElementById('profit').textContent='₦'+totalProfit.toLocaleString();
+document.getElementById('count').textContent=ledger.length+' items';
+localStorage.setItem('marketledger',JSON.stringify(ledger));
+}
+function addItem(){
+let item=document.getElementById('item').value, market=document.getElementById('market').value, buy=parseInt(document.getElementById('buy').value), sell=parseInt(document.getElementById('sell').value), qty=parseInt(document.getElementById('qty').value)||1;
+if(!buy||!sell){alert('Enter buy and sell price'); return;} ledger.unshift({item,market,buy,sell,qty,date:Date.now()}); render();
+document.getElementById('buy').value=''; document.getElementById('sell').value='';
+}
+function clearLedger(){if(confirm('Clear today ledger?')){ledger=[]; render();}}
+render();
+</script>
+</body></html>

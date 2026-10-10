@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipt Generator - Moniepoint, Opay, STC Pay, QNB, ENBD, CashApp | All Countries</title>
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
+.header{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1a1a1a}
+.logo{font-weight:900} .logo span{color:#00FF88} .back{color:#888;text-decoration:none;font-size:12px;border:1px solid #222;padding:6px 12px;border-radius:20px}
+.wrap{max-width:1000px;margin:20px auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+.card{background:#121212;border:1px solid #222;border-radius:18px;padding:18px}
+label{font-size:10px;color:#888;font-weight:800;display:block;margin:10px 0 4px;letter-spacing:.5px}
+input,select{width:100%;background:#080808;border:1px solid #222;color:#fff;padding:10px 12px;border-radius:10px;font-size:13px;outline:none}
+input:focus,select:focus{border-color:#00FF88}
+.btn{background:#00FF88;color:#000;border:0;padding:12px;border-radius:12px;font-weight:900;width:100%;cursor:pointer;margin-top:12px}
+.btn2{background:#222;color:#fff;border:0;padding:10px;border-radius:10px;font-weight:800;width:100%;cursor:pointer;margin-top:8px}
+.receipt{border-radius:18px;overflow:hidden;min-height:500px;position:relative}
+.r-monie{background:#fff;color:#000}.r-monie .top{background:#0033A0;color:#fff;padding:18px;text-align:center}
+.r-opay .top{background:#00C853;color:#fff;padding:18px;text-align:center}
+.r-stc .top{background:#4F008C;color:#fff;padding:18px;text-align:center}
+.r-qnb .top{background:#8C1D40;color:#fff;padding:18px;text-align:center}
+.r-enbd .top{background:#0061A5;color:#fff;padding:18px;text-align:center}
+.r-knet .top{background:#0a7a3c;color:#fff;padding:18px;text-align:center}
+.r-cash .top{background:#00D632;color:#000;padding:18px;text-align:center}
+.r-body{padding:20px} .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:13px}
+.row b{color:#111} .row span{color:#555}
+.status{text-align:center;padding:12px;background:#E8F5E9;color:#2E7D32;font-weight:900;border-radius:10px;margin:14px 0;font-size:13px}
+.small{font-size:10px;color:#999;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header"><div class="logo">ClearCode<span>System</span></div><a href="/" class="back">← Home</a></div>
+<div class="wrap">
+<div class="card">
+<h2 style="font-size:14px">🧾 UNIVERSAL <span style="color:#00FF88">RECEIPT MAKER</span> - ALL COUNTRIES</h2>
+<label>Receipt Style (Auto by Country)</label>
+<select id="style" onchange="gen()">
+<option value="monie">🇳🇬 Moniepoint - Nigeria</option>
+<option value="opay">🇳🇬 Opay - Nigeria</option>
+<option value="stc">🇸🇦 STC Pay - Saudi</option>
+<option value="qnb">🇶🇦 QNB - Qatar</option>
+<option value="enbd">🇦🇪 ENBD / ADCB - UAE</option>
+<option value="knet">🇰🇼 KNET - Kuwait</option>
+<option value="cash">🇺🇸 CashApp - USA</option>
+</select>
+<label>Amount</label><input id="amount" value="25,000" oninput="gen()">
+<label>Sender Name</label><input id="sender" value="John Musa" oninput="gen()">
+<label>Receiver Name</label><input id="receiver" value="Mama Chioma Store" oninput="gen()">
+<label>Reference / Transaction ID</label><input id="ref" value="MP-20260412-998877" oninput="gen()">
+<label>Date & Time</label><input id="date" type="datetime-local" value="2026-05-13T14:30" oninput="gen()">
+<label>Status</label><select id="status" onchange="gen()"><option>Successful</option><option>Pending</option><option>Failed</option></select>
+<button class="btn" onclick="window.print()">PRINT / SAVE AS PDF →</button>
+<button class="btn2" onclick="download()">Download Image (Screenshot)</button>
+<p style="font-size:10px;color:#555;margin-top:10px">For entertainment / business demo only. Not a bank document.</p>
+</div>
+
+<div class="card receipt r-monie" id="receipt">
+<div class="top" id="r-top"><div id="r-bank" style="font-weight:900;font-size:18px">Moniepoint</div><div style="font-size:10px;opacity:.8">Transaction Receipt</div></div>
+<div class="r-body">
+<div class="status" id="r-status">✓ Successful</div>
+<div style="text-align:center;font-size:28px;font-weight:900;margin:10px 0" id="r-amount">₦25,000</div>
+<div class="row"><span>Sender</span><b id="r-sender">John Musa</b></div>
+<div class="row"><span>Receiver</span><b id="r-receiver">Mama Chioma Store</b></div>
+<div class="row"><span>Reference</span><b id="r-ref">MP-20260412-998877</b></div>
+<div class="row"><span>Date</span><b id="r-date">May 13, 2026 02:30 PM</b></div>
+<div class="row"><span>Fee</span><b id="r-fee">₦0.00</b></div>
+<div class="small">This receipt is generated by ClearCodeSystem for business records.<br>Powered by {{ country }} • Not affiliated with any bank.</div>
+</div>
+</div>
+</div>
+<script>
+function gen(){
+ let s=document.getElementById('style').value;
+ let bank=document.getElementById('r-bank');
+ let top=document.getElementById('r-top');
+ let rec=document.getElementById('receipt');
+ let curr='₦';
+ rec.className='card receipt r-'+s;
+ if(s=='monie'){bank.innerText='Moniepoint';top.style.background='#0033A0';curr='₦';}
+ if(s=='opay'){bank.innerText='Opay';top.style.background='#00C853';curr='₦';}
+ if(s=='stc'){bank.innerText='STC Pay';top.style.background='#4F008C';curr='SAR ';}
+ if(s=='qnb'){bank.innerText='QNB';top.style.background='#8C1D40';curr='QAR ';}
+ if(s=='enbd'){bank.innerText='ENBD';top.style.background='#0061A5';curr='AED ';}
+ if(s=='knet'){bank.innerText='KNET';top.style.background='#0a7a3c';curr='KWD ';}
+ if(s=='cash'){bank.innerText='CashApp';top.style.background='#00D632';curr='$';}
+ document.getElementById('r-amount').innerText=curr+document.getElementById('amount').value;
+ document.getElementById('r-sender').innerText=document.getElementById('sender').value;
+ document.getElementById('r-receiver').innerText=document.getElementById('receiver').value;
+ document.getElementById('r-ref').innerText=document.getElementById('ref').value;
+ let d=document.getElementById('date').value;
+ if(d){ let dt=new Date(d); document.getElementById('r-date').innerText=dt.toLocaleString(); }
+ document.getElementById('r-status').innerText=(document.getElementById('status').value=='Successful'?'✓ ':'')+document.getElementById('status').value;
+}
+function download(){ alert('Take screenshot or Print → Save as PDF. Image download coming v2'); }
+gen();
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bahrain Overtime Calculator 125% 150% - Bahrain Labor Law OT</title>
+<meta name="description" content="Bahrain overtime calculator - calculate day overtime 125% night overtime 150% per Bahrain labor law 2026">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}.card{max-width:500px;margin:30px auto;background:#121212;border:1px solid #222;border-radius:18px;padding:20px}label{font-size:10px;color:#888;display:block;margin:10px 0 4px}input,select{width:100%;padding:12px;background:#080808;border:1px solid #222;color:#fff;border-radius:10px}.btn{width:100%;background:#00FF88;color:#000;padding:12px;border-radius:12px;font-weight:900;border:0;margin-top:14px;cursor:pointer}#res{margin-top:14px;background:#0a0a0a;border:1px solid #00FF88;border-radius:12px;padding:14px;display:none}</style>
+</head>
+<body>
+<div class="card">
+<h2>🇧🇭 Bahrain Overtime</h2><p style="font-size:11px;color:#888">125% Day - 150% Night per law</p>
+<label>Basic Salary BHD</label><input id="sal" type="number" placeholder="e.g. 300">
+<label>Total Working Hours per Month (e.g. 208)</label><input id="hours" type="number" value="208">
+<label>Overtime Hours</label><input id="ot" type="number" placeholder="e.g. 20">
+<label>Type</label><select id="type"><option value="1.25">Day OT 125%</option><option value="1.5">Night OT 150% + Holiday</option></select>
+<button class="btn" onclick="calc()">CALCULATE OT →</button>
+<div id="res"></div>
+<a href="/" style="display:block;margin-top:12px;color:#888;font-size:11px;text-decoration:none">← Home</a>
+</div>
+<script>
+function calc(){
+let sal=parseFloat(document.getElementById('sal').value)||0;
+let totH=parseFloat(document.getElementById('hours').value)||208;
+let otH=parseFloat(document.getElementById('ot').value)||0;
+let rate=parseFloat(document.getElementById('type').value)||1.25;
+let hourly = sal / totH;
+let otPay = hourly * rate * otH;
+let r=document.getElementById('res');
+r.style.display='block';
+r.innerHTML=`<b style="color:#00FF88">OT Pay: BHD ${otPay.toFixed(3)}</b><br><span style="font-size:12px">Hourly: BHD ${hourly.toFixed(3)}<br>Rate: ${rate*100}%<br>Hours: ${otH}h<br>Total Salary + OT: BHD ${(sal+otPay).toFixed(3)}</span>`;
+}
+</script>
+</body>
+</html>

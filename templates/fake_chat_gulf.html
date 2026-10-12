@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fake WhatsApp Chat Generator Gulf 2026 - محادثة وهمية | ClearCodeSystem</title>
+<meta name="description" content="Create fake WhatsApp chat with boss, crush, mom - Gulf style Arabic English.">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:12px}
+.card{max-width:500px;margin:10px auto;background:#121212;border:1px solid #222;border-radius:20px;padding:14px}
+input,select{width:100%;padding:12px;background:#080808;border:1px solid #333;border-radius:10px;color:#fff;margin-top:8px;font-size:14px}
+button{padding:12px;border:none;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px}
+.btn-green{background:#00FF88;color:#000;width:100%}.btn-dark{background:#222;color:#fff;border:1px solid #333;width:100%}
+.chat-preview{margin-top:14px;background:#0b141a;border-radius:14px;overflow:hidden;border:1px solid #222;max-width:400px;margin-left:auto;margin-right:auto}
+.chat-header{background:#202c33;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.chat-body{background:#111b21 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%230b141a" width="100" height="100"/></svg>');padding:12px;min-height:380px;display:flex;flex-direction:column;gap:8px}
+.bubble{max-width:75%;padding:8px 10px;border-radius:10px;font-size:13px;line-height:1.4;position:relative}
+.bubble.me{background:#005c4b;align-self:flex-end;border-top-right-radius:2px}
+.bubble.them{background:#202c33;align-self:flex-start;border-top-left-radius:2px}
+.time{font-size:9px;color:#ffffff70;display:block;text-align:right;margin-top:4px}
+.ad-slot{margin:12px 0;min-height:90px;background:#0e0e0e;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.msg-input{display:flex;gap:6px;margin-top:10px}
+.msg-input input{flex:1} .msg-input button{width:auto;padding:12px 16px}
+.tag{font-size:10px;background:#1a1a1a;padding:4px 8px;border-radius:20px;margin:2px;display:inline-block;color:#888}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="font-weight:900;font-size:18px">💬 Fake Chat - محادثة وهمية</h2>
+<p style="font-size:11px;color:#888">Make fake WhatsApp chat with boss / crush / mom - Gulf edition</p>
+
+<div class="ad-slot"></div>
+
+<input id="contactName" type="text" placeholder="Contact Name - اسم الشخص" value="المدير - Boss" oninput="updateHeader()">
+<select id="status">
+<option value="online">Online - متصل الآن</option>
+<option value="typing">Typing... - يكتب...</option>
+<option value="last">Last seen today - آخر ظهور</option>
+</select>
+
+<div style="display:flex;gap:6px;margin-top:10px">
+<span class="tag" onclick="quickAdd('حبي وينك؟')">حبيبي وينك؟</span>
+<span class="tag" onclick="quickAdd('تمام الحمدلله')">تمام</span>
+<span class="tag" onclick="quickAdd('I got promoted! 😍')">Promoted!</span>
+<span class="tag" onclick="quickAdd('ما اقدر اجي اليوم')">ما اقدر</span>
+</div>
+
+<div class="chat-preview" id="preview">
+<div class="chat-header">
+<div style="width:36px;height:36px;background:#00a884;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">M</div>
+<div><div id="hName" style="font-weight:800;font-size:13px">المدير - Boss</div><div id="hStatus" style="font-size:10px;color:#8696a0">Online</div></div>
+</div>
+<div class="chat-body" id="chatBody">
+<div class="bubble them">السلام عليكم، وينك اليوم؟<span class="time">09:15 ✓✓</span></div>
+<div class="bubble me">وعليكم السلام، عندي ظرف طارئ<span class="time">09:16 ✓✓</span></div>
+</div>
+</div>
+
+<div class="msg-input">
+<select id="side" style="width:110px"><option value="them">Them - هو</option><option value="me">Me - أنا</option></select>
+<input id="msgText" type="text" placeholder="اكتب رسالة...">
+<button onclick="addMsg()" style="background:#00FF88;color:#000;font-weight:900">➕</button>
+</div>
+
+<button onclick="clearChat()" class="btn-dark">🗑️ Clear Chat</button>
+<button onclick="downloadChat()" class="btn-green">📸 Screenshot - حفظ الصورة</button>
+
+<div class="ad-slot" id="mid"></div>
+
+<p style="font-size:10px;color:#555;text-align:center;margin-top:10px">Take screenshot to share on TikTok / Snapchat - خد سكرين شوت</p>
+<a href="/" style="display:block;text-align:center;margin-top:10px;color:#555;font-size:11px;text-decoration:none">← Back</a>
+
+<div class="ad-slot"></div>
+</div>
+
+<script>
+let msgs=[{side:'them',text:'السلام عليكم، وينك اليوم؟',time:'09:15'},{side:'me',text:'وعليكم السلام، عندي ظرف طارئ',time:'09:16'}];
+function updateHeader(){
+ document.getElementById('hName').innerText=document.getElementById('contactName').value || 'Contact';
+ document.getElementById('hStatus').innerText=document.getElementById('status').value;
+}
+document.getElementById('status').addEventListener('change',updateHeader);
+function render(){
+ const body=document.getElementById('chatBody'); body.innerHTML='';
+ msgs.forEach(m=>{
+  const div=document.createElement('div'); div.className='bubble '+m.side; div.innerHTML=`${m.text}<span class="time">${m.time} ✓✓</span>`; body.appendChild(div);
+ });
+ body.scrollTop=body.scrollHeight;
+}
+function addMsg(){
+ const txt=document.getElementById('msgText').value.trim(); if(!txt) return;
+ const side=document.getElementById('side').value;
+ const now=new Date(); const time=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+ msgs.push({side,text:txt,time}); document.getElementById('msgText').value=''; render(); document.getElementById('mid').style.display='flex';
+}
+function quickAdd(t){document.getElementById('msgText').value=t; addMsg();}
+function clearChat(){msgs=[];render();}
+function downloadChat(){
+ alert('📸 خد سكرين شوت الآن - Press Volume + Power to screenshot. For 4K export, we will add canvas export in v2.');
+}
+document.getElementById('msgText').addEventListener('keypress',e=>{if(e.key==='Enter') addMsg()});
+render();
+</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+</body>
+</html>

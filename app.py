@@ -270,48 +270,66 @@ def sitemap():
 
 @app.route('/robots.txt')
 def robots():
-    txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
+    txt = "User-agent: *\nAllow: /\nAllow: /tool/lagos-rent-package\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
 # ========== BACKEND APIS ==========
 
-# NEW: LAGOS RENT PACKAGE API
 @app.route('/api/lagos-rent', methods=['POST'])
 def api_lagos_rent():
     try:
-        data = request.json
+        data = request.json or {}
         rent = float(data.get('rent', 0))
-        if rent <= 0: return jsonify({'error':'Invalid rent'}), 400
-        location = data.get('location', 'mainland').lower()
+        if rent <= 0:
+            return jsonify({'error':'Enter valid rent amount'}), 400
+        if rent < 10000:
+            return jsonify({'error':'Rent too low'}), 400
+
+        location = (data.get('location') or 'mainland').lower()
         config = {
-            'mainland': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5},
-            'yaba': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5},
-            'ikeja': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10},
-            'lekki': {'agreement':10, 'commission':10, 'damages':15, 'caution':15, 'legal':10},
-            'vi': {'agreement':15, 'commission':15, 'damages':15, 'caution':15, 'legal':10},
+            'mainland': {'agreement':10, 'commission':10, 'damages':5, 'caution':5, 'legal':5, 'inspection':3000, 'label':'Mainland - Surulere, Agege, Alimosho'},
+            'yaba': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5, 'inspection':5000, 'label':'Yaba, Ebute Metta'},
+            'ikeja': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10, 'inspection':7000, 'label':'Ikeja, Ogba, Allen'},
+            'lekki': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10, 'inspection':10000, 'label':'Lekki, Ajah, Sangotedo'},
+            'vi': {'agreement':10, 'commission':10, 'damages':15, 'caution':15, 'legal':10, 'inspection':15000, 'label':'VI, Ikoyi, Banana'},
         }
         c = config.get(location, config['mainland'])
+
         agreement = rent * c['agreement']/100
         commission = rent * c['commission']/100
         damages = rent * c['damages']/100
         caution = rent * c['caution']/100
         legal = rent * c['legal']/100
-        inspection = 10000 if location in ['lekki','vi'] else 5000
-        if location == 'mainland': inspection = 3000
+        inspection = c['inspection']
 
         total = rent + agreement + commission + damages + caution + legal + inspection
         monthly = total / 12
 
-        # Optional: log leads to console for you
-        print(f"[LEAD] Lagos Rent: {rent} - {location} - Total: {total} - IP: {request.remote_addr}")
+        # Lead log for your WhatsApp agent business
+        print(f"[LEAD] Rent:{rent} Loc:{location} Total:{total} IP:{request.headers.get('X-Forwarded-For', request.remote_addr)} Time:{datetime.now()}")
 
         return jsonify({
-            'rent': rent, 'agreement': agreement, 'commission': commission,
-            'damages': damages, 'caution': caution, 'legal': legal,
-            'inspection': inspection, 'total': total, 'monthly': monthly,
-            'location': location, 'percent': c
+            'rent': int(rent),
+            'agreement': int(agreement),
+            'commission': int(commission),
+            'damages': int(damages),
+            'caution': int(caution),
+            'legal': int(legal),
+            'inspection': int(inspection),
+            'total': int(total),
+            'monthly': int(monthly),
+            'location': location,
+            'location_label': c['label'],
+            'percent': {
+                'agreement': c['agreement'],
+                'commission': c['commission'],
+                'damages': c['damages'],
+                'caution': c['caution'],
+                'legal': c['legal']
+            }
         })
     except Exception as e:
+        print(f"lagos-rent error: {e}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/qr', methods=['POST'])

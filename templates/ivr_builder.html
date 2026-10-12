@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IVR Builder $5 USDT - {{country_name}}</title>
+<style>
+*{box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
+.card{max-width:700px;margin:0 auto;background:#121212;border:1px solid #222;border-radius:16px;padding:20px}
+h1{font-size:20px} .wallet{font-family:monospace;background:#000;padding:10px;border-radius:8px;font-size:11px;word-break:break-all;color:#00FF88;border:1px solid #333;margin:8px 0}
+input,textarea,select{width:100%;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:12px;color:#fff;margin-top:8px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-weight:700;margin-top:12px;cursor:pointer}
+.green{background:#00FF88;color:#000} .dark{background:#222;color:#fff;border:1px solid #333}
+.small{font-size:11px;color:#666;margin-top:8px} .ok{color:#00FF88} .err{color:#ff4444}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>📞 IVR Builder - 5 USDT</h1>
+<p style="color:#888;font-size:12px">{{country_name}} • TRC20 Payment</p>
+
+<label style="font-size:11px;color:#aaa;margin-top:12px;display:block">BUSINESS NAME</label>
+<input id="biz" placeholder="ClearCode Logistics">
+
+<label style="font-size:11px;color:#aaa;margin-top:12px;display:block">IVR SCRIPT</label>
+<textarea id="script" style="min-height:100px">Welcome to ClearCode. Press 1 for Sales, Press 2 for Support. Thank you.</textarea>
+
+<div style="background:#0f1f15;border:1px solid #00FF8855;border-radius:12px;padding:14px;margin-top:16px">
+<h3 style="font-size:13px">Pay 5 USDT TRC20 to unlock</h3>
+<div class="wallet" id="wallet">TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4</div>
+<button class="btn dark" onclick="navigator.clipboard.writeText('TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4');alert('Copied')">📋 Copy Wallet</button>
+<input id="txid" placeholder="Paste TxID after payment">
+<button class="btn green" id="vbtn" onclick="verify()">✅ Verify & Unlock</button>
+<p id="vmsg" class="small"></p>
+</div>
+
+<button class="btn green" id="dlbtn" disabled onclick="download()">⬇️ Download MP3 (Locked)</button>
+
+<div style="margin-top:16px">
+<input id="phone" placeholder="+234 phone for test call">
+<button class="btn dark" onclick="callTest()">📲 Test Call</button>
+<p id="cmsg" class="small"></p>
+</div>
+</div>
+
+<script>
+let unlocked=false;
+async function verify(){
+ const txid=document.getElementById('txid').value.trim();
+ const m=document.getElementById('vmsg');
+ if(txid.length<10){m.innerHTML='<span class=err>Invalid TxID</span>';return}
+ m.textContent='Verifying...';
+ document.getElementById('vbtn').disabled=true;
+ try{
+  const r=await fetch('/api/ivr/verify-usdt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid})});
+  const d=await r.json();
+  if(d.ok){unlocked=true;m.innerHTML='<span class=ok>✅ Verified '+d.amount+' USDT - Unlocked!</span>';document.getElementById('dlbtn').disabled=false;document.getElementById('dlbtn').textContent='⬇️ Download MP3 (Unlocked)';}
+  else m.innerHTML='<span class=err>❌ '+d.error+'</span>';
+ }catch(e){m.innerHTML='<span class=err>Network error</span>'}
+ document.getElementById('vbtn').disabled=false;
+}
+function download(){
+ if(!unlocked){alert('Pay 5 USDT first');return}
+ const text=document.getElementById('script').value;
+ window.location='/api/ivr/download?text='+encodeURIComponent(text);
+}
+async function callTest(){
+ if(!unlocked){alert('Pay first');return}
+ const phone=document.getElementById('phone').value;
+ const text=document.getElementById('script').value;
+ const m=document.getElementById('cmsg');
+ m.textContent='Calling...';
+ const r=await fetch('/api/ivr/call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,text})});
+ const d=await r.json();
+ m.textContent=d.ok?d.msg:d.error;
+}
+</script>
+</body>
+</html>

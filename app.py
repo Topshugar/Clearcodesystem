@@ -26,17 +26,17 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# 9 COUNTRIES - 85 TOOLS - FINAL WITH GULF VIRAL TOOLS + IVR BUILDER
+# 9 COUNTRIES - 85 TOOLS - GULF VIRAL ONLY IN GULF + IVR EVERYWHERE
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
- 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package','ivr_builder'],
+ 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt','ivr_builder'],
  'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
  'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
  'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
  'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
  'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
  'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
- 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt','ivr_builder'],
 }
 
 COUNTRY_NAME = {
@@ -388,7 +388,7 @@ def ivr_verify():
     try:
         data = request.get_json() or {}
         txid = data.get('txid','').strip()
-        required = 5  # Fixed 5 USDT for all
+        required = 5
         if len(txid) < 10:
             return jsonify({"ok": False, "error": "Invalid TxID"})
         return jsonify({"ok": True, "msg": f"Verified {required} USDT", "wallet": "TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4", "amount": required})

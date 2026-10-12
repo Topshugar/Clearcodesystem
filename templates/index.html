@@ -28,10 +28,10 @@
 <title>Free USA Tools 2026 - Paycheck Tax, Tip Calculator, Background Check | ClearCodeSystem</title>
 <meta name="description" content="Free USA tools 2026 - paycheck calculator federal tax, tip calculator, background check USA, notify simulator.">
 {% else %}
-<title>Free Nigeria Tools 2026 - NEPA Band A, CAC Checker, Fuel, Rent Lagos | ClearCodeSystem</title>
-<meta name="description" content="Free Nigeria tools 2026 - NEPA units Band A, CAC name checker, fuel cost, Lagos rent splitter, PAYE tax, JAMB, WAEC, NIN validator. 24 tools.">
+<title>Free Nigeria Tools 2026 - NEPA Band A, CAC Checker, Fuel, Lagos Rent Package, Rent Lagos | ClearCodeSystem</title>
+<meta name="description" content="Free Nigeria tools 2026 - Lagos total rent package calculator agreement commission damages, NEPA units Band A, CAC name checker, fuel cost, Lagos rent splitter, PAYE tax, JAMB, WAEC, NIN validator. 25 tools.">
 {% endif %}
-<meta name="keywords" content="{{country_name}} tools, {{country}} tools 2026, traffic fines, gold price, gratuity">
+<meta name="keywords" content="{{country_name}} tools, {{country}} tools 2026, traffic fines, gold price, gratuity, lagos rent package">
 <link rel="canonical" href="https://clearcodesystem.onrender.com/?country={{country}}">
 <meta property="og:title" content="Free {{country_name}} Tools 2026 - {{allowed|length}} Tools">
 <meta property="og:description" content="Free tools for {{country_name}} - {{allowed|length}} tools unlocked">
@@ -47,11 +47,13 @@
 .ip-box{max-width:600px;margin:14px auto;background:#121212;border:1px solid #00FF88;border-radius:12px;padding:10px;font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .grid{max-width:1100px;margin:16px auto;padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}} @media(min-width:1000px){.grid{grid-template-columns:repeat(4,1fr)}}
-.tool{background:#121212;border:1px solid #222;border-radius:18px;padding:14px;text-decoration:none;color:#fff;display:block;transition:0.2s}
+.tool{background:#121212;border:1px solid #222;border-radius:18px;padding:14px;text-decoration:none;color:#fff;display:block;transition:0.2s;position:relative}
 .tool:hover{border-color:#00FF88;transform:translateY(-2px)} .tool h3{font-size:13px;font-weight:800;line-height:1.2} .tool p{font-size:10px;color:#888;margin-top:4px;line-height:1.4}
 .badge{font-size:8px;padding:3px 8px;border-radius:20px;font-weight:900;background:#00FF88;color:#000}
+.badge.new{background:#FF0040;color:#fff}
 .seo-box{max-width:1100px;margin:24px auto;padding:16px;background:#121212;border:1px solid #222;border-radius:18px}
 .footer{text-align:center;padding:20px;color:#555;font-size:11px;border-top:1px solid #1a1a1a;margin-top:24px}
+.ad-slot{max-width:1100px;margin:10px auto;background:#0e0e0e;border-radius:12px;min-height:90px;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -68,11 +70,12 @@
 
 <div class="grid">
 {% for t in allowed %}
-{% set icon = '⚡' %}{% set title = t.replace('-',' ').replace('_',' ').title() %}
+{% set icon = '⚡' %}{% set title = t.replace('-',' ').replace('_',' ').title() %}{% set is_new = false %}
 {% if t=='nepa_calculator' %}{% set icon='⚡' %}{% set title='NEPA Units Calculator Band A' %}
 {% elif t=='cac_checker' %}{% set icon='🏢' %}{% set title='CAC Name Checker NG' %}
 {% elif t=='fuel_calculator' %}{% set icon='⛽' %}{% set title='Fuel Cost Calculator' %}
 {% elif t=='rent_splitter' %}{% set icon='🏠' %}{% set title='Lagos Rent Splitter Total' %}
+{% elif t=='lagos_rent_package' or t=='lagos-rent-package' %}{% set icon='🏠🔥' %}{% set title='Lagos Total Rent Package Calculator' %}{% set is_new = true %}
 {% elif t=='land_converter' %}{% set icon='🏞️' %}{% set title='Land Converter Plot SqM' %}
 {% elif t=='paye_calculator' %}{% set icon='💼' %}{% set title='PAYE Tax + Pension NG' %}
 {% elif t=='jamb_calculator' %}{% set icon='🎓' %}{% set title='JAMB Age + Score 2026' %}
@@ -140,7 +143,9 @@
 {% elif t=='salary_sa' %}{% set icon='💰' %}{% set title='Saudi Salary Calculator' %}
 {% endif %}
 <a href="/tool/{{t.replace('_','-')}}" class="tool">
-<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:22px">{{icon}}</span><span class="badge">{{country}} • LIVE</span></div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:22px">{{icon}}</span>
+{% if is_new %}<span class="badge new">NEW 🔥</span>{% else %}<span class="badge">{{country}} • LIVE</span>{% endif %}
+</div>
 <h3>{{title}}</h3>
 <p>Optimized for {{country_name}} • 4K • Free</p>
 </a>
@@ -152,41 +157,31 @@
 {% if country=='UK' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇬🇧 UK Tools 2026 - HMRC Take Home Pay, Rent, VAT</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">ClearCodeSystem offers 6 free tools for UK. Top searches: <b style="color:#aaa">UK take home pay calculator 2026/27 HMRC income tax National Insurance student loan Plan 1 2 5</b>, <b style="color:#aaa">UK rent splitter London council tax bills</b>, <b style="color:#aaa">UK VAT calculator 20% add remove VAT</b>, <b style="color:#aaa">UK tip calculator 12.5% service charge optional</b>. HMRC rates: PA £12,570, basic 20%, higher 40%, additional 45%. No data saved. VPN to switch to Gulf/Nigeria.</p>
-<p style="font-size:11px;color:#666;margin-top:8px">Popular UK: take home pay • tax calculator UK • rent London • VAT 20% • payslip UK • service charge UK</p>
-
 {% elif country=='BH' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇧🇭 Bahrain Tools 2026 - CPR, Traffic Fines, Gratuity BHD</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">ClearCodeSystem offers 6 free Bahrain tools. Top: <b style="color:#aaa">Bahrain CPR check</b>, <b style="color:#aaa">Bahrain traffic fines General Directorate of Traffic</b>, <b style="color:#aaa">Bahrain gratuity EOS calculator labor law</b>, <b style="color:#aaa">Bahrain gold price BHD today per gram 24K 21K 18K</b>, <b style="color:#aaa">Bahrain rent calculator Manama</b>, overtime. Official links included. Gulf CPC $3-8.</p>
-<p style="font-size:11px;color:#666;margin-top:8px">Bahrain CPR • Bahrain traffic fines • Bahrain gratuity • gold price BHD • rent Bahrain</p>
-
 {% elif country=='OM' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇴🇲 Oman Tools 2026 - Civil ID ROP, Traffic Fines, Gratuity OMR</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">6 free Oman tools: <b style="color:#aaa">Oman civil ID check ROP Royal Oman Police</b>, <b style="color:#aaa">Oman traffic fines ROP</b>, <b style="color:#aaa">Oman gratuity EOS calculator Oman labor law</b>, <b style="color:#aaa">Oman gold price OMR per gram</b>, <b style="color:#aaa">Oman rent calculator Muscat</b>, overtime 25% 50%. Gulf CPC $3-8.</p>
-<p style="font-size:11px;color:#666;margin-top:8px">Oman civil ID • Oman traffic fines • Oman gratuity • gold price OMR • rent Muscat</p>
-
 {% elif country=='QA' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇶🇦 Qatar Tools 2026 - QID MOI, Traffic Fines, Gratuity QAR</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">6 free Qatar tools: <b style="color:#aaa">QID check MOI Qatar ID status</b>, <b style="color:#aaa">Qatar traffic fines MOI</b>, <b style="color:#aaa">Qatar gratuity EOS calculator Qatar labor law</b>, <b style="color:#aaa">Qatar gold price QAR today</b>, <b style="color:#aaa">Qatar rent splitter Doha Pearl West Bay</b>. Gulf CPC $3-8.</p>
-
 {% elif country=='AE' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇦🇪 UAE Tools 2026 - Emirates ID ICP, RTA Fines, Gratuity AED</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">7 free UAE tools: <b style="color:#aaa">Emirates ID check ICP UAE</b>, <b style="color:#aaa">UAE traffic fines Dubai RTA Abu Dhabi</b>, <b style="color:#aaa">UAE gratuity calculator MOHRE EOS</b>, <b style="color:#aaa">UAE gold price Dubai 22K 24K AED today</b>, <b style="color:#aaa">UAE rent calculator + Ejari</b>, overtime 125% 150%, salary basic split. Gulf CPC $3-8.</p>
-
 {% elif country=='KW' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇰🇼 Kuwait Tools 2026 - Civil ID PACI, Traffic Fines, Gratuity KWD</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">6 free Kuwait tools: <b style="color:#aaa">Kuwait Civil ID check PACI</b>, <b style="color:#aaa">Kuwait traffic fines MOI</b>, <b style="color:#aaa">Kuwait gratuity EOS</b>, <b style="color:#aaa">Kuwait gold price KWD today</b>, rent, overtime. Gulf CPC $3-8.</p>
-
 {% elif country=='SA' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇸🇦 Saudi Tools 2026 - Iqama, Hijri, GOSI, ZATCA</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">Free Saudi tools: Iqama expiry check Absher, Hijri to Gregorian, GOSI 9.75%, ZATCA QR Fatoora e-invoice, GPA calculator Saudi, salary. KSA CPC $2-4.</p>
-
 {% elif country=='US' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇺🇸 USA Tools 2026 - Paycheck Federal Tax, Tip, Background Check</h2>
 <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">Free USA tools: paycheck calculator federal tax brackets 2026, tip 15% 18% 20% splitter, background check. USA CPC $8-15 premium.</p>
-
 {% else %}
-<h2 style="font-size:14px;font-weight:900">Free 🇳🇬 Nigeria Tools 2026 - NEPA Band A, CAC, Fuel, Rent Lagos</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">24 free Nigeria tools: NEPA Band A units calculator, CAC business name checker, fuel cost per litre, Lagos rent splitter total package, land converter plot sqm, PAYE tax + pension, JAMB age + score 2026, WAEC NECO grade, NIN validator + slip. Mobile 4K.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇳🇬 Nigeria Tools 2026 - Lagos Rent Package, NEPA Band A, CAC, Fuel</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">25 free Nigeria tools: <b style="color:#00FF88">NEW: Lagos total rent package calculator</b> - if rent is 500k how much is total package? Calculates Agreement 10%, Commission 10%, Damages 10%, Caution, Legal. Also NEPA Band A units calculator, CAC business name checker, fuel cost per litre, Lagos rent splitter total package, land converter plot sqm, PAYE tax + pension, JAMB age + score 2026, WAEC NECO grade, NIN validator + slip. Mobile 4K.</p>
+<p style="font-size:11px;color:#666;margin-top:8px">Trending NG: if rent is 500k how much is total package • Lagos rent package calculator • agreement commission Lagos • total package rent • NEPA Band A • CAC checker</p>
 {% endif %}
 </div>
 

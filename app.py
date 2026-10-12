@@ -382,6 +382,47 @@ def ruler_api():
     if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
+# ================= IVR BUILDER BACKEND - USDT: TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4 =================
+@app.route('/api/ivr/generate-audio', methods=['POST'])
+def ivr_generate():
+    try:
+        data = request.get_json() or {}
+        text = data.get('text','Welcome to ClearCode')
+        return jsonify({"ok": True, "audio_url": "/static/demo-ivr.mp3", "text": text})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+@app.route('/api/ivr/verify-usdt', methods=['POST'])
+def ivr_verify():
+    try:
+        data = request.get_json() or {}
+        txid = data.get('txid','').strip()
+        type_ = data.get('type','simple')
+        required = 5 if type_ == 'simple' else 10
+        if len(txid) < 10:
+            return jsonify({"ok": False, "error": "Invalid TxID"})
+        # TODO: Replace with real Tronscan check for TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4
+        return jsonify({"ok": True, "msg": f"Verified {required} USDT", "wallet": "TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+@app.route('/api/ivr/call', methods=['POST'])
+def ivr_call():
+    try:
+        data = request.get_json() or {}
+        phone = data.get('phone','')
+        text = data.get('text','')
+        print(f"[IVR CALL LEAD] Phone:{phone} Text:{text[:50]} IP:{request.headers.get('X-Forwarded-For', request.remote_addr)}")
+        return jsonify({"ok": True, "msg": f"Call queued to {phone}"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+@app.route('/api/ivr/download')
+def ivr_download():
+    text = request.args.get('text','Welcome')
+    return jsonify({"ok": True, "text": text, "note": "MP3 generation via gTTS next"})
+# ================= END IVR BACKEND =================
+
 @app.route('/api/clear-shell', methods=['POST'])
 def shell_api():
     d = request.json

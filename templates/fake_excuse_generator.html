@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عذر غياب جاهز 2026 - Fake Excuse Generator | ClearCodeSystem</title>
+<meta name="description" content="مولد اعذار غياب جاهز للدوام والمدرسة - عذر طبي، عائلي، طارئ. Arabic + English sick leave excuse generator.">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,Tajawal,sans-serif;padding:16px}
+.card{max-width:600px;margin:20px auto;background:#121212;border:1px solid #222;border-radius:20px;padding:18px}
+select,input,textarea{width:100%;padding:14px;background:#080808;border:1px solid #333;border-radius:12px;color:#fff;margin-top:10px;font-size:14px}
+button{width:100%;padding:14px;background:#00FF88;color:#000;border:none;border-radius:12px;font-weight:900;margin-top:12px;cursor:pointer;font-size:14px}
+button.sec{background:#222;color:#fff;border:1px solid #333}
+.result{margin-top:16px;background:#0a0a0a;border:1px solid #00FF88;border-radius:14px;padding:16px;display:none;line-height:1.7}
+.ad-slot{margin:14px 0;min-height:90px;background:#0e0e0e;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.badge{font-size:10px;padding:4px 10px;background:#00FF88;color:#000;border-radius:20px;font-weight:900;display:inline-block;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="font-weight:900">🤒 مولد عذر غياب - Excuse Generator</h2>
+<p style="font-size:11px;color:#888;margin-top:6px">اختر السبب وانسخ عذر جاهز عربي + انجليزي للمدير / المدرسة</p>
+
+<div class="ad-slot"></div>
+
+<select id="reason">
+<option value="sick">🤒 مرض / Sick Leave</option>
+<option value="family">👨‍👩‍👧 ظرف عائلي / Family Emergency</option>
+<option value="traffic">🚗 حادث / زحمة / Traffic Accident</option>
+<option value="doctor">🏥 موعد مستشفى / Doctor Appointment</option>
+<option value="personal">😔 ظرف شخصي طارئ / Personal Emergency</option>
+<option value="car">🔧 سيارة خربانة / Car Breakdown</option>
+</select>
+
+<select id="lang">
+<option value="both">عربي + English (Bilingual)</option>
+<option value="ar">عربي فقط</option>
+<option value="en">English Only</option>
+</select>
+
+<input id="name" type="text" placeholder="اسمك (اختياري) - Your Name">
+<input id="days" type="text" placeholder="المدة: يوم واحد، يومين - e.g. Today, 2 days" value="اليوم">
+
+<button onclick="generate()">✨ توليد العذر - Generate</button>
+<button onclick="randomExcuse()" class="sec">🎲 عذر عشوائي - Random</button>
+
+<div id="res" class="result"></div>
+
+<div class="ad-slot" id="mid" style="display:none"></div>
+
+<button onclick="copyRes()" id="copyBtn" style="display:none;background:#222;color:#fff;border:1px solid #333">📋 نسخ - Copy</button>
+<button onclick="shareWA()" class="sec">📱 ارسال واتساب للمدير</button>
+
+<a href="/" style="display:block;text-align:center;margin-top:12px;color:#555;font-size:11px;text-decoration:none">← Back to tools</a>
+
+<div class="ad-slot"></div>
+</div>
+
+<script>
+const excuses={
+ sick:{
+  ar:["أعتذر عن عدم الحضور اليوم بسبب وعكة صحية مفاجئة (ارتفاع حرارة + صداع) وسأوافيكم بتقرير طبي عند العودة.","تعرضت لنزلة برد شديدة مع التهاب حلق ولا أستطيع الحضور اليوم، أرجو قبول عذري.","استيقظت اليوم مع ألم شديد في المعدة وتوجهت للمستوصف، سأعود غداً بإذن الله."],
+  en:["I apologize for not being able to attend today due to a sudden fever and severe headache. I will provide a medical report upon return.","I woke up with severe flu symptoms and sore throat, unable to come to work/school today. Kindly accept my apology.","Due to unexpected food poisoning and stomach pain, I visited the clinic this morning and was advised to rest today."]
+ },
+ family:{
+  ar:["ظرف عائلي طارئ استدعى حضوري الفوري مع العائلة في المستشفى، أرجو تفهمكم.","يوجد حالة طارئة في العائلة واحتاج للبقاء معهم اليوم، سأعوض ما فاتني.","عذر عائلي قهري يمنعني من الحضور اليوم، شكراً لتفهمكم."],
+  en:["Due to a sudden family emergency that requires my immediate presence at the hospital, I won't be able to attend today.","A critical family matter came up and I must stay with them today. I will make up for any missed work."]
+ },
+ traffic:{
+  ar:["تعرضت لحادث مروري بسيط أثناء الطريق وتم تعطيل السيارة واحتاج وقت للإجراءات.","يوجد حادث كبير والطريق مغلق تماماً من المرور، حاولت الوصول بكل الطرق.","زحمة سير خانقة بسبب حادث والطريق متوقف لأكثر من ساعة."],
+  en:["I had a minor traffic accident on my way and my car is disabled, need time for procedures.","There is a major accident and the road is completely closed by traffic police, I tried all alternative routes."]
+ },
+ doctor:{
+  ar:["لدي موعد مستشفى محجوز مسبقاً ولا يمكن تأجيله اليوم، تم تحديده من أسابيع.","موعد متابعة مهم في المستشفى مع الدكتور المختص ولا يمكن تأجيله.","لدي تحاليل طبية صباح اليوم في المستشفى ويجب أن أكون صائم."],
+  en:["I have a pre-booked hospital appointment that cannot be postponed, scheduled weeks ago.","I have an important follow-up appointment with my specialist today."]
+ },
+ personal:{
+  ar:["مررت بظرف شخصي طارئ جداً يمنعني من الحضور اليوم، أرجو تفهمكم.","ظرف خاص قهري خارج عن إرادتي يمنعني من الدوام اليوم.","أعتذر، أمر شخصي طارئ جداً ولا أستطيع الحضور."],
+  en:["Due to a very urgent personal emergency beyond my control, I cannot attend today.","I am facing a sudden personal issue that requires my immediate attention."]
+ },
+ car:{
+  ar:["تعطلت السيارة فجأة في الطريق ولم أتمكن من تشغيلها، انتظرت السطحة.","السيارة لا تعمل صباح اليوم والبطارية فارغة تماماً.","حصل ثقب في الإطار ولا يوجد بنشري قريب."],
+  en:["My car broke down suddenly on the road and won't start, waiting for roadside assistance.","Car battery is completely dead this morning and I have a flat tire with no repair shop nearby."]
+ }
+}
+
+function generate(){
+ const r=document.getElementById('reason').value
+ const l=document.getElementById('lang').value
+ const name=document.getElementById('name').value.trim()
+ const days=document.getElementById('days').value.trim() || "اليوم / Today"
+ const pick=(arr)=>arr[Math.floor(Math.random()*arr.length)]
+ const arTxt=pick(excuses[r].ar)
+ const enTxt=pick(excuses[r].en)
+
+ let final=""
+ if(l==="both" || l==="ar") final+=`عذر غياب - ${days}\n${name?`الاسم: ${name}\n`:''}${arTxt}\n\n`
+ if(l==="both" || l==="en") final+=`Excuse Letter - ${days}\n${name?`Name: ${name}\n`:''}${enTxt}`
+ if(l==="ar") final=final.trim()
+
+ document.getElementById('res').style.display='block'
+ document.getElementById('res').innerHTML=`<span class="badge">جاهز للارسال ✅ READY</span><div style="white-space:pre-wrap;font-size:13px">${final}</div>`
+ document.getElementById('res').dataset.text=final
+ document.getElementById('copyBtn').style.display='block'
+ document.getElementById('mid').style.display='flex'
+}
+
+function randomExcuse(){
+ const keys=Object.keys(excuses); document.getElementById('reason').value=keys[Math.floor(Math.random()*keys.length)]; generate()
+}
+
+function copyRes(){
+ const t=document.getElementById('res').dataset.text; navigator.clipboard.writeText(t); const btn=document.getElementById('copyBtn'); btn.innerText='✅ تم النسخ!'; setTimeout(()=>btn.innerText='📋 نسخ - Copy',1200)
+}
+
+function shareWA(){
+ const t=document.getElementById('res').dataset.text || "احتاج عذر غياب"; window.open(`https://wa.me/?text=${encodeURIComponent(t)}`)
+}
+generate()
+</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+</body>
+</html>

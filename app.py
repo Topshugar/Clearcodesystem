@@ -170,28 +170,39 @@ def gpa_calculator(): return render_with_country('gpa_calculator.html')
 @app.route('/tool/salary-sa')
 def salary_sa(): return render_with_country('salary_sa.html')
 
-# NG
+# NG - Nigeria Tools
 @app.route('/tool/nepa-calculator')
 def nepa_calculator(): return render_with_country('nepa_calculator.html')
+
 @app.route('/tool/cac-checker')
 def cac_checker(): return render_with_country('cac_checker.html')
+
 @app.route('/tool/fuel-calculator')
 def fuel_calculator(): return render_with_country('fuel_calculator.html')
+
 @app.route('/tool/rent-splitter')
 def rent_splitter(): return render_with_country('rent_splitter.html')
+
 @app.route('/tool/land-converter')
 def land_converter(): return render_with_country('land_converter.html')
+
 @app.route('/tool/paye-calculator')
 def paye_calculator(): return render_with_country('paye_calculator.html')
+
 @app.route('/tool/jamb-calculator')
 def jamb_calculator(): return render_with_country('jamb_calculator.html')
+
 @app.route('/tool/waec-calculator')
 def waec_calculator(): return render_with_country('waec_calculator.html')
+
 @app.route('/tool/nin-validator')
 def nin_validator(): return render_with_country('nin_validator.html')
+
 @app.route('/tool/lagos-rent-package')
 def lagos_rent_package(): return render_with_country('lagos_rent_package.html')
 
+@app.route('/tool/ivr-builder')
+def ivr_builder(): return render_with_country('ivr_builder.html')
 # QATAR
 @app.route('/tool/qid-check')
 def qid_check(): return render_with_country('qid_check.html')

@@ -3,39 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Salary Flex 2026 - كم تكسب وانت نايم؟ | ClearCodeSystem</title>
-<meta name="description" content="Salary flex calculator - كم تكسب وانت نايم وانت تلعب - QAR SAR AED KWD">
+<title>Salary Flex 2026 - كم تكسب وانت نايم؟ All Currencies | ClearCodeSystem</title>
+<meta name="description" content="Salary flex all currencies - كم تكسب وانت نايم - worldwide salary calculator">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
 .card{max-width:550px;margin:20px auto;background:#121212;border:1px solid #222;border-radius:20px;padding:18px;text-align:center}
 input,select{width:100%;padding:14px;background:#080808;border:1px solid #333;border-radius:12px;color:#fff;margin-top:10px;font-size:15px}
 button{width:100%;padding:14px;background:#00FF88;color:#000;border:none;border-radius:12px;font-weight:900;margin-top:12px;cursor:pointer}
-.stat{display:inline-block;background:#0a0a0a;border:1px solid #222;border-radius:14px;padding:14px;margin:6px;min-width:140px}
-.stat b{font-size:20px;color:#00FF88;display:block}.stat span{font-size:10px;color:#888}
+.stat{display:inline-block;background:#0a0a0a;border:1px solid #222;border-radius:14px;padding:14px;margin:6px;min-width:130px}
+.stat b{font-size:18px;color:#00FF88;display:block}.stat span{font-size:9px;color:#888}
 .ad-slot{margin:14px 0;min-height:90px;background:#0e0e0e;border-radius:12px;display:flex;align-items:center;justify-content:center}
 .result{margin-top:16px;display:none}
 </style>
 </head>
 <body>
 <div class="card">
-<h2 style="font-weight:900">💸 Salary Flex - كم تكسب؟</h2>
-<p style="font-size:11px;color:#888">How much you earn while sleeping / gaming / chilling</p>
+<h2 style="font-weight:900">💸 Salary Flex - Worldwide</h2>
+<p style="font-size:11px;color:#888">كم تكسب وانت نايم؟ All currencies</p>
 <div class="ad-slot"></div>
 
 <select id="currency">
-<option value="QAR">QAR - قطري</option>
-<option value="SAR">SAR - سعودي</option>
-<option value="AED">AED - اماراتي</option>
-<option value="KWD">KWD - كويتي</option>
-<option value="BHD">BHD - بحريني</option>
-<option value="OMR">OMR - عماني</option>
-<option value="USD">USD - $</option>
-<option value="NGN">NGN - ₦</option>
+<option value="QAR">🇶🇦 QAR - Qatari Riyal</option>
+<option value="SAR">🇸🇦 SAR - Saudi Riyal</option>
+<option value="AED">🇦🇪 AED - UAE Dirham</option>
+<option value="KWD">🇰🇼 KWD - Kuwaiti Dinar</option>
+<option value="BHD">🇧🇭 BHD - Bahraini Dinar</option>
+<option value="OMR">🇴🇲 OMR - Omani Rial</option>
+<option value="JOD">🇯🇴 JOD - Jordanian Dinar</option>
+<option value="EGP">🇪🇬 EGP - Egyptian Pound</option>
+<option value="NGN">🇳🇬 NGN - Nigerian Naira</option>
+<option value="GHS">🇬🇭 GHS - Ghana Cedi</option>
+<option value="KES">🇰🇪 KES - Kenyan Shilling</option>
+<option value="ZAR">🇿🇦 ZAR - South African Rand</option>
+<option value="USD">🇺🇸 USD - US Dollar</option>
+<option value="EUR">🇪🇺 EUR - Euro</option>
+<option value="GBP">🇬🇧 GBP - British Pound</option>
+<option value="CAD">🇨🇦 CAD - Canadian Dollar</option>
+<option value="AUD">🇦🇺 AUD - Australian Dollar</option>
+<option value="INR">🇮🇳 INR - Indian Rupee</option>
+<option value="PKR">🇵🇰 PKR - Pakistani Rupee</option>
+<option value="BDT">🇧🇩 BDT - Bangladeshi Taka</option>
+<option value="TRY">🇹🇷 TRY - Turkish Lira</option>
+<option value="MYR">🇲🇾 MYR - Malaysian Ringgit</option>
+<option value="IDR">🇮🇩 IDR - Indonesian Rupiah</option>
+<option value="PHP">🇵🇭 PHP - Philippine Peso</option>
+<option value="JPY">🇯🇵 JPY - Japanese Yen</option>
+<option value="KRW">🇰🇷 KRW - Korean Won</option>
+<option value="CNY">🇨🇳 CNY - Chinese Yuan</option>
+<option value="BRL">🇧🇷 BRL - Brazilian Real</option>
+<option value="MXN">🇲🇽 MXN - Mexican Peso</option>
 </select>
 
-<input id="salary" type="number" placeholder="Monthly Salary - راتبك" value="8000" oninput="calc()">
-<input id="hours" type="number" placeholder="Sleep hours - ساعات نوم" value="8" oninput="calc()">
+<input id="salary" type="number" placeholder="Monthly Salary - راتبك الشهري" value="8000" oninput="calc()">
+<input id="hours" type="number" placeholder="Sleep hours - ساعات النوم" value="8" oninput="calc()">
 
 <button onclick="calc()">💰 Flex - احسب</button>
 
@@ -56,12 +77,18 @@ function calc(){
  const perHour=sal/30/24;
  const perMin=perHour/60;
  const earnSleep=perHour*sleepH;
+ const earnGame=perHour*3;
+ const earnShower=perMin*15;
  document.getElementById('res').style.display='block';
  document.getElementById('res').innerHTML=`
- <div class="stat"><b>${(perHour/3600).toFixed(3)} ${cur}</b><span>PER SECOND</span></div>
- <div class="stat"><b>${perMin.toFixed(2)} ${cur}</b><span>PER MINUTE</span></div>
+ <div class="stat"><b>${(perHour/3600).toFixed(4)} ${cur}</b><span>PER SECOND</span></div>
+ <div class="stat"><b>${perMin.toFixed(3)} ${cur}</b><span>PER MINUTE</span></div>
  <div class="stat"><b>${perHour.toFixed(2)} ${cur}</b><span>PER HOUR</span></div>
- <div style="margin-top:12px;background:#0a0a0a;border:1px solid #00FF88;border-radius:12px;padding:12px"><span style="font-size:11px;color:#888">😴 Sleeping ${sleepH}h</span><b style="display:block;font-size:24px;color:#00FF88">${earnSleep.toFixed(2)} ${cur}</b></div>
+ <div style="margin-top:12px">
+ <div style="background:#0a0a0a;border:1px solid #00FF88;border-radius:12px;padding:12px;margin-top:8px"><span style="font-size:11px;color:#888">😴 Sleeping ${sleepH}h</span><b style="display:block;font-size:22px;color:#00FF88">${earnSleep.toFixed(2)} ${cur}</b></div>
+ <div style="background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:12px;margin-top:8px"><span style="font-size:11px;color:#888">🎮 Gaming 3h</span><b style="display:block">${earnGame.toFixed(2)} ${cur}</b></div>
+ <div style="background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:12px;margin-top:8px"><span style="font-size:11px;color:#888">🚿 Shower 15min</span><b style="display:block">${earnShower.toFixed(2)} ${cur}</b></div>
+ </div>
  `;
  document.getElementById('mid').style.display='flex';
  document.getElementById('shareBtn').style.display='block';
@@ -69,7 +96,7 @@ function calc(){
 }
 function shareFlex(){
  const txt=document.getElementById('res').dataset.txt;
- window.open(`https://wa.me/?text=${encodeURIComponent('💸 اكسب وانا نايم: '+txt+' - https://clearcodesystem.onrender.com/tool/salary-flex')}`);
+ window.open(`https://wa.me/?text=${encodeURIComponent('💸 I earn while sleeping: '+txt+' - https://clearcodesystem.onrender.com/tool/salary-flex')}`);
 }
 calc();
 </script>

@@ -369,8 +369,6 @@ def ruler_api():
     outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html salary_flex.html anonymous_link.html arabic_stylish_name.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     if cmd == '': return jsonify({'output': ''})
-    return jsonify({'    if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
-    if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
 @app.route('/api/clear-shell', methods=['POST'])

@@ -1,128 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ 'ar' if country in ['SA','QA','AE','KW','BH','OM'] else 'en' }}">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Salary Flex 2026 - كم تكسب وانت نايم؟ All Currencies | ClearCodeSystem</title>
-<meta name="description" content="Salary flex all currencies - كم تكسب وانت نايم - worldwide salary calculator">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% if country in ['SA','QA','AE','KW','BH','OM'] %}راتب فلكس - شف راتبك وانت نايم 😂 | Salary Flex {{country}}{% else %}Salary Flex - Earn While Sleeping Calculator {{country}} | ClearCode{% endif %}</title>
+<meta name="description" content="Salary flex meme - calculate how much you earn while sleeping, eating. Viral in {{country_name}}">
+<style>body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px;max-width:500px;margin:auto}.card{background:#121212;border:1px solid #222;border-radius:18px;padding:20px;margin-top:20px}input{width:100%;padding:12px;border-radius:10px;background:#0a0a0a;border:1px solid #222;color:#fff;margin:8px 0}button{width:100%;padding:14px;background:#00FF88;color:#000;border:0;border-radius:12px;font-weight:900} .result{margin-top:16px;background:#00FF8822;border:1px solid #00FF88;padding:14px;border-radius:12px;display:none} .share{display:flex;gap:8px;margin-top:12px} .share a{flex:1;text-align:center;padding:10px;border-radius:10px;text-decoration:none;font-weight:900;font-size:12px} .wa{background:#25D366;color:#fff} .snap{background:#FFFC00;color:#000}</style>
+<!-- Monetag In-Page Push -->
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif;padding:16px}
-.card{max-width:550px;margin:20px auto;background:#121212;border:1px solid #222;border-radius:20px;padding:18px;text-align:center}
-input,select{width:100%;padding:14px;background:#080808;border:1px solid #333;border-radius:12px;color:#fff;margin-top:10px;font-size:15px}
-button{width:100%;padding:14px;background:#00FF88;color:#000;border:none;border-radius:12px;font-weight:900;margin-top:12px;cursor:pointer}
-.stat{display:inline-block;background:#0a0a0a;border:1px solid #222;border-radius:14px;padding:14px;margin:6px;min-width:130px}
-.stat b{font-size:18px;color:#00FF88;display:block}.stat span{font-size:9px;color:#888}
-.ad-slot{margin:14px 0;min-height:90px;background:#0e0e0e;border-radius:12px;display:flex;align-items:center;justify-content:center}
-.result{margin-top:16px;display:none}
-</style>
 </head>
 <body>
+<h1 style="font-weight:900">💸 Salary Flex <span style="color:#00FF88">{{country_name}}</span></h1>
+<p style="color:#888;font-size:12px">{{country}} • LIVE • Earn while sleeping meme - viral Gulf</p>
 <div class="card">
-<h2 style="font-weight:900">💸 Salary Flex - Worldwide</h2>
-<p style="font-size:11px;color:#888">كم تكسب وانت نايم؟ All currencies</p>
-<div class="ad-slot"></div>
-
-<select id="currency">
-<option value="QAR">🇶🇦 QAR - Qatari Riyal</option>
-<option value="SAR">🇸🇦 SAR - Saudi Riyal</option>
-<option value="AED">🇦🇪 AED - UAE Dirham</option>
-<option value="KWD">🇰🇼 KWD - Kuwaiti Dinar</option>
-<option value="BHD">🇧🇭 BHD - Bahraini Dinar</option>
-<option value="OMR">🇴🇲 OMR - Omani Rial</option>
-<option value="JOD">🇯🇴 JOD - Jordanian Dinar</option>
-<option value="EGP">🇪🇬 EGP - Egyptian Pound</option>
-<option value="NGN">🇳🇬 NGN - Nigerian Naira</option>
-<option value="GHS">🇬🇭 GHS - Ghana Cedi</option>
-<option value="KES">🇰🇪 KES - Kenyan Shilling</option>
-<option value="ZAR">🇿🇦 ZAR - South African Rand</option>
-<option value="USD">🇺🇸 USD - US Dollar</option>
-<option value="EUR">🇪🇺 EUR - Euro</option>
-<option value="GBP">🇬🇧 GBP - British Pound</option>
-<option value="CAD">🇨🇦 CAD - Canadian Dollar</option>
-<option value="AUD">🇦🇺 AUD - Australian Dollar</option>
-<option value="INR">🇮🇳 INR - Indian Rupee</option>
-<option value="PKR">🇵🇰 PKR - Pakistani Rupee</option>
-<option value="BDT">🇧🇩 BDT - Bangladeshi Taka</option>
-<option value="TRY">🇹🇷 TRY - Turkish Lira</option>
-<option value="MYR">🇲🇾 MYR - Malaysian Ringgit</option>
-<option value="IDR">🇮🇩 IDR - Indonesian Rupiah</option>
-<option value="PHP">🇵🇭 PHP - Philippine Peso</option>
-<option value="JPY">🇯🇵 JPY - Japanese Yen</option>
-<option value="KRW">🇰🇷 KRW - Korean Won</option>
-<option value="CNY">🇨🇳 CNY - Chinese Yuan</option>
-<option value="BRL">🇧🇷 BRL - Brazilian Real</option>
-<option value="MXN">🇲🇽 MXN - Mexican Peso</option>
-</select>
-
-<input id="salary" type="number" placeholder="Monthly Salary - راتبك الشهري" value="8000" oninput="calc()">
-<input id="hours" type="number" placeholder="Sleep hours - ساعات النوم" value="8" oninput="calc()">
-
-<button onclick="calc()">💰 Flex - احسب</button>
-
+<input id="salary" type="number" placeholder="Monthly Salary - {{ 'QAR' if country=='QA' else 'SAR' if country=='SA' else 'AED' if country=='AE' else 'KWD' if country=='KW' else 'BHD' if country=='BH' else 'OMR' if country=='OM' else '₦' }}">
+<input id="hours" type="number" value="8" placeholder="Sleep hours">
+<button onclick="calc()">CALCULATE MY FLEX 🔥</button>
 <div id="res" class="result"></div>
-<div class="ad-slot" id="mid" style="display:none"></div>
-
-<button onclick="shareFlex()" style="background:#222;color:#fff;border:1px solid #333;display:none" id="shareBtn">📱 Share Flex - شارك</button>
-
-<a href="/" style="display:block;text-align:center;margin-top:12px;color:#555;font-size:11px;text-decoration:none">← Back</a>
-<div class="ad-slot"></div>
+<div id="share" class="share" style="display:none">
+<a id="waShare" class="wa" href="#">WhatsApp</a>
+<a id="snapShare" class="snap" href="#">Snapchat</a>
 </div>
-
+</div>
 <script>
 function calc(){
- const sal=parseFloat(document.getElementById('salary').value)||0;
- const sleepH=parseFloat(document.getElementById('hours').value)||8;
- const cur=document.getElementById('currency').value;
- const perHour=sal/30/24;
- const perMin=perHour/60;
- const earnSleep=perHour*sleepH;
- const earnGame=perHour*3;
- const earnShower=perMin*15;
- document.getElementById('res').style.display='block';
- document.getElementById('res').innerHTML=`
- <div class="stat"><b>${(perHour/3600).toFixed(4)} ${cur}</b><span>PER SECOND</span></div>
- <div class="stat"><b>${perMin.toFixed(3)} ${cur}</b><span>PER MINUTE</span></div>
- <div class="stat"><b>${perHour.toFixed(2)} ${cur}</b><span>PER HOUR</span></div>
- <div style="margin-top:12px">
- <div style="background:#0a0a0a;border:1px solid #00FF88;border-radius:12px;padding:12px;margin-top:8px"><span style="font-size:11px;color:#888">😴 Sleeping ${sleepH}h</span><b style="display:block;font-size:22px;color:#00FF88">${earnSleep.toFixed(2)} ${cur}</b></div>
- <div style="background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:12px;margin-top:8px"><span style="font-size:11px;color:#888">🎮 Gaming 3h</span><b style="display:block">${earnGame.toFixed(2)} ${cur}</b></div>
- <div style="background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:12px;margin-top:8px"><span style="font-size:11px;color:#888">🚿 Shower 15min</span><b style="display:block">${earnShower.toFixed(2)} ${cur}</b></div>
- </div>
- `;
- document.getElementById('mid').style.display='flex';
- document.getElementById('shareBtn').style.display='block';
- document.getElementById('res').dataset.txt=earnSleep.toFixed(2)+' '+cur;
+ let s=parseFloat(document.getElementById('salary').value)||0; let h=parseFloat(document.getElementById('hours').value)||8;
+ if(s<=0) return alert('Enter salary');
+ let perSec = s/30/24/3600; let earn = perSec*h*3600;
+ let cur = "{{ 'QAR' if country=='QA' else 'SAR' if country=='SA' else 'AED' if country=='AE' else 'KWD' if country=='KW' else 'BHD' if country=='BH' else 'OMR' if country=='OM' else 'USD' if country in ['US','UK'] else 'NGN' }}";
+ let txt = `While you slept ${h}h you earned <b style='color:#00FF88'>${earn.toFixed(2)} ${cur}</b> 😴💸<br>Per sec: ${(perSec).toFixed(4)} ${cur}`;
+ document.getElementById('res').innerHTML=txt; document.getElementById('res').style.display='block';
+ // VIRAL SHARE
+ let shareText = `I earned ${earn.toFixed(2)} ${cur} while sleeping ${h}h 😂💸 Calculate yours: https://clearcodesystem.onrender.com/tool/salary-flex?country={{country}}&ref=viral`;
+ document.getElementById('waShare').href=`https://wa.me/?text=${encodeURIComponent(shareText)}`;
+ document.getElementById('snapShare').href=`https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(shareText)}`;
+ document.getElementById('share').style.display='flex';
+ // Monetag Interstitial trigger (replace zone)
+ try{ if(window.vignette) window.vignette.show(); }catch(e){}
 }
-function shareFlex(){
- const txt=document.getElementById('res').dataset.txt;
- window.open(`https://wa.me/?text=${encodeURIComponent('💸 I earn while sleeping: '+txt+' - https://clearcodesystem.onrender.com/tool/salary-flex')}`);
-}
-calc();
-
-// --- IP CHECK ---
-async function detectIPCountry(){
- try{
-  const r = await fetch('https://ipapi.co/json/');
-  const d = await r.json();
-  const cc = d.country_code;
-  const map = {
-   QA:'QAR', SA:'SAR', AE:'AED', KW:'KWD', BH:'BHD', OM:'OMR',
-   JO:'JOD', EG:'EGP', NG:'NGN', GH:'GHS', KE:'KES', ZA:'ZAR',
-   US:'USD', GB:'GBP', CA:'CAD', AU:'AUD', BR:'BRL', MX:'MXN',
-   IN:'INR', PK:'PKR', BD:'BDT', TR:'TRY', MY:'MYR', ID:'IDR',
-   PH:'PHP', JP:'JPY', KR:'KRW', CN:'CNY'
-  };
-  if(map[cc]){
-   const sel = document.getElementById('currency');
-   if(sel.querySelector(`option[value="${map[cc]}"]`)){
-    sel.value = map[cc];
-    calc();
-   }
-  }
- }catch(e){}
-}
-detectIPCountry();
 </script>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 </body>

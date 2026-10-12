@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة النوم 2026 - متى انام عشان اصحى نشيط | ClearCodeSystem</title>
+<meta name="description" content="حاسبة النوم - اذا نمت الآن متى اصحى؟ دورات نوم 90 دقيقة. Sleep calculator if I sleep now.">
+<script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,Tajawal,sans-serif;padding:16px}
+.card{max-width:550px;margin:20px auto;background:#121212;border:1px solid #222;border-radius:20px;padding:18px;text-align:center}
+button{width:100%;padding:16px;background:#00FF88;color:#000;border:none;border-radius:14px;font-weight:900;margin-top:10px;cursor:pointer;font-size:16px}
+button.sec{background:#222;color:#fff;border:1px solid #333}
+.time-card{display:inline-block;background:#0a0a0a;border:1px solid #222;border-radius:14px;padding:12px 18px;margin:6px;min-width:110px}
+.time-card b{font-size:20px;color:#00FF88;display:block}.time-card span{font-size:10px;color:#888}
+.ad-slot{margin:14px 0;min-height:90px;background:#0e0e0e;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.result{margin-top:16px;text-align:right;display:none}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="font-weight:900">😴 حاسبة النوم - Sleep Calculator</h2>
+<p style="font-size:11px;color:#888;margin-top:6px">دورة النوم 90 دقيقة - اصحى نشيط بدون تعب</p>
+
+<div class="ad-slot"></div>
+
+<div style="background:#0a0a0a;border-radius:14px;padding:14px;margin-top:12px">
+<p style="font-size:13px">🕐 الآن الساعة: <b id="now" style="color:#00FF88">--:--</b></p>
+<p style="font-size:11px;color:#666;margin-top:4px">إذا نمت الآن، أفضل وقت تصحى:</p>
+</div>
+
+<button onclick="calcNow()">😴 إذا أنام الآن - If I sleep NOW</button>
+<button onclick="calcWake()" class="sec">⏰ أريد أن أصحى الساعة... - I want to wake at</button>
+
+<input id="wakeTime" type="time" style="width:100%;padding:14px;background:#080808;border:1px solid #333;border-radius:12px;color:#fff;margin-top:10px;display:none">
+
+<div id="res" class="result"></div>
+
+<div class="ad-slot" id="mid" style="display:none"></div>
+
+<div id="tips" style="display:none;margin-top:14px;background:#0a0a0a;border-radius:12px;padding:12px;text-align:right">
+<p style="font-size:11px;color:#888;line-height:1.6">💡 نصائح للنوم السريع:<br>• لا تستخدم الجوال 20 دقيقة قبل النوم<br>• اشرب ماء<br>• دورة النوم الكاملة 90 دقيقة<br>• 6 دورات = 9 ساعات نوم مثالي</p>
+</div>
+
+<a href="/" style="display:block;text-align:center;margin-top:12px;color:#555;font-size:11px;text-decoration:none">← Back</a>
+<div class="ad-slot"></div>
+</div>
+
+<script>
+function updateNow(){
+ const n=new Date(); document.getElementById('now').innerText=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(updateNow,1000); updateNow();
+
+function calcNow(){
+ const now=new Date();
+ let html='<p style="font-size:12px;color:#888;text-align:center;margin-bottom:10px">💤 اصحى في هذه الأوقات عشان تكون نشيط:</p><div style="text-align:center">';
+ for(let i=1;i<=6;i++){
+  let t=new Date(now.getTime()+i*90*60000+14*60000);
+  let time=t.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  let cycles=i; let hours=(i*1.5).toFixed(1);
+  html+=`<div class="time-card"><b>${time}</b><span>${cycles} دورات - ${hours} ساعات</span></div>`;
+ }
+ html+='</div>';
+ document.getElementById('res').innerHTML=html;
+ document.getElementById('res').style.display='block';
+ document.getElementById('mid').style.display='flex';
+ document.getElementById('tips').style.display='block';
+}
+
+function calcWake(){
+ const input=document.getElementById('wakeTime');
+ if(input.style.display==='none'){input.style.display='block'; return;}
+ if(!input.value){alert('اختر وقت الاستيقاظ'); return;}
+ const [h,m]=input.value.split(':').map(Number);
+ const wake=new Date(); wake.setHours(h,m,0,0);
+ if(wake<new Date()) wake.setDate(wake.getDate()+1);
+ let html='<p style="font-size:12px;color:#888;text-align:center;margin-bottom:10px">🛏️ لازم تنام في هذه الأوقات:</p><div style="text-align:center">';
+ for(let i=6;i>=1;i--){
+  let t=new Date(wake.getTime()-i*90*60000-14*60000);
+  let time=t.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  html+=`<div class="time-card"><b>${time}</b><span>${i} دورات</span></div>`;
+ }
+ html+='</div>';
+ document.getElementById('res').innerHTML=html;
+ document.getElementById('res').style.display='block';
+ document.getElementById('mid').style.display='flex';
+ document.getElementById('tips').style.display='block';
+}
+</script>
+<script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+</body>
+</html>

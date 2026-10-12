@@ -26,17 +26,17 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# 9 COUNTRIES - 81 TOOLS - FIXED TEMPLATES
+# 9 COUNTRIES - 84 TOOLS - FINAL WITH GULF VIRAL TOOLS
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package'],
- 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt'],
- 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt'],
- 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt'],
- 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt'],
- 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt'],
- 'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt'],
- 'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt'],
- 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
 }
 
 COUNTRY_NAME = {
@@ -94,173 +94,189 @@ def home():
 # -- STATIC ROUTES --
 @app.route('/unlock')
 def unlock(): return render_template('unlock.html')
+
+def render_with_country(template_name):
+    raw=get_country(); country=map_to_group(raw)
+    return render_template(template_name, country=country, raw_country=raw, country_name=COUNTRY_NAME.get(raw, COUNTRY_NAME.get(country)))
+
 @app.route('/tool/builder')
 @app.route('/tool/store-builder')
-def builder(): return render_template('builder.html')
+def builder(): return render_with_country('builder.html')
 @app.route('/tool/pos-receipt')
 @app.route('/tool/receipt-generator')
-def pos_receipt(): return render_template('pos_receipt.html')
+def pos_receipt(): return render_with_country('pos_receipt.html')
+
+# === NEW GULF VIRAL TOOLS - 9 COUNTRY IP ROUTING ===
+@app.route('/tool/salary-flex')
+def salary_flex(): return render_with_country('salary_flex.html')
+@app.route('/tool/anonymous-link')
+@app.route('/tool/saraha')
+def anonymous_link(): return render_with_country('anonymous_link.html')
+@app.route('/tool/arabic-stylish-name')
+@app.route('/tool/stylish-name')
+@app.route('/tool/zakharfa')
+def arabic_stylish_name(): return render_with_country('arabic_stylish_name.html')
 
 # CORE TOOLS
 @app.route('/tool/wa-qr')
-def wa_qr(): return render_template('wa_qr.html')
+def wa_qr(): return render_with_country('wa_qr.html')
 @app.route('/tool/invoice')
-def invoice(): return render_template('invoice.html')
+def invoice(): return render_with_country('invoice.html')
 @app.route('/tool/bg-remover')
-def bg_remover(): return render_template('bg_remover.html')
+def bg_remover(): return render_with_country('bg_remover.html')
 @app.route('/tool/pos-charges')
-def pos_charges(): return render_template('pos_charges.html')
+def pos_charges(): return render_with_country('pos_charges.html')
 @app.route('/tool/delivery-fee')
-def delivery_fee(): return render_template('delivery_fee.html')
+def delivery_fee(): return render_with_country('delivery_fee.html')
 @app.route('/tool/price-tag')
-def price_tag(): return render_template('price_tag.html')
+def price_tag(): return render_with_country('price_tag.html')
 @app.route('/tool/profit-calc')
-def profit_calc(): return render_template('profit_calculator.html')
+def profit_calc(): return render_with_country('profit_calculator.html')
 @app.route('/tool/debt-book')
-def debt_book(): return render_template('debt_book.html')
+def debt_book(): return render_with_country('debt_book.html')
 @app.route('/tool/ruler-terminal')
-def ruler_terminal(): return render_template('ruler_terminal.html')
+def ruler_terminal(): return render_with_country('ruler_terminal.html')
 @app.route('/tool/clear-shell')
-def clear_shell(): return render_template('clear_shell.html')
+def clear_shell(): return render_with_country('clear_shell.html')
 @app.route('/tool/market-ledger')
-def market_ledger(): return render_template('market_ledger.html')
+def market_ledger(): return render_with_country('market_ledger.html')
 @app.route('/tool/usa-notify')
-def usa_notify(): return render_template('usa_notify.html')
+def usa_notify(): return render_with_country('usa_notify.html')
 @app.route('/tool/paycheck')
-def paycheck(): return render_template('paycheck.html')
+def paycheck(): return render_with_country('paycheck.html')
 @app.route('/tool/fake-text')
-def fake_text(): return render_template('fake_text.html')
+def fake_text(): return render_with_country('fake_text.html')
 @app.route('/tool/tip-calculator')
-def tip_calculator(): return render_template('tip_calculator.html')
+def tip_calculator(): return render_with_country('tip_calculator.html')
 @app.route('/tool/whatsapp-broadcast')
 @app.route('/tool/whatsapp_broadcast')
-def whatsapp_broadcast(): return render_template('whatsapp_broadcast.html')
+def whatsapp_broadcast(): return render_with_country('whatsapp_broadcast.html')
 @app.route('/tool/background-check')
 @app.route('/tool/usa-background-check')
 @app.route('/tool/background_check')
-def background_check(): return render_template('usa_background_check.html')
+def background_check(): return render_with_country('usa_background_check.html')
 
 # SAUDI
 @app.route('/tool/iqama-expiry')
-def iqama_expiry(): return render_template('iqama_expiry.html')
+def iqama_expiry(): return render_with_country('iqama_expiry.html')
 @app.route('/tool/hijri-converter')
-def hijri_converter(): return render_template('hijri_converter.html')
+def hijri_converter(): return render_with_country('hijri_converter.html')
 @app.route('/tool/gosi-calculator')
-def gosi_calculator(): return render_template('gosi_calculator.html')
+def gosi_calculator(): return render_with_country('gosi_calculator.html')
 @app.route('/tool/zatca-qr')
-def zatca_qr(): return render_template('zatca_qr.html')
+def zatca_qr(): return render_with_country('zatca_qr.html')
 @app.route('/tool/gpa-calculator')
-def gpa_calculator(): return render_template('gpa_calculator.html')
+def gpa_calculator(): return render_with_country('gpa_calculator.html')
 @app.route('/tool/salary-sa')
-def salary_sa(): return render_template('salary_sa.html')
+def salary_sa(): return render_with_country('salary_sa.html')
 
 # NG
 @app.route('/tool/nepa-calculator')
-def nepa_calculator(): return render_template('nepa_calculator.html')
+def nepa_calculator(): return render_with_country('nepa_calculator.html')
 @app.route('/tool/cac-checker')
-def cac_checker(): return render_template('cac_checker.html')
+def cac_checker(): return render_with_country('cac_checker.html')
 @app.route('/tool/fuel-calculator')
-def fuel_calculator(): return render_template('fuel_calculator.html')
+def fuel_calculator(): return render_with_country('fuel_calculator.html')
 @app.route('/tool/rent-splitter')
-def rent_splitter(): return render_template('rent_splitter.html')
+def rent_splitter(): return render_with_country('rent_splitter.html')
 @app.route('/tool/land-converter')
-def land_converter(): return render_template('land_converter.html')
+def land_converter(): return render_with_country('land_converter.html')
 @app.route('/tool/paye-calculator')
-def paye_calculator(): return render_template('paye_calculator.html')
+def paye_calculator(): return render_with_country('paye_calculator.html')
 @app.route('/tool/jamb-calculator')
-def jamb_calculator(): return render_template('jamb_calculator.html')
+def jamb_calculator(): return render_with_country('jamb_calculator.html')
 @app.route('/tool/waec-calculator')
-def waec_calculator(): return render_template('waec_calculator.html')
+def waec_calculator(): return render_with_country('waec_calculator.html')
 @app.route('/tool/nin-validator')
-def nin_validator(): return render_template('nin_validator.html')
+def nin_validator(): return render_with_country('nin_validator.html')
 @app.route('/tool/lagos-rent-package')
-def lagos_rent_package(): return render_template('lagos_rent_package.html')
+def lagos_rent_package(): return render_with_country('lagos_rent_package.html')
 
 # QATAR
 @app.route('/tool/qid-check')
-def qid_check(): return render_template('qid_check.html')
+def qid_check(): return render_with_country('qid_check.html')
 @app.route('/tool/qatar-traffic-fines')
-def qatar_traffic_fines(): return render_template('qatar_traffic_fines.html')
+def qatar_traffic_fines(): return render_with_country('qatar_traffic_fines.html')
 @app.route('/tool/qatar-gratuity')
-def qatar_gratuity(): return render_template('qatar_gratuity.html')
+def qatar_gratuity(): return render_with_country('qatar_gratuity.html')
 @app.route('/tool/qatar-rent-splitter')
-def qatar_rent_splitter(): return render_template('qatar_rent_splitter.html')
+def qatar_rent_splitter(): return render_with_country('qatar_rent_splitter.html')
 @app.route('/tool/qatar-gold-price')
-def qatar_gold_price(): return render_template('qatar_gold_price.html')
+def qatar_gold_price(): return render_with_country('qatar_gold_price.html')
 @app.route('/tool/qatar-overtime')
-def qatar_overtime(): return render_template('qatar_overtime.html')
+def qatar_overtime(): return render_with_country('qatar_overtime.html')
 
 # UAE
 @app.route('/tool/emirates-id-check')
-def emirates_id_check(): return render_template('emirates_id_check.html')
+def emirates_id_check(): return render_with_country('emirates_id_check.html')
 @app.route('/tool/uae-traffic-fines')
-def uae_traffic_fines(): return render_template('uae_traffic_fines.html')
+def uae_traffic_fines(): return render_with_country('uae_traffic_fines.html')
 @app.route('/tool/uae-gratuity')
-def uae_gratuity(): return render_template('uae_gratuity.html')
+def uae_gratuity(): return render_with_country('uae_gratuity.html')
 @app.route('/tool/uae-gold-price')
-def uae_gold_price(): return render_template('uae_gold_price.html')
+def uae_gold_price(): return render_with_country('uae_gold_price.html')
 @app.route('/tool/uae-rent-splitter')
-def uae_rent_splitter(): return render_template('uae_rent_splitter.html')
+def uae_rent_splitter(): return render_with_country('uae_rent_splitter.html')
 @app.route('/tool/uae-overtime')
-def uae_overtime(): return render_template('uae_overtime.html')
+def uae_overtime(): return render_with_country('uae_overtime.html')
 @app.route('/tool/uae-salary')
-def uae_salary(): return render_template('uae_salary.html')
+def uae_salary(): return render_with_country('uae_salary.html')
 
 # KUWAIT
 @app.route('/tool/kuwait-civil-id')
-def kuwait_civil_id(): return render_template('kuwait_civil_id.html')
+def kuwait_civil_id(): return render_with_country('kuwait_civil_id.html')
 @app.route('/tool/kuwait-traffic-fines')
-def kuwait_traffic_fines(): return render_template('kuwait_traffic_fines.html')
+def kuwait_traffic_fines(): return render_with_country('kuwait_traffic_fines.html')
 @app.route('/tool/kuwait-gratuity')
-def kuwait_gratuity(): return render_template('kuwait_gratuity.html')
+def kuwait_gratuity(): return render_with_country('kuwait_gratuity.html')
 @app.route('/tool/kuwait-gold-price')
-def kuwait_gold_price(): return render_template('kuwait_gold_price.html')
+def kuwait_gold_price(): return render_with_country('kuwait_gold_price.html')
 @app.route('/tool/kuwait-rent')
-def kuwait_rent(): return render_template('kuwait_rent.html')
+def kuwait_rent(): return render_with_country('kuwait_rent.html')
 @app.route('/tool/kuwait-overtime')
-def kuwait_overtime(): return render_template('kuwait_overtime.html')
+def kuwait_overtime(): return render_with_country('kuwait_overtime.html')
 
 # BAHRAIN
 @app.route('/tool/bahrain-cpr-check')
-def bahrain_cpr_check(): return render_template('bahrain_cpr_check.html')
+def bahrain_cpr_check(): return render_with_country('bahrain_cpr_check.html')
 @app.route('/tool/bahrain-traffic-fines')
-def bahrain_traffic_fines(): return render_template('bahrain_traffic_fines.html')
+def bahrain_traffic_fines(): return render_with_country('bahrain_traffic_fines.html')
 @app.route('/tool/bahrain-gratuity')
-def bahrain_gratuity(): return render_template('bahrain_gratuity.html')
+def bahrain_gratuity(): return render_with_country('bahrain_gratuity.html')
 @app.route('/tool/bahrain-gold-price')
-def bahrain_gold_price(): return render_template('bahrain_gold_price.html')
+def bahrain_gold_price(): return render_with_country('bahrain_gold_price.html')
 @app.route('/tool/bahrain-rent')
-def bahrain_rent(): return render_template('bahrain_rent.html')
+def bahrain_rent(): return render_with_country('bahrain_rent.html')
 @app.route('/tool/bahrain-overtime')
-def bahrain_overtime(): return render_template('bahrain_overtime.html')
+def bahrain_overtime(): return render_with_country('bahrain_overtime.html')
 
 # OMAN
 @app.route('/tool/oman-civil-check')
-def oman_civil_check(): return render_template('oman_civil_check.html')
+def oman_civil_check(): return render_with_country('oman_civil_check.html')
 @app.route('/tool/oman-traffic-fines')
-def oman_traffic_fines(): return render_template('oman_traffic_fines.html')
+def oman_traffic_fines(): return render_with_country('oman_traffic_fines.html')
 @app.route('/tool/oman-gratuity')
-def oman_gratuity(): return render_template('oman_gratuity.html')
+def oman_gratuity(): return render_with_country('oman_gratuity.html')
 @app.route('/tool/oman-gold-price')
-def oman_gold_price(): return render_template('oman_gold_price.html')
+def oman_gold_price(): return render_with_country('oman_gold_price.html')
 @app.route('/tool/oman-rent')
-def oman_rent(): return render_template('oman_rent.html')
+def oman_rent(): return render_with_country('oman_rent.html')
 @app.route('/tool/oman-overtime')
-def oman_overtime(): return render_template('oman_overtime.html')
+def oman_overtime(): return render_with_country('oman_overtime.html')
 
 # UK
 @app.route('/tool/uk-paycheck')
-def uk_paycheck(): return render_template('uk_paycheck.html')
+def uk_paycheck(): return render_with_country('uk_paycheck.html')
 @app.route('/tool/uk-rent-splitter')
-def uk_rent_splitter(): return render_template('uk_rent_splitter.html')
+def uk_rent_splitter(): return render_with_country('uk_rent_splitter.html')
 @app.route('/tool/uk-tip-calculator')
-def uk_tip_calculator(): return render_template('uk_tip_calculator.html')
+def uk_tip_calculator(): return render_with_country('uk_tip_calculator.html')
 @app.route('/tool/uk-vat-calculator')
-def uk_vat_calculator(): return render_template('uk_vat_calculator.html')
+def uk_vat_calculator(): return render_with_country('uk_vat_calculator.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','lagos-rent-package','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','lagos-rent-package','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator','salary-flex','anonymous-link','arabic-stylish-name']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
@@ -270,11 +286,10 @@ def sitemap():
 
 @app.route('/robots.txt')
 def robots():
-    txt = "User-agent: *\nAllow: /\nAllow: /tool/lagos-rent-package\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
+    txt = "User-agent: *\nAllow: /\nAllow: /tool/lagos-rent-package\nAllow: /tool/salary-flex\nAllow: /tool/anonymous-link\nAllow: /tool/arabic-stylish-name\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
 # ========== BACKEND APIS ==========
-
 @app.route('/api/lagos-rent', methods=['POST'])
 def api_lagos_rent():
     try:
@@ -284,7 +299,6 @@ def api_lagos_rent():
             return jsonify({'error':'Enter valid rent amount'}), 400
         if rent < 10000:
             return jsonify({'error':'Rent too low'}), 400
-
         location = (data.get('location') or 'mainland').lower()
         config = {
             'mainland': {'agreement':10, 'commission':10, 'damages':5, 'caution':5, 'legal':5, 'inspection':3000, 'label':'Mainland - Surulere, Agege, Alimosho'},
@@ -294,39 +308,21 @@ def api_lagos_rent():
             'vi': {'agreement':10, 'commission':10, 'damages':15, 'caution':15, 'legal':10, 'inspection':15000, 'label':'VI, Ikoyi, Banana'},
         }
         c = config.get(location, config['mainland'])
-
         agreement = rent * c['agreement']/100
         commission = rent * c['commission']/100
         damages = rent * c['damages']/100
         caution = rent * c['caution']/100
         legal = rent * c['legal']/100
         inspection = c['inspection']
-
         total = rent + agreement + commission + damages + caution + legal + inspection
         monthly = total / 12
-
-        # Lead log for your WhatsApp agent business
         print(f"[LEAD] Rent:{rent} Loc:{location} Total:{total} IP:{request.headers.get('X-Forwarded-For', request.remote_addr)} Time:{datetime.now()}")
-
         return jsonify({
-            'rent': int(rent),
-            'agreement': int(agreement),
-            'commission': int(commission),
-            'damages': int(damages),
-            'caution': int(caution),
-            'legal': int(legal),
-            'inspection': int(inspection),
-            'total': int(total),
-            'monthly': int(monthly),
-            'location': location,
-            'location_label': c['label'],
-            'percent': {
-                'agreement': c['agreement'],
-                'commission': c['commission'],
-                'damages': c['damages'],
-                'caution': c['caution'],
-                'legal': c['legal']
-            }
+            'rent': int(rent), 'agreement': int(agreement), 'commission': int(commission),
+            'damages': int(damages), 'caution': int(caution), 'legal': int(legal),
+            'inspection': int(inspection), 'total': int(total), 'monthly': int(monthly),
+            'location': location, 'location_label': c['label'],
+            'percent': {'agreement': c['agreement'], 'commission': c['commission'], 'damages': c['damages'], 'caution': c['caution'], 'legal': c['legal']}
         })
     except Exception as e:
         print(f"lagos-rent error: {e}")
@@ -370,8 +366,10 @@ def api_bg_remove():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
+    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html salary_flex.html anonymous_link.html arabic_stylish_name.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
+    if cmd == '': return jsonify({'output': ''})
+    return jsonify({'    if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 

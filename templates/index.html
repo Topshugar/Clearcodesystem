@@ -28,10 +28,10 @@
 <title>Free USA Tools 2026 - Paycheck Tax, Tip Calculator, Background Check | ClearCodeSystem</title>
 <meta name="description" content="Free USA tools 2026 - paycheck calculator federal tax, tip calculator, background check USA, notify simulator.">
 {% else %}
-<title>Free Nigeria Tools 2026 - NEPA Band A, CAC Checker, Fuel, Lagos Rent Package, Rent Lagos | ClearCodeSystem</title>
-<meta name="description" content="Free Nigeria tools 2026 - Lagos total rent package calculator agreement commission damages, NEPA units Band A, CAC name checker, fuel cost, Lagos rent splitter, PAYE tax, JAMB, WAEC, NIN validator. 28 tools.">
+<title>Free Nigeria Tools 2026 - NEPA Band A, CAC Checker, Fuel, Lagos Rent Package, IVR $5, Rent Lagos | ClearCodeSystem</title>
+<meta name="description" content="Free Nigeria tools 2026 - Lagos total rent package calculator agreement commission damages, IVR Builder $5 USDT, NEPA units Band A, CAC name checker, fuel cost, Lagos rent splitter, PAYE tax, JAMB, WAEC, NIN validator. 29 tools.">
 {% endif %}
-<meta name="keywords" content="{{country_name}} tools, {{country}} tools 2026, traffic fines, gold price, gratuity, lagos rent package, salary flex, anonymous link, stylish name">
+<meta name="keywords" content="{{country_name}} tools, {{country}} tools 2026, traffic fines, gold price, gratuity, lagos rent package, ivr builder 5 usdt, salary flex, anonymous link, stylish name">
 <link rel="canonical" href="https://clearcodesystem.onrender.com/?country={{country}}">
 <meta property="og:title" content="Free {{country_name}} Tools 2026 - {{allowed|length}} Tools">
 <meta property="og:description" content="Free tools for {{country_name}} - {{allowed|length}} tools unlocked">
@@ -50,10 +50,14 @@
 .tool{background:#121212;border:1px solid #222;border-radius:18px;padding:14px;text-decoration:none;color:#fff;display:block;transition:0.2s;position:relative}
 .tool:hover{border-color:#00FF88;transform:translateY(-2px)} .tool h3{font-size:13px;font-weight:800;line-height:1.2} .tool p{font-size:10px;color:#888;margin-top:4px;line-height:1.4}
 .badge{font-size:8px;padding:3px 8px;border-radius:20px;font-weight:900;background:#00FF88;color:#000}
-.badge.new{background:#FF0040;color:#fff}
+.badge.new{background:#FF0040;color:#fff;animation:pulse 1.5s infinite}
+.badge.usdt{background:#00FF88;color:#000;border:1px solid #00FF88}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.tool-pinned{border-color:#00FF88 !important; background: linear-gradient(135deg, #121212 0%, #0f1f15 100%) !important;}
 .seo-box{max-width:1100px;margin:24px auto;padding:16px;background:#121212;border:1px solid #222;border-radius:18px}
 .footer{text-align:center;padding:20px;color:#555;font-size:11px;border-top:1px solid #1a1a1a;margin-top:24px}
-.ad-slot{max-width:1100px;margin:10px auto;background:#0e0e0e;border-radius:12px;min-height:90px;display:flex;align-items:center;justify-content:center}
+.wallet-footer{max-width:1100px;margin:12px auto;background:#0f1f15;border:1px dashed #00FF8855;border-radius:12px;padding:10px;text-align:center;font-size:11px;color:#888}
+.wallet-footer b{color:#00FF88;font-family:monospace;font-size:11px;word-break:break-all}
 </style>
 </head>
 <body>
@@ -69,22 +73,37 @@
 </div>
 
 <div class="grid">
-{% for t in allowed %}
+{# PINNED TOP: IVR + LAGOS + VIRAL - ALWAYS FIRST #}
+{% set pinned = ['ivr_builder','lagos_rent_package','salary_flex','anonymous_link','arabic_stylish_name'] %}
+{% for t in pinned if t in allowed %}
+{% set icon = '📞🔥' %}{% set title = '' %}{% set is_new = true %}{% set pinned_class = 'tool-pinned' %}
+{% if t=='ivr_builder' %}{% set icon='📞🔥' %}{% set title='IVR Builder - AI Voice Menu $5 USDT' %}
+{% elif t=='lagos_rent_package' %}{% set icon='🏠🔥' %}{% set title='Lagos Total Rent Package Calculator' %}
+{% elif t=='salary_flex' %}{% set icon='💸' %}{% set title='Salary Flex - Earn While Sleeping' %}
+{% elif t=='anonymous_link' %}{% set icon='🔗' %}{% set title='Anonymous Link - رابط صراحة NGL' %}
+{% elif t=='arabic_stylish_name' %}{% set icon='✨' %}{% set title='زخرفة اسماء - Stylish Name' %}
+{% endif %}
+<a href="/tool/{{t.replace('_','-')}}" class="tool {{pinned_class}}">
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:22px">{{icon}}</span>
+{% if t=='ivr_builder' %}<span class="badge usdt">5 USDT • NEW 🔥</span>{% else %}<span class="badge new">NEW 🔥</span>{% endif %}
+</div>
+<h3>{{title}}</h3>
+<p>Optimized for {{country_name}} • 4K • Free{% if t=='ivr_builder' %} • Pay 5 USDT TRC20{% endif %}</p>
+</a>
+{% endfor %}
+
+{# REST OF TOOLS #}
+{% for t in allowed if t not in pinned %}
 {% set icon = '⚡' %}{% set title = t.replace('-',' ').replace('_',' ').title() %}{% set is_new = false %}
 {% if t=='nepa_calculator' %}{% set icon='⚡' %}{% set title='NEPA Units Calculator Band A' %}
 {% elif t=='cac_checker' %}{% set icon='🏢' %}{% set title='CAC Name Checker NG' %}
 {% elif t=='fuel_calculator' %}{% set icon='⛽' %}{% set title='Fuel Cost Calculator' %}
 {% elif t=='rent_splitter' %}{% set icon='🏠' %}{% set title='Lagos Rent Splitter Total' %}
-{% elif t=='lagos_rent_package' or t=='lagos-rent-package' %}{% set icon='🏠🔥' %}{% set title='Lagos Total Rent Package Calculator' %}{% set is_new = true %}
-{% elif t=='ivr_builder' or t=='ivr-builder' %}{% set icon='📞🔥' %}{% set title='IVR Builder - AI Voice Menu $5 USDT' %}{% set is_new = true %}
 {% elif t=='land_converter' %}{% set icon='🏞️' %}{% set title='Land Converter Plot SqM' %}
 {% elif t=='paye_calculator' %}{% set icon='💼' %}{% set title='PAYE Tax + Pension NG' %}
 {% elif t=='jamb_calculator' %}{% set icon='🎓' %}{% set title='JAMB Age + Score 2026' %}
 {% elif t=='waec_calculator' %}{% set icon='📝' %}{% set title='WAEC NECO Grade Calculator' %}
 {% elif t=='nin_validator' %}{% set icon='🪪' %}{% set title='NIN Validator + Slip Gen' %}
-{% elif t=='salary_flex' %}{% set icon='💸' %}{% set title='Salary Flex - Earn While Sleeping' %}{% set is_new = true %}
-{% elif t=='anonymous_link' %}{% set icon='🔗' %}{% set title='Anonymous Link - رابط صراحة NGL' %}{% set is_new = true %}
-{% elif t=='arabic_stylish_name' %}{% set icon='✨' %}{% set title='زخرفة اسماء - Stylish Name' %}{% set is_new = true %}
 {% elif t=='qid_check' %}{% set icon='🪪' %}{% set title='QID MOI Status Check QA' %}
 {% elif t=='qatar_traffic_fines' %}{% set icon='🚗' %}{% set title='Qatar Traffic Fines Check' %}
 {% elif t=='qatar_gratuity' %}{% set icon='💰' %}{% set title='Qatar Gratuity EOS Calculator' %}
@@ -105,21 +124,21 @@
 {% elif t=='kuwait_rent' %}{% set icon='🏠' %}{% set title='Kuwait Rent Calculator' %}
 {% elif t=='kuwait_overtime' %}{% set icon='⏰' %}{% set title='Kuwait Overtime Calculator' %}
 {% elif t=='bahrain_cpr_check' %}{% set icon='🪪' %}{% set title='Bahrain CPR Check BH' %}
-{% elif t=='bahrain_traffic_fines' %}{% set icon='🚗' %}{% set title='Bahrain Traffic Fines General Directorate' %}
-{% elif t=='bahrain_gratuity' %}{% set icon='💰' %}{% set title='Bahrain Gratuity EOS Calculator' %}
+{% elif t=='bahrain_traffic_fines' %}{% set icon='🚗' %}{% set title='Bahrain Traffic Fines' %}
+{% elif t=='bahrain_gratuity' %}{% set icon='💰' %}{% set title='Bahrain Gratuity EOS' %}
 {% elif t=='bahrain_gold_price' %}{% set icon='💍' %}{% set title='Bahrain Gold Price BHD' %}
 {% elif t=='bahrain_rent' %}{% set icon='🏠' %}{% set title='Bahrain Rent Calculator Manama' %}
 {% elif t=='bahrain_overtime' %}{% set icon='⏰' %}{% set title='Bahrain Overtime Calculator' %}
 {% elif t=='oman_civil_check' %}{% set icon='🪪' %}{% set title='Oman Civil ID ROP Check' %}
 {% elif t=='oman_traffic_fines' %}{% set icon='🚗' %}{% set title='Oman Traffic Fines ROP' %}
-{% elif t=='oman_gratuity' %}{% set icon='💰' %}{% set title='Oman Gratuity EOS Calculator' %}
+{% elif t=='oman_gratuity' %}{% set icon='💰' %}{% set title='Oman Gratuity EOS' %}
 {% elif t=='oman_gold_price' %}{% set icon='💍' %}{% set title='Oman Gold Price OMR' %}
 {% elif t=='oman_rent' %}{% set icon='🏠' %}{% set title='Oman Rent Calculator Muscat' %}
 {% elif t=='oman_overtime' %}{% set icon='⏰' %}{% set title='Oman Overtime Calculator' %}
 {% elif t=='uk_paycheck' %}{% set icon='💷' %}{% set title='UK Take Home Pay HMRC 2026/27' %}
 {% elif t=='uk_rent_splitter' %}{% set icon='🏠' %}{% set title='UK Rent Splitter London + Bills' %}
 {% elif t=='uk_tip_calculator' %}{% set icon='🧮' %}{% set title='UK Tip + 12.5% Service Charge' %}
-{% elif t=='uk_vat_calculator' %}{% set icon='💰' %}{% set title='UK VAT Calculator 20% Add/Remove' %}
+{% elif t=='uk_vat_calculator' %}{% set icon='💰' %}{% set title='UK VAT Calculator 20%' %}
 {% elif t=='pos_charges' %}{% set icon='🏧' %}{% set title='POS Charges Calculator' %}
 {% elif t=='wa_qr' %}{% set icon='📱' %}{% set title='WhatsApp QR Generator' %}
 {% elif t=='whatsapp_broadcast' %}{% set icon='📢' %}{% set title='WhatsApp Broadcast Safe' %}
@@ -135,7 +154,7 @@
 {% elif t=='clear_shell' %}{% set icon='🔌' %}{% set title='ClearShell SSH' %}
 {% elif t=='market_ledger' %}{% set icon='📊' %}{% set title='MarketLedger - Price & Sales' %}
 {% elif t=='builder' %}{% set icon='🏪' %}{% set title='Store Builder - Free Shop Link' %}
-{% elif t=='pos_receipt' %}{% set icon='🧾' %}{% set title='Receipt Generator All Banks - 7 Styles' %}
+{% elif t=='pos_receipt' %}{% set icon='🧾' %}{% set title='Receipt Generator All Banks' %}
 {% elif t=='paycheck' %}{% set icon='💵' %}{% set title='Paycheck Calculator USA' %}
 {% elif t=='background_check' %}{% set icon='🔍' %}{% set title='USA Background Check' %}
 {% elif t=='usa_notify' %}{% set icon='🇺🇸' %}{% set title='USA Notify Simulator' %}
@@ -148,7 +167,7 @@
 {% endif %}
 <a href="/tool/{{t.replace('_','-')}}" class="tool">
 <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:22px">{{icon}}</span>
-{% if is_new %}<span class="badge new">NEW 🔥</span>{% else %}<span class="badge">{{country}} • LIVE</span>{% endif %}
+<span class="badge">{{country}} • LIVE</span>
 </div>
 <h3>{{title}}</h3>
 <p>Optimized for {{country_name}} • 4K • Free</p>
@@ -156,43 +175,46 @@
 {% endfor %}
 </div>
 
-<!-- DYNAMIC SEO BOX FOR ALL 9 COUNTRIES -->
+<div class="wallet-footer">
+💳 IVR Payments: 5 USDT TRC20 → <b>TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4</b> • Lagos Rent Leads → WhatsApp • All tools IP-Strict
+</div>
+
 <div class="seo-box">
 {% if country=='UK' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇬🇧 UK Tools 2026 - HMRC Take Home Pay, Rent, VAT + 3 New Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">ClearCodeSystem offers {{allowed|length}} free tools for UK. Top: <b style="color:#aaa">UK take home pay calculator 2026/27</b>, rent splitter London, VAT 20%, plus NEW: salary flex, anonymous link, stylish name generator.</p>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">ClearCodeSystem offers {{allowed|length}} free tools for UK. Top: <b style="color:#aaa">UK take home pay calculator 2026/27</b>, rent splitter London, VAT 20%, plus NEW: IVR Builder $5 USDT, salary flex, anonymous link.</p>
 {% elif country=='BH' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇧🇭 Bahrain Tools 2026 - CPR, Traffic Fines, Gratuity BHD + Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">ClearCodeSystem offers {{allowed|length}} free Bahrain tools. Top: CPR check, traffic fines, gratuity, gold BHD, rent, plus NEW: salary flex BHD, رابط صراحة, زخرفة اسماء.</p>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">ClearCodeSystem offers {{allowed|length}} free Bahrain tools. Top: CPR check, traffic fines, gratuity, gold BHD, rent, plus NEW: IVR Builder BHD 5 USDT, salary flex, رابط صراحة.</p>
 {% elif country=='OM' %}
 <h2 style="font-size:14px;font-weight:900">Free 🇴🇲 Oman Tools 2026 - Civil ID ROP, Traffic Fines, Gratuity OMR</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Oman tools: civil ID ROP, traffic fines, gratuity, gold OMR, rent Muscat, overtime + NEW viral tools.</p>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Oman tools: civil ID ROP, traffic fines, gratuity, gold OMR, rent Muscat, overtime + IVR Builder 5 USDT viral tools.</p>
 {% elif country=='QA' %}
-<h2 style="font-size:14px;font-weight:900">Free 🇶🇦 Qatar Tools 2026 - QID MOI, Traffic Fines, Gratuity QAR + Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Qatar tools: QID check MOI, traffic fines, gratuity, gold QAR, rent Doha + NEW: salary flex QAR, رابط صراحة NGL, زخرفة اسماء stylish name generator for Insta TikTok PUBG.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇶🇦 Qatar Tools 2026 - QID MOI, Traffic Fines, Gratuity QAR + IVR $5</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Qatar tools: QID check MOI, traffic fines, gratuity, gold QAR, rent Doha + NEW: IVR Builder $5 USDT, salary flex QAR, رابط صراحة NGL.</p>
 {% elif country=='AE' %}
-<h2 style="font-size:14px;font-weight:900">Free 🇦🇪 UAE Tools 2026 - Emirates ID ICP, RTA Fines, Gratuity AED + Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free UAE tools: Emirates ID ICP, traffic fines Dubai RTA, gratuity MOHRE, gold Dubai, Ejari rent, overtime + NEW viral flex tools.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇦🇪 UAE Tools 2026 - Emirates ID ICP, RTA Fines, Gratuity AED + IVR $5</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free UAE tools: Emirates ID ICP, traffic fines Dubai RTA, gratuity MOHRE, gold Dubai, Ejari rent, overtime + NEW IVR Builder 5 USDT viral flex tools.</p>
 {% elif country=='KW' %}
-<h2 style="font-size:14px;font-weight:900">Free 🇰🇼 Kuwait Tools 2026 - Civil ID PACI, Traffic Fines, Gratuity KWD + Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Kuwait tools: Civil ID PACI, traffic fines MOI, gratuity, gold KWD, rent + NEW viral tools KWD.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇰🇼 Kuwait Tools 2026 - Civil ID PACI, Traffic Fines, Gratuity KWD + IVR</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Kuwait tools: Civil ID PACI, traffic fines MOI, gratuity, gold KWD, rent + NEW IVR Builder KWD 5 USDT viral tools.</p>
 {% elif country=='SA' %}
-<h2 style="font-size:14px;font-weight:900">Free 🇸🇦 Saudi Tools 2026 - Iqama, Hijri, GOSI, ZATCA + Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Saudi tools: Iqama expiry, Hijri, GOSI 9.75%, ZATCA QR, GPA + NEW: salary flex SAR, رابط صراحة, زخرفة اسماء.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇸🇦 Saudi Tools 2026 - Iqama, Hijri, GOSI, ZATCA + IVR $5</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Saudi tools: Iqama expiry, Hijri, GOSI 9.75%, ZATCA QR, GPA + NEW: IVR Builder $5 USDT, salary flex SAR, رابط صراحة.</p>
 {% elif country=='US' %}
-<h2 style="font-size:14px;font-weight:900">Free 🇺🇸 USA Tools 2026 - Paycheck Federal Tax, Tip, Background Check + Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free USA tools: paycheck calculator, tip 15% 18% 20%, background check + NEW viral flex tools.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇺🇸 USA Tools 2026 - Paycheck Federal Tax, Tip, Background Check + IVR $5</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free USA tools: paycheck calculator, tip 15% 18% 20%, background check + NEW IVR Builder $5 USDT viral flex tools.</p>
 {% else %}
-<h2 style="font-size:14px;font-weight:900">Free 🇳🇬 Nigeria Tools 2026 - Lagos Rent Package, IVR Builder $5, NEPA Band A, CAC, Fuel + 3 NEW Viral</h2>
-<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Nigeria tools: NEW: Lagos total rent package calculator + IVR Builder AI Voice Menu $5 USDT + salary flex NGN earn while sleeping + anonymous link NGL clone + زخرفة اسماء stylish name generator. Also NEPA Band A, CAC, fuel, rent splitter, PAYE, JAMB, WAEC, NIN.</p>
+<h2 style="font-size:14px;font-weight:900">Free 🇳🇬 Nigeria Tools 2026 - Lagos Rent Package, IVR Builder $5, NEPA Band A, CAC + 3 NEW Viral</h2>
+<p style="font-size:12px;color:#888;margin-top:8px;line-height:1.7">{{allowed|length}} free Nigeria tools: NEW: IVR Builder AI Voice Menu $5 USDT TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4 + Lagos total rent package calculator + salary flex NGN earn while sleeping + anonymous link NGL clone + زخرفة اسماء stylish name generator. Also NEPA Band A, CAC, fuel, rent splitter, PAYE, JAMB, WAEC, NIN.</p>
 {% endif %}
 </div>
 
 <div style="max-width:1100px;margin:16px auto;padding:0 16px;text-align:center">
-<p style="font-size:11px;color:#444">You see only {{country_name}} tools because IP {{raw_country}} → {{country}}. IP-Strict mode - VPN to switch. {{allowed|length}} tools total.</p>
+<p style="font-size:11px;color:#444">You see only {{country_name}} tools because IP {{raw_country}} → {{country}}. IP-Strict mode - VPN to switch. {{allowed|length}} tools total. USDT Wallet: TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4</p>
 </div>
-<div class="footer">ClearCodeSystem © 2026 • IP Strict Geo • {{country}} - {{country_name}} • {{allowed|length}} tools unlocked • Gulf $3-8 • UK $3-5 • US $8-15</div>
+<div class="footer">ClearCodeSystem © 2026 • IP Strict Geo • {{country}} - {{country_name}} • {{allowed|length}} tools unlocked • Wallet: TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4 • 5 USDT</div>
 
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 </body>
-</html>right by us
+</html>

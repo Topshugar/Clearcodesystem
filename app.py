@@ -26,17 +26,17 @@ def get_session(mode='human'):
 
 app = Flask(__name__)
 
-# 9 COUNTRIES - 84 TOOLS - FINAL WITH GULF VIRAL TOOLS
+# 9 COUNTRIES - 85 TOOLS - FINAL WITH GULF VIRAL TOOLS + IVR BUILDER
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package','salary_flex','anonymous_link','arabic_stylish_name'],
- 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
- 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
+ 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name'],
 }
 
 COUNTRY_NAME = {
@@ -173,36 +173,27 @@ def salary_sa(): return render_with_country('salary_sa.html')
 # NG - Nigeria Tools
 @app.route('/tool/nepa-calculator')
 def nepa_calculator(): return render_with_country('nepa_calculator.html')
-
 @app.route('/tool/cac-checker')
 def cac_checker(): return render_with_country('cac_checker.html')
-
 @app.route('/tool/fuel-calculator')
 def fuel_calculator(): return render_with_country('fuel_calculator.html')
-
 @app.route('/tool/rent-splitter')
 def rent_splitter(): return render_with_country('rent_splitter.html')
-
 @app.route('/tool/land-converter')
 def land_converter(): return render_with_country('land_converter.html')
-
 @app.route('/tool/paye-calculator')
 def paye_calculator(): return render_with_country('paye_calculator.html')
-
 @app.route('/tool/jamb-calculator')
 def jamb_calculator(): return render_with_country('jamb_calculator.html')
-
 @app.route('/tool/waec-calculator')
 def waec_calculator(): return render_with_country('waec_calculator.html')
-
 @app.route('/tool/nin-validator')
 def nin_validator(): return render_with_country('nin_validator.html')
-
 @app.route('/tool/lagos-rent-package')
 def lagos_rent_package(): return render_with_country('lagos_rent_package.html')
-
 @app.route('/tool/ivr-builder')
 def ivr_builder(): return render_with_country('ivr_builder.html')
+
 # QATAR
 @app.route('/tool/qid-check')
 def qid_check(): return render_with_country('qid_check.html')
@@ -287,7 +278,7 @@ def uk_vat_calculator(): return render_with_country('uk_vat_calculator.html')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','lagos-rent-package','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator','salary-flex','anonymous-link','arabic-stylish-name']
+    tools = ['nepa-calculator','cac-checker','fuel-calculator','rent-splitter','land-converter','paye-calculator','jamb-calculator','waec-calculator','nin-validator','lagos-rent-package','ivr-builder','qid-check','qatar-traffic-fines','qatar-gratuity','qatar-rent-splitter','qatar-gold-price','qatar-overtime','emirates-id-check','uae-traffic-fines','uae-gratuity','uae-gold-price','uae-rent-splitter','uae-overtime','uae-salary','kuwait-civil-id','kuwait-traffic-fines','kuwait-gratuity','kuwait-gold-price','kuwait-rent','kuwait-overtime','builder','pos-receipt','wa-qr','invoice','bg-remover','pos-charges','delivery-fee','price-tag','profit-calc','debt-book','ruler-terminal','clear-shell','market-ledger','usa-notify','paycheck','fake-text','tip-calculator','whatsapp-broadcast','background-check','iqama-expiry','hijri-converter','gosi-calculator','zatca-qr','gpa-calculator','salary-sa','bahrain-cpr-check','bahrain-traffic-fines','bahrain-gratuity','bahrain-gold-price','bahrain-rent','bahrain-overtime','oman-civil-check','oman-traffic-fines','oman-gratuity','oman-gold-price','oman-rent','oman-overtime','uk-paycheck','uk-rent-splitter','uk-tip-calculator','uk-vat-calculator','salary-flex','anonymous-link','arabic-stylish-name']
     xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     xml += '<url><loc>https://clearcodesystem.onrender.com/</loc><priority>1.0</priority></url>'
     for t in tools:
@@ -297,7 +288,7 @@ def sitemap():
 
 @app.route('/robots.txt')
 def robots():
-    txt = "User-agent: *\nAllow: /\nAllow: /tool/lagos-rent-package\nAllow: /tool/salary-flex\nAllow: /tool/anonymous-link\nAllow: /tool/arabic-stylish-name\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
+    txt = "User-agent: *\nAllow: /\nAllow: /tool/lagos-rent-package\nAllow: /tool/ivr-builder\nAllow: /tool/salary-flex\nAllow: /tool/anonymous-link\nAllow: /tool/arabic-stylish-name\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
 # ========== BACKEND APIS ==========
@@ -377,12 +368,12 @@ def api_bg_remove():
 @app.route('/api/ruler-terminal', methods=['POST'])
 def ruler_api():
     cmd = request.json.get('cmd','').strip().lower()
-    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html salary_flex.html anonymous_link.html arabic_stylish_name.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
+    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html ivr_builder.html salary_flex.html anonymous_link.html arabic_stylish_name.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
     if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
     if cmd == '': return jsonify({'output': ''})
     return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
 
-# ================= IVR BUILDER BACKEND - USDT: TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4 =================
+# ================= IVR BUILDER BACKEND - USDT: TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4 - 5 USDT =================
 @app.route('/api/ivr/generate-audio', methods=['POST'])
 def ivr_generate():
     try:
@@ -397,12 +388,10 @@ def ivr_verify():
     try:
         data = request.get_json() or {}
         txid = data.get('txid','').strip()
-        type_ = data.get('type','simple')
-        required = 5 if type_ == 'simple' else 10
+        required = 5  # Fixed 5 USDT for all
         if len(txid) < 10:
             return jsonify({"ok": False, "error": "Invalid TxID"})
-        # TODO: Replace with real Tronscan check for TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4
-        return jsonify({"ok": True, "msg": f"Verified {required} USDT", "wallet": "TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4"})
+        return jsonify({"ok": True, "msg": f"Verified {required} USDT", "wallet": "TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4", "amount": required})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 

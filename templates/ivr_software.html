@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto p-4">
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-bold">🇳🇬 Nigerian IVR Builder</h1>
+    <p class="text-gray-500">Create Business Phone Menu + Live Call</p>
+    <div class="mt-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm inline-block">USDT Paywall Active</div>
+  </div>
+
+  <div class="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
+    <button onclick="switchTab('simple')" id="tab-simple" class="flex-1 bg-white shadow rounded-lg py-2 font-bold">A) Simple MP3 (5 USDT)</button>
+    <button onclick="switchTab('live')" id="tab-live" class="flex-1 py-2 text-gray-500">B) Live Call (10 USDT)</button>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow p-6 space-y-4">
+    <input id="bizName" class="w-full border rounded-lg p-3" placeholder="Business Name e.g. ClearCode">
+    <textarea id="welcomeMsg" class="w-full border rounded-lg p-3" rows="3">Welcome to ClearCode. Press 1 for Sales, Press 2 for Support, Press 0 to speak with agent. Thank you.</textarea>
+    <div class="grid grid-cols-3 gap-2">
+      <input id="opt1" class="border rounded p-2 text-sm" value="Press 1 - Sales">
+      <input id="opt2" class="border rounded p-2 text-sm" value="Press 2 - Support">
+      <input id="opt0" class="border rounded p-2 text-sm" value="Press 0 - Agent">
+    </div>
+    <div id="livePhoneDiv" class="hidden">
+      <input id="testPhone" class="w-full border rounded-lg p-3" placeholder="+2348012345678">
+    </div>
+    <div class="flex gap-3">
+      <button onclick="previewIVR()" class="flex-1 bg-black text-white py-3 rounded-xl font-bold">▶️ Preview</button>
+      <button onclick="openPaywall()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">🔓 Unlock 5/10 USDT</button>
+    </div>
+    <audio id="audioPreview" controls class="w-full hidden"></audio>
+    <div id="status" class="text-center text-sm text-gray-500"></div>
+  </div>
+
+  <div id="payModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center">
+      <h2 class="text-xl font-bold">Pay USDT (TRC20)</h2>
+      <p id="payAmount" class="text-sm text-gray-500">Amount: 5 USDT</p>
+      <div class="bg-gray-50 p-4 rounded-xl mt-4">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4" class="mx-auto rounded">
+        <p class="font-mono text-xs mt-3 break-all bg-white p-2 border rounded">TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4</p>
+        <p class="text-[11px] mt-2 text-red-600 font-bold">TRC20 Only • Send exact amount</p>
+      </div>
+      <input id="txId" class="w-full border rounded-lg p-3 mt-4" placeholder="Paste TxID / Hash here">
+      <button onclick="verifyUSDT()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold mt-3">Verify Payment</button>
+      <button onclick="closePaywall()" class="text-gray-500 text-sm mt-2">Cancel</button>
+      <p id="verifyStatus" class="text-sm mt-3"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentTab='simple'; let paid=false;
+function switchTab(t){
+ currentTab=t;
+ document.getElementById('tab-simple').className=t=='simple'?'flex-1 bg-white shadow rounded-lg py-2 font-bold':'flex-1 py-2 text-gray-500';
+ document.getElementById('tab-live').className=t=='live'?'flex-1 bg-white shadow rounded-lg py-2 font-bold':'flex-1 py-2 text-gray-500';
+ document.getElementById('livePhoneDiv').classList.toggle('hidden',t=='simple');
+ document.getElementById('payAmount').innerText = t=='simple'? 'Amount: 5 USDT (Simple MP3)' : 'Amount: 10 USDT (Live Call)';
+}
+function previewIVR(){
+ const msg=document.getElementById('welcomeMsg').value;
+ let u=new SpeechSynthesisUtterance(msg); u.lang='en-NG'; speechSynthesis.speak(u);
+ document.getElementById('status').innerText="Preview playing + generating MP3...";
+ fetch('/api/ivr/generate-audio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg})}).then(r=>r.json()).then(d=>{ if(d.audio_url){ let a=document.getElementById('audioPreview'); a.src=d.audio_url; a.classList.remove('hidden'); }});
+}
+function openPaywall(){ if(paid){doUnlockAction();return;} document.getElementById('payModal').classList.remove('hidden');document.getElementById('payModal').classList.add('flex'); }
+function closePaywall(){ document.getElementById('payModal').classList.add('hidden');document.getElementById('payModal').classList.remove('flex'); }
+function verifyUSDT(){
+ const tx=document.getElementById('txId').value.trim(); if(!tx){alert("Paste TxID");return;}
+ document.getElementById('verifyStatus').innerText="Verifying on Tron...";
+ fetch('/api/ivr/verify-usdt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:tx,type:currentTab})}).then(r=>r.json()).then(d=>{
+   if(d.ok){ paid=true; document.getElementById('verifyStatus').innerText="✅ Verified! Unlocking..."; setTimeout(()=>{closePaywall();doUnlockAction();},1000); }
+   else{ document.getElementById('verifyStatus').innerText="❌ "+(d.error||"Not found, wait 30s"); }
+ });
+}
+function doUnlockAction(){
+ if(currentTab=='simple'){ window.location.href='/api/ivr/download?text='+encodeURIComponent(document.getElementById('welcomeMsg').value); }
+ else{
+   const phone=document.getElementById('testPhone').value; if(!phone){alert("Enter phone +234");return;}
+   document.getElementById('status').innerText="📞 Calling "+phone+"...";
+   fetch('/api/ivr/call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,text:document.getElementById('welcomeMsg').value})}).then(r=>r.json()).then(d=>{ document.getElementById('status').innerText=d.ok?"✅ Call Sent!":"❌ "+d.error; });
+ }
+}
+</script>
+{% endblock %}

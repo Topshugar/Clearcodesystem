@@ -1,0 +1,8 @@
+<body style="background:#080808;color:#fff;font-family:sans-serif;text-align:center;padding:20px">
+<h2>🔗 Send anonymous message to <span style="color:#00FF88">{{username}}</span></h2>
+<textarea id="m" style="width:100%;max-width:400px;height:100px;background:#121212;color:#fff;border:1px solid #333;border-radius:12px;padding:12px"></textarea><br>
+<button onclick="send()" style="margin-top:10px;padding:12px 20px;background:#00FF88;border:0;border-radius:12px;font-weight:900">Send Anonymously</button>
+<script>
+function send(){fetch('/api/sarah/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:"{{username}}",msg:document.getElementById('m').value})}).then(r=>r.json()).then(()=>{alert('Sent anonymously ✅');document.getElementById('m').value=''});}
+</script>
+</body>

@@ -99,6 +99,30 @@ function shareFlex(){
  window.open(`https://wa.me/?text=${encodeURIComponent('💸 I earn while sleeping: '+txt+' - https://clearcodesystem.onrender.com/tool/salary-flex')}`);
 }
 calc();
+
+// --- IP CHECK ---
+async function detectIPCountry(){
+ try{
+  const r = await fetch('https://ipapi.co/json/');
+  const d = await r.json();
+  const cc = d.country_code;
+  const map = {
+   QA:'QAR', SA:'SAR', AE:'AED', KW:'KWD', BH:'BHD', OM:'OMR',
+   JO:'JOD', EG:'EGP', NG:'NGN', GH:'GHS', KE:'KES', ZA:'ZAR',
+   US:'USD', GB:'GBP', CA:'CAD', AU:'AUD', BR:'BRL', MX:'MXN',
+   IN:'INR', PK:'PKR', BD:'BDT', TR:'TRY', MY:'MYR', ID:'IDR',
+   PH:'PHP', JP:'JPY', KR:'KRW', CN:'CNY'
+  };
+  if(map[cc]){
+   const sel = document.getElementById('currency');
+   if(sel.querySelector(`option[value="${map[cc]}"]`)){
+    sel.value = map[cc];
+    calc();
+   }
+  }
+ }catch(e){}
+}
+detectIPCountry();
 </script>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 </body>

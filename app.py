@@ -315,16 +315,18 @@ def admin_analytics():
     tools = Counter([a['tool'] for a in ANALYTICS])
     countries = Counter([a['country'] for a in ANALYTICS])
     last = ANALYTICS[-30:][::-1]
-    return f"""
+    disabled_list = list(DISABLED_TOOLS)
+    html = f"""
     <html style="background:#080808;color:#fff;font-family:monospace;padding:20px">
-    <h2>📊 ClearCode Analytics - V3 + BankInfo</h2>
-    <p>Total: {len(ANALYTICS)} | Disabled: {list(DISABLED_TOOLS)}</p>
+    <h2>📊 ClearCode Analytics - V3 + BankInfo FIXED</h2>
+    <p>Total: {len(ANALYTICS)} | Disabled: {disabled_list}</p>
     <h3>Top Tools</h3><pre>{tools.most_common(20)}</pre>
     <h3>Top Countries</h3><pre>{countries.most_common(20)}</pre>
     <h3>Last 30</h3><pre>{last}</pre>
     <hr><a href="/admin/tools?key={ADMIN_KEY}" style="color:#00FF88">Go to Tools Manager</a>
     </html>
     """
+    return html
 
 @app.route('/admin/tools')
 def admin_tools_manager():
@@ -338,15 +340,15 @@ def admin_tools_manager():
     if action == 'enable' and tool:
         DISABLED_TOOLS.discard(tool)
         save_data()
-    html = f"<html style='background:#080808;color:#fff;font-family:monospace;padding:20px'><h2>🛠️ Tools Manager</h2>"
+    out = f"<html style='background:#080808;color:#fff;font-family:monospace;padding:20px'><h2>🛠️ Tools Manager</h2>"
     for c in COUNTRY_TOOLS:
-        html += f"<h3>{c}</h3>"
+        out += f"<h3>{c}</h3>"
         for t in COUNTRY_TOOLS[c]:
             key = f"{c}:{t}"
             status = "🔴 OFF" if key in DISABLED_TOOLS else "🟢 ON"
-            html += f"{status} {key} - <a style='color:#FF0040' href='/admin/tools?key={ADMIN_KEY}&action=disable&tool={key}'>OFF</a> | <a style='color:#00FF88' href='/admin/tools?key={ADMIN_KEY}&action=enable&tool={key}'>ON</a><br>"
-    html += f"<hr><a href='/admin/analytics?key={ADMIN_KEY}' style='color:#00FF88'>Back</a></html>"
-    return html
+            out += f"{status} {key} - <a style='color:#FF0040' href='/admin/tools?key={ADMIN_KEY}&action=disable&tool={key}'>OFF</a> | <a style='color:#00FF88' href='/admin/tools?key={ADMIN_KEY}&action=enable&tool={key}'>ON</a><br>"
+    out += f"<hr><a href='/admin/analytics?key={ADMIN_KEY}' style='color:#00FF88'>Back</a></html>"
+    return out
 
 @app.route('/sitemap.xml')
 def sitemap():
@@ -363,26 +365,29 @@ def robots():
     txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nDisallow: /admin/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
-# ===== BIN CHECK API - NEW FIXED =====
+# ===== BIN CHECK API - FIXED NO CORS =====
 @app.route('/api/bin-check', methods=['POST'])
 def api_bin_check():
     try:
-        data = request.json or {}
+        data = request.get_json(silent=True) or {}
         bin_code = str(data.get('bin','')).strip()[:8]
         bin_code = ''.join(filter(str.isdigit, bin_code))
         if len(bin_code) < 6:
             return jsonify({'error':'Enter at least 6 digits'}), 400
-        r = requests.get(f'https://lookup.binlist.net/{bin_code}', headers={'Accept-Version':'3'}, timeout=5)
+        r = requests.get(f'https://lookup.binlist.net/{bin_code}', headers={'Accept-Version':'3'}, timeout=6)
         if r.status_code!= 200:
             return jsonify({'error':'BIN not found in public DB'}), 404
         j = r.json()
+        bank_name = j.get('bank',{}).get('name','Unknown') if j.get('bank') else 'Unknown'
+        country_info = j.get('country',{})
+        country_str = f"{country_info.get('name','Unknown')} {country_info.get('emoji','')}" if country_info else 'Unknown'
         return jsonify({
             'bin': bin_code,
             'scheme': (j.get('scheme') or 'Unknown').upper(),
             'type': (j.get('type') or 'Unknown').upper(),
             'category': j.get('category') or 'Unknown',
-            'bank': j.get('bank',{}).get('name') if j.get('bank') else 'Unknown',
-            'country': f"{j.get('country',{}).get('name','Unknown')} {j.get('country',{}).get('emoji','')}" if j.get('country') else 'Unknown'
+            'bank': bank_name,
+            'country': country_str
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -518,5 +523,3 @@ def shell_api():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
-    

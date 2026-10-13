@@ -1,51 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="max-width:600px;margin:20px auto;padding:20px;background:#0f0f0f;border-radius:12px;color:#fff;font-family:system-ui">
-<h2 style="color:#00D4FF">💳 Bank Card Info Checker</h2>
-<p style="color:#aaa;font-size:13px">Educational tool - Check YOUR own card type only. We don't validate, store, or check if card is live.</p>
+<div style="max-width:600px;margin:15px auto;padding:16px;background:#111;border:1px solid #00D4FF;border-radius:16px;color:#fff;font-family:system-ui">
+<h2 style="color:#00D4FF;margin:0">💳 Bank Card Info - {{country}} {{country_name}}</h2>
+<p style="color:#888;font-size:12px;margin:8px 0">Educational only. Check YOUR own card. Works in Nigeria & Gulf.</p>
 
-<input id="bin" maxlength="8" inputmode="numeric" placeholder="Enter first 6-8 digits (e.g. 555931)" style="width:100%;padding:14px;border-radius:8px;background:#1a1a1a;color:#fff;border:1px solid #333;font-size:16px;margin-top:12px">
+<input id="bin" type="tel" maxlength="8" placeholder="Enter 6 digits" style="width:100%;padding:14px;border-radius:10px;background:#1a1a1a;color:#fff;border:1px solid #333;font-size:20px;text-align:center;letter-spacing:3px;font-weight:bold">
 
-<button onclick="checkBIN()" id="btn" style="width:100%;margin-top:12px;padding:14px;background:#00D4FF;color:#000;border:0;border-radius:8px;font-weight:bold;cursor:pointer">Check Info</button>
+<button onclick="checkBIN()" id="btn" style="width:100%;margin-top:12px;padding:14px;background:#00D4FF;color:#000;border:0;border-radius:10px;font-weight:900;font-size:16px">CHECK NOW → {{country}}</button>
 
-<div id="result" style="margin-top:20px;padding:15px;background:#151515;border-radius:8px;display:none"></div>
+<div id="result" style="margin-top:16px;padding:14px;background:#151515;border-radius:10px;display:none;font-size:13px;line-height:1.8"></div>
 
-<p style="margin-top:15px;color:#666;font-size:11px">Disclaimer: Public BIN info only. For your own card. No VBV/LIVE/balance check. Data from public BIN database.</p>
+<div style="margin-top:14px">
+<p style="color:#555;font-size:11px;margin-bottom:6px">Try examples for {{country_name}}:</p>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+
+{% if country == 'NG' %}
+<button onclick="setBIN('406068')" style="padding:7px 12px;border-radius:20px;background:#008751;color:#fff;border:0;font-size:12px;font-weight:bold">🇳🇬 GTB 406068</button>
+<button onclick="setBIN('506099')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">Verve 506099</button>
+<button onclick="setBIN('506116')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">Kuda 506116</button>
+<button onclick="setBIN('506146')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">OPay 506146</button>
+
+{% elif country == 'BH' %}
+<button onclick="setBIN('555931')" style="padding:7px 12px;border-radius:20px;background:#CE1126;color:#fff;border:0;font-size:12px;font-weight:bold">🇧🇭 Al Baraka 555931</button>
+<button onclick="setBIN('406068')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">BBK 406068</button>
+<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">NBB 417500</button>
+
+{% elif country == 'QA' %}
+<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#8D1B3D;color:#fff;border:0;font-size:12px;font-weight:bold">🇶🇦 QNB 417500</button>
+<button onclick="setBIN('555931')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">QIB 555931</button>
+<button onclick="setBIN('422207')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">Doha Bank 422207</button>
+
+{% elif country == 'SA' %}
+<button onclick="setBIN('431380')" style="padding:7px 12px;border-radius:20px;background:#006C35;color:#fff;border:0;font-size:12px;font-weight:bold">🇸🇦 Rajhi 431380</button>
+<button onclick="setBIN('422207')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">NCB 422207</button>
+
+{% elif country == 'AE' %}
+<button onclick="setBIN('422207')" style="padding:7px 12px;border-radius:20px;background:#00732F;color:#fff;border:0;font-size:12px;font-weight:bold">🇦🇪 ADCB 422207</button>
+<button onclick="setBIN('529977')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">FAB 529977</button>
+
+{% elif country == 'KW' %}
+<button onclick="setBIN('529977')" style="padding:7px 12px;border-radius:20px;background:#007A3D;color:#fff;border:0;font-size:12px;font-weight:bold">🇰🇼 NBK 529977</button>
+<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">KFH 417500</button>
+
+{% else %}
+<button onclick="setBIN('406068')" style="padding:7px 12px;border-radius:20px;background:#00D4FF;color:#000;border:0;font-size:12px;font-weight:bold">GTB 406068</button>
+<button onclick="setBIN('555931')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">MC 555931</button>
+<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">VISA 417500</button>
+{% endif %}
+
+</div>
+</div>
+
+<p style="margin-top:14px;color:#333;font-size:10px;text-align:center">Detected: {{raw_country}} → {{country}} • Public BIN DB only • No live check • Educational</p>
 </div>
 
 <script>
+function setBIN(v){document.getElementById('bin').value=v; checkBIN();}
 async function checkBIN(){
- const binInput = document.getElementById('bin').value.trim().replace(/\D/g,'').slice(0,8);
+ const binInput = document.getElementById('bin').value.replace(/\D/g,'').slice(0,8);
  const result = document.getElementById('result');
  const btn = document.getElementById('btn');
- if(binInput.length < 6){ alert('Enter at least 6 digits'); return; }
+ if(binInput.length < 6){ alert('Enter 6 digits'); return; }
  result.style.display='block';
- result.innerHTML='⏳ Checking...';
+ result.innerHTML='⏳ Checking {{country}} BIN...';
  btn.disabled=true; btn.innerText='Checking...';
  try{
-   const res = await fetch('/api/bin-check', {
-     method:'POST',
-     headers:{'Content-Type':'application/json'},
-     body: JSON.stringify({bin: binInput})
-   });
+   const res = await fetch('/api/bin-check', {method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({bin: binInput})});
    const data = await res.json();
-   if(!res.ok){ throw new Error(data.error || 'Not found'); }
    result.innerHTML = `
-    <div style="display:grid;gap:8px;font-size:14px">
-      <div><span style="color:#888">BIN:</span> <b>${data.bin}</b></div>
-      <div><span style="color:#888">Brand:</span> <b style="color:#00D4FF">${data.scheme}</b></div>
-      <div><span style="color:#888">Type:</span> <b>${data.type}</b></div>
-      <div><span style="color:#888">Category:</span> <b>${data.category}</b></div>
-      <div><span style="color:#888">Bank:</span> <b>${data.bank}</b></div>
-      <div><span style="color:#888">Country:</span> <b>${data.country}</b></div>
-      <hr style="border-color:#222;margin:8px 0">
-      <div style="color:#00FF88;font-size:12px">✓ Educational info only. No fraud check.</div>
-    </div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#888">BIN</span><b>${data.bin} <span style="font-size:10px;color:#444">${data.source}</span></b></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#888">Brand</span><b style="color:#00D4FF">${data.scheme}</b></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#888">Type</span><b>${data.type} • ${data.category}</b></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#888">Bank</span><b style="color:#00FF88">${data.bank}</b></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#888">Country</span><b>${data.country}</b></div>
+      <hr style="border-color:#222;margin:10px 0">
+      <div style="color:#555;font-size:11px">✓ {{country_name}} tool • Educational only</div>
    `;
  } catch(e){
-   result.innerHTML = `<div style="color:#ff4444">❌ ${e.message}. Try another 6 digits from your own card. Example: 406068 for Bahrain AL BARAKA.</div>`;
+   result.innerHTML = `<span style="color:#ff4444">Error: ${e.message}. Try 406068</span>`;
  } finally {
-   btn.disabled=false; btn.innerText='Check Info';
+   btn.disabled=false; btn.innerText='CHECK NOW → {{country}}';
  }
 }
 </script>

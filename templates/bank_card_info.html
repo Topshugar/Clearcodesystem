@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width:600px;margin:20px auto;padding:20px;background:#0f0f0f;border-radius:12px;color:#fff;font-family:system-ui">
+<h2 style="color:#00FF88">💳 Bank Card Info Checker</h2>
+<p style="color:#aaa;font-size:13px">Educational tool - Check YOUR own card type only. We don't validate, store, or check if card is live.</p>
+
+<input id="bin" maxlength="8" placeholder="Enter first 6-8 digits of your card (e.g. 555931)" style="width:100%;padding:14px;border-radius:8px;background:#1a1a1a;color:#fff;border:1px solid #333;font-size:16px">
+
+<button onclick="checkBIN()" style="width:100%;margin-top:12px;padding:14px;background:#00FF88;color:#000;border:0;border-radius:8px;font-weight:bold;cursor:pointer">Check Info</button>
+
+<div id="result" style="margin-top:20px;padding:15px;background:#151515;border-radius:8px;display:none"></div>
+
+<p style="margin-top:15px;color:#666;font-size:11px">Disclaimer: This tool shows public BIN information (card brand, type) for educational purpose only. No VBV check, no balance check, no validation. Do not use other people's cards.</p>
+</div>
+
+<script>
+async function checkBIN(){
+ const bin = document.getElementById('bin').value.trim().replace(/\D/g,'').slice(0,8);
+ if(bin.length < 6){ alert('Enter at least 6 digits'); return; }
+ document.getElementById('result').style.display='block';
+ document.getElementById('result').innerHTML='Checking...';
+ try{
+   const res = await fetch(`https://lookup.binlist.net/${bin}`, {headers:{'Accept-Version':'3'}});
+   if(!res.ok) throw 'Not found';
+   const data = await res.json();
+   document.getElementById('result').innerHTML = `
+    <div><b>BIN:</b> ${bin}</div>
+    <div><b>Brand:</b> ${data.scheme ? data.scheme.toUpperCase() : 'Unknown'}</div>
+    <div><b>Type:</b> ${data.type ? data.type.toUpperCase() : 'Unknown'}</div>
+    <div><b>Category:</b> ${data.category || 'Unknown'}</div>
+    <div><b>Bank:</b> ${data.bank ? data.bank.name : 'Unknown'}</div>
+    <div><b>Country:</b> ${data.country ? data.country.name + ' ' + (data.country.emoji||'') : 'Unknown'}</div>
+    <hr style="border-color:#222">
+    <div style="color:#00FF88;font-size:12px">✓ Educational info only. No fraud check.</div>
+   `;
+ } catch(e){
+   document.getElementById('result').innerHTML = `<div style="color:#ff4444">BIN not found in public database. Try another 6 digits from your own card.</div>`;
+ }
+}
+</script>
+{% endblock %}

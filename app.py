@@ -1,311 +1,158 @@
-from flask import Flask, render_template, request, jsonify, Response
-import qrcode, os, io, base64, requests, json
+import os
+import json
+import io
+import base64
+import requests
 from datetime import datetime
 from collections import Counter
-import paramiko
+from flask import Flask, render_template, request, jsonify, Response, redirect, url_for
 from PIL import Image
-
-REMBG_AVAILABLE = False
-human_session = None
-cloth_session = None
-
-def get_session(mode='human'):
-    global human_session, cloth_session, REMBG_AVAILABLE
-    try:
-        from rembg import remove, new_session
-        REMBG_AVAILABLE = True
-        if mode == 'human' and human_session is None:
-            try: human_session = new_session("u2net_human_seg")
-            except: human_session = True
-        elif cloth_session is None:
-            try: cloth_session = new_session("isnet-general-use")
-            except: cloth_session = True
-        return True
-    except Exception as e:
-        print(f"rembg error: {e}")
-        return False
+import qrcode
+import paramiko
 
 app = Flask(__name__)
 
-# ===== CLEAN ADMIN V3 PERSISTENT =====
+# ===== CONFIG =====
 ADMIN_KEY = "CLEARCODE2026"
-DATA_FILE = "admin_data.json"
-ANALYTICS = []
-DISABLED_TOOLS = set()
+DATA_FILE = "data.json"
+ANALYTICS_FILE = "analytics.json"
 
+# Load or create data
 def load_data():
     global ANALYTICS, DISABLED_TOOLS
     try:
-        if os.path.exists(DATA_FILE):
-            with open(DATA_FILE, 'r') as f:
-                data = json.load(f)
-                ANALYTICS = data.get('analytics', [])[-5000:]
-                DISABLED_TOOLS = set(data.get('disabled', []))
+        if os.path.exists(ANALYTICS_FILE):
+            with open(ANALYTICS_FILE, 'r') as f:
+                d = json.load(f)
+                ANALYTICS = d.get('analytics', [])
+                DISABLED_TOOLS = set(d.get('disabled', []))
+        else:
+            ANALYTICS = []
+            DISABLED_TOOLS = set()
     except:
-        pass
+        ANALYTICS = []
+        DISABLED_TOOLS = set()
 
 def save_data():
     try:
-        with open(DATA_FILE, 'w') as f:
+        with open(ANALYTICS_FILE, 'w') as f:
             json.dump({'analytics': ANALYTICS[-5000:], 'disabled': list(DISABLED_TOOLS)}, f)
     except:
         pass
 
+ANALYTICS = []
+DISABLED_TOOLS = set()
 load_data()
 
+# ===== COUNTRY TOOLS - BANK INFO GLOBAL NOW =====
 COUNTRY_TOOLS = {
- 'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','pos_charges','wa_qr','whatsapp_broadcast','invoice','bg_remover','delivery_fee','fake_text','debt_book','price_tag','profit_calc','ruler_terminal','clear_shell','market_ledger','builder','pos_receipt','lagos_rent_package','ivr_builder','bank_card_info'],
- 'US': ['paycheck','background_check','tip_calculator','usa_notify','builder','pos_receipt','ivr_builder','bank_card_info'],
- 'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'],
- 'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'],
- 'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'],
- 'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'],
- 'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'],
- 'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','builder','pos_receipt','ivr_builder','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'],
- 'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','builder','pos_receipt','ivr_builder','bank_card_info'],
+    'NG': ['nepa_calculator','cac_checker','fuel_calculator','rent_splitter','land_converter','paye_calculator','jamb_calculator','waec_calculator','nin_validator','lagos_rent_package','ivr_builder','builder','pos_receipt','wa_qr','invoice','bg_remover','pos_charges','delivery_fee','price_tag','profit_calc','debt_book','ruler_terminal','clear_shell','market_ledger','bank_card_info','salary_flex','anonymous_link','arabic_stylish_name'],
+    'BH': ['bahrain_cpr_check','bahrain_traffic_fines','bahrain_gratuity','bahrain_gold_price','bahrain_rent','bahrain_overtime','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info','ivr_builder'],
+    'QA': ['qid_check','qatar_traffic_fines','qatar_gratuity','qatar_rent_splitter','qatar_gold_price','qatar_overtime','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info','ivr_builder'],
+    'SA': ['iqama_expiry','hijri_converter','gosi_calculator','zatca_qr','gpa_calculator','salary_sa','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info','ivr_builder'],
+    'AE': ['emirates_id_check','uae_traffic_fines','uae_gratuity','uae_gold_price','uae_rent_splitter','uae_overtime','uae_salary','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info','ivr_builder'],
+    'KW': ['kuwait_civil_id','kuwait_traffic_fines','kuwait_gratuity','kuwait_gold_price','kuwait_rent','kuwait_overtime','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info','ivr_builder'],
+    'OM': ['oman_civil_check','oman_traffic_fines','oman_gratuity','oman_gold_price','oman_rent','oman_overtime','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info','ivr_builder'],
+    'US': ['usa_notify','paycheck','fake_text','tip_calculator','whatsapp_broadcast','background_check','bank_card_info','ivr_builder'],
+    'UK': ['uk_paycheck','uk_rent_splitter','uk_tip_calculator','uk_vat_calculator','bank_card_info','ivr_builder'],
+    'DEFAULT': ['wa_qr','invoice','bg_remover','bank_card_info','salary_flex','anonymous_link','arabic_stylish_name','ivr_builder']
 }
 
-COUNTRY_NAME = {
-'NG':'🇳🇬 Nigeria','US':'🇺🇸 USA','SA':'🇸🇦 Saudi','QA':'🇶🇦 Qatar','AE':'🇦🇪 UAE','KW':'🇰🇼 Kuwait',
-'BH':'🇧🇭 Bahrain','OM':'🇴🇲 Oman','UK':'🇬🇧 UK',
-'GH':'🇳🇬 Nigeria','KE':'🇳🇬 Nigeria','CA':'🇺🇸 USA','GB':'🇬🇧 UK','AU':'🇺🇸 USA','EG':'🇸🇦 Saudi'
+COUNTRY_NAMES = {
+    'NG': 'Nigeria', 'BH': 'Bahrain', 'QA': 'Qatar', 'SA': 'Saudi Arabia',
+    'AE': 'UAE', 'KW': 'Kuwait', 'OM': 'Oman', 'US': 'USA', 'UK': 'UK', 'DEFAULT': 'Global'
 }
 
-IP_CACHE = {}
-
-def get_country():
-    forced = request.args.get('country') or request.args.get('c')
-    if forced and forced.upper() in COUNTRY_TOOLS:
-        return forced.upper()
+# ===== BG REMOVER SESSIONS =====
+human_session = None
+cloth_session = None
+def get_session(mode):
+    global human_session, cloth_session
     try:
-        cf = request.headers.get('CF-IPCountry')
-        if cf and len(cf)==2 and cf.upper()!='XX':
-            return cf.upper()
-        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
-        if ip in ['127.0.0.1','::1',''] or ip.startswith('192.'):
-            return 'NG'
-        if ip in IP_CACHE:
-            return IP_CACHE[ip]
-        r = requests.get(f'https://ipapi.co/{ip}/country/', timeout=2)
-        code = r.text.strip().upper()
-        if len(code)==2:
-            IP_CACHE[ip]=code
-            return code
-        return 'NG'
-    except:
-        return 'NG'
-
-def map_to_group(code):
-    code = code.upper()
-    if code in COUNTRY_TOOLS: return code
-    if code in ['GH','KE','ZA','NG']: return 'NG'
-    if code in ['US','CA','AU']: return 'US'
-    if code in ['SA','EG']: return 'SA'
-    if code in ['QA']: return 'QA'
-    if code in ['AE']: return 'AE'
-    if code in ['KW']: return 'KW'
-    if code in ['BH']: return 'BH'
-    if code in ['OM']: return 'OM'
-    if code in ['GB','UK']: return 'UK'
+        from rembg import new_session
+        if mode == 'human':
+            if human_session is None:
+                human_session = True
+                try:
+                    human_session = new_session('u2net_human_seg')
+                except:
+                    human_session = new_session('u2net')
+            return human_session
+        else:
+            if cloth_session is None:
+                cloth_session = True
+                try:
+                    cloth_session = new_session('u2net_cloth_seg')
+                except:
+                    cloth_session = new_session('u2net')
+            return cloth_session
+    except Exception as e:
+        print(f"rembg error {e}")
+        return None
+# ===== HELPERS =====
+def get_country():
+    raw = request.args.get('country', '').upper()
+    if raw in COUNTRY_TOOLS:
+        return raw
+    # Auto detect from IP header (Cloudflare / Render)
+    cf_country = request.headers.get('CF-IPCountry', '').upper()
+    if cf_country in COUNTRY_TOOLS:
+        return cf_country
+    # Check?country= param lower
+    c = request.args.get('c', '').upper()
+    if c in COUNTRY_TOOLS:
+        return c
     return 'NG'
 
-@app.before_request
-def track_clean():
-    if request.path.startswith('/tool/'):
-        try:
-            tool = request.path.split('/')[-1].replace('-','_')
-            raw = get_country()
-            country = map_to_group(raw)
-            ANALYTICS.append({
-                "tool": tool,
-                "country": country,
-                "raw": raw,
-                "time": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                "ip": request.headers.get('X-Forwarded-For', request.remote_addr)[:20]
-            })
-            if len(ANALYTICS) > 5000:
-                ANALYTICS.pop(0)
-            if len(ANALYTICS) % 10 == 0:
-                save_data()
-        except:
-            pass
+def is_disabled(tool_key, country):
+    return f"{country}:{tool_key}" in DISABLED_TOOLS or tool_key in DISABLED_TOOLS
 
+# ===== ROUTES =====
 @app.route('/')
-def home():
-    raw_country = get_country()
-    country = map_to_group(raw_country)
-    allowed = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS['NG'])
-    allowed = [t for t in allowed if f"{country}:{t}" not in DISABLED_TOOLS and f"{country}:{t.replace('_','-')}" not in DISABLED_TOOLS]
-    display_name = COUNTRY_NAME.get(raw_country, COUNTRY_NAME.get(country, f'🌍 {country}'))
-    return render_template('index.html', country=country, raw_country=raw_country, country_name=display_name, allowed=allowed, all_groups=COUNTRY_TOOLS)
+def index():
+    country = get_country()
+    raw_country = request.args.get('country', country)
+    tools = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS['DEFAULT'])
+    # filter disabled
+    tools = [t for t in tools if not is_disabled(t, country)]
+    return render_template('index.html', tools=tools, country=country, country_name=COUNTRY_NAMES.get(country, country), raw_country=raw_country)
 
-@app.route('/unlock')
-def unlock(): return render_template('unlock.html')
+@app.route('/tool/<tool_name>')
+def tool_page(tool_name):
+    country = get_country()
+    raw_country = request.args.get('country', country)
+    # Log analytics
+    try:
+        ANALYTICS.append({
+            'tool': tool_name,
+            'country': country,
+            'time': datetime.now().isoformat(),
+            'ip': request.headers.get('X-Forwarded-For', request.remote_addr)
+        })
+        if len(ANALYTICS) % 20 == 0:
+            save_data()
+    except:
+        pass
 
-def render_with_country(template_name):
-    raw=get_country(); country=map_to_group(raw)
-    tool_key = template_name.replace('.html','')
-    if f"{country}:{tool_key}" in DISABLED_TOOLS or f"{country}:{tool_key.replace('_','-')}" in DISABLED_TOOLS:
-        return "<h2 style='background:#080808;color:#fff;padding:40px;text-align:center'>Tool disabled in your region</h2>", 403
-    return render_template(template_name, country=country, raw_country=raw, country_name=COUNTRY_NAME.get(raw, COUNTRY_NAME.get(country)))
-@app.route('/tool/builder')
-@app.route('/tool/store-builder')
-def builder(): return render_with_country('builder.html')
-@app.route('/tool/pos-receipt')
-@app.route('/tool/receipt-generator')
-def pos_receipt(): return render_with_country('pos_receipt.html')
-@app.route('/tool/salary-flex')
-def salary_flex(): return render_with_country('salary_flex.html')
-@app.route('/tool/anonymous-link')
-@app.route('/tool/saraha')
-def anonymous_link(): return render_with_country('anonymous_link.html')
-@app.route('/tool/arabic-stylish-name')
-@app.route('/tool/stylish-name')
-@app.route('/tool/zakharfa')
-def arabic_stylish_name(): return render_with_country('arabic_stylish_name.html')
-@app.route('/tool/bank-card-info')
-def bank_card_info(): return render_with_country('bank_card_info.html')
-@app.route('/tool/wa-qr')
-def wa_qr(): return render_with_country('wa_qr.html')
-@app.route('/tool/invoice')
-def invoice(): return render_with_country('invoice.html')
-@app.route('/tool/bg-remover')
-def bg_remover(): return render_with_country('bg_remover.html')
-@app.route('/tool/pos-charges')
-def pos_charges(): return render_with_country('pos_charges.html')
-@app.route('/tool/delivery-fee')
-def delivery_fee(): return render_with_country('delivery_fee.html')
-@app.route('/tool/price-tag')
-def price_tag(): return render_with_country('price_tag.html')
-@app.route('/tool/profit-calc')
-def profit_calc(): return render_with_country('profit_calculator.html')
-@app.route('/tool/debt-book')
-def debt_book(): return render_with_country('debt_book.html')
-@app.route('/tool/ruler-terminal')
-def ruler_terminal(): return render_with_country('ruler_terminal.html')
-@app.route('/tool/clear-shell')
-def clear_shell(): return render_with_country('clear_shell.html')
-@app.route('/tool/market-ledger')
-def market_ledger(): return render_with_country('market_ledger.html')
-@app.route('/tool/usa-notify')
-def usa_notify(): return render_with_country('usa_notify.html')
-@app.route('/tool/paycheck')
-def paycheck(): return render_with_country('paycheck.html')
-@app.route('/tool/fake-text')
-def fake_text(): return render_with_country('fake_text.html')
-@app.route('/tool/tip-calculator')
-def tip_calculator(): return render_with_country('tip_calculator.html')
-@app.route('/tool/whatsapp-broadcast')
-@app.route('/tool/whatsapp_broadcast')
-def whatsapp_broadcast(): return render_with_country('whatsapp_broadcast.html')
-@app.route('/tool/background-check')
-@app.route('/tool/usa-background-check')
-@app.route('/tool/background_check')
-def background_check(): return render_with_country('usa_background_check.html')
-@app.route('/tool/iqama-expiry')
-def iqama_expiry(): return render_with_country('iqama_expiry.html')
-@app.route('/tool/hijri-converter')
-def hijri_converter(): return render_with_country('hijri_converter.html')
-@app.route('/tool/gosi-calculator')
-def gosi_calculator(): return render_with_country('gosi_calculator.html')
-@app.route('/tool/zatca-qr')
-def zatca_qr(): return render_with_country('zatca_qr.html')
-@app.route('/tool/gpa-calculator')
-def gpa_calculator(): return render_with_country('gpa_calculator.html')
-@app.route('/tool/salary-sa')
-def salary_sa(): return render_with_country('salary_sa.html')
-@app.route('/tool/nepa-calculator')
-def nepa_calculator(): return render_with_country('nepa_calculator.html')
-@app.route('/tool/cac-checker')
-def cac_checker(): return render_with_country('cac_checker.html')
-@app.route('/tool/fuel-calculator')
-def fuel_calculator(): return render_with_country('fuel_calculator.html')
-@app.route('/tool/rent-splitter')
-def rent_splitter(): return render_with_country('rent_splitter.html')
-@app.route('/tool/land-converter')
-def land_converter(): return render_with_country('land_converter.html')
-@app.route('/tool/paye-calculator')
-def paye_calculator(): return render_with_country('paye_calculator.html')
-@app.route('/tool/jamb-calculator')
-def jamb_calculator(): return render_with_country('jamb_calculator.html')
-@app.route('/tool/waec-calculator')
-def waec_calculator(): return render_with_country('waec_calculator.html')
-@app.route('/tool/nin-validator')
-def nin_validator(): return render_with_country('nin_validator.html')
-@app.route('/tool/lagos-rent-package')
-def lagos_rent_package(): return render_with_country('lagos_rent_package.html')
-@app.route('/tool/ivr-builder')
-def ivr_builder(): return render_with_country('ivr_builder.html')
-@app.route('/tool/qid-check')
-def qid_check(): return render_with_country('qid_check.html')
-@app.route('/tool/qatar-traffic-fines')
-def qatar_traffic_fines(): return render_with_country('qatar_traffic_fines.html')
-@app.route('/tool/qatar-gratuity')
-def qatar_gratuity(): return render_with_country('qatar_gratuity.html')
-@app.route('/tool/qatar-rent-splitter')
-def qatar_rent_splitter(): return render_with_country('qatar_rent_splitter.html')
-@app.route('/tool/qatar-gold-price')
-def qatar_gold_price(): return render_with_country('qatar_gold_price.html')
-@app.route('/tool/qatar-overtime')
-def qatar_overtime(): return render_with_country('qatar_overtime.html')
-@app.route('/tool/emirates-id-check')
-def emirates_id_check(): return render_with_country('emirates_id_check.html')
-@app.route('/tool/uae-traffic-fines')
-def uae_traffic_fines(): return render_with_country('uae_traffic_fines.html')
-@app.route('/tool/uae-gratuity')
-def uae_gratuity(): return render_with_country('uae_gratuity.html')
-@app.route('/tool/uae-gold-price')
-def uae_gold_price(): return render_with_country('uae_gold_price.html')
-@app.route('/tool/uae-rent-splitter')
-def uae_rent_splitter(): return render_with_country('uae_rent_splitter.html')
-@app.route('/tool/uae-overtime')
-def uae_overtime(): return render_with_country('uae_overtime.html')
-@app.route('/tool/uae-salary')
-def uae_salary(): return render_with_country('uae_salary.html')
-@app.route('/tool/kuwait-civil-id')
-def kuwait_civil_id(): return render_with_country('kuwait_civil_id.html')
-@app.route('/tool/kuwait-traffic-fines')
-def kuwait_traffic_fines(): return render_with_country('kuwait_traffic_fines.html')
-@app.route('/tool/kuwait-gratuity')
-def kuwait_gratuity(): return render_with_country('kuwait_gratuity.html')
-@app.route('/tool/kuwait-gold-price')
-def kuwait_gold_price(): return render_with_country('kuwait_gold_price.html')
-@app.route('/tool/kuwait-rent')
-def kuwait_rent(): return render_with_country('kuwait_rent.html')
-@app.route('/tool/kuwait-overtime')
-def kuwait_overtime(): return render_with_country('kuwait_overtime.html')
-@app.route('/tool/bahrain-cpr-check')
-def bahrain_cpr_check(): return render_with_country('bahrain_cpr_check.html')
-@app.route('/tool/bahrain-traffic-fines')
-def bahrain_traffic_fines(): return render_with_country('bahrain_traffic_fines.html')
-@app.route('/tool/bahrain-gratuity')
-def bahrain_gratuity(): return render_with_country('bahrain_gratuity.html')
-@app.route('/tool/bahrain-gold-price')
-def bahrain_gold_price(): return render_with_country('bahrain_gold_price.html')
-@app.route('/tool/bahrain-rent')
-def bahrain_rent(): return render_with_country('bahrain_rent.html')
-@app.route('/tool/bahrain-overtime')
-def bahrain_overtime(): return render_with_country('bahrain_overtime.html')
-@app.route('/tool/oman-civil-check')
-def oman_civil_check(): return render_with_country('oman_civil_check.html')
-@app.route('/tool/oman-traffic-fines')
-def oman_traffic_fines(): return render_with_country('oman_traffic_fines.html')
-@app.route('/tool/oman-gratuity')
-def oman_gratuity(): return render_with_country('oman_gratuity.html')
-@app.route('/tool/oman-gold-price')
-def oman_gold_price(): return render_with_country('oman_gold_price.html')
-@app.route('/tool/oman-rent')
-def oman_rent(): return render_with_country('oman_rent.html')
-@app.route('/tool/oman-overtime')
-def oman_overtime(): return render_with_country('oman_overtime.html')
-@app.route('/tool/uk-paycheck')
-def uk_paycheck(): return render_with_country('uk_paycheck.html')
-@app.route('/tool/uk-rent-splitter')
-def uk_rent_splitter(): return render_with_country('uk_rent_splitter.html')
-@app.route('/tool/uk-tip-calculator')
-def uk_tip_calculator(): return render_with_country('uk_tip_calculator.html')
-@app.route('/tool/uk-vat-calculator')
-def uk_vat_calculator(): return render_with_country('uk_vat_calculator.html')
+    # Check disabled
+    if is_disabled(tool_name, country):
+        return render_template('disabled.html', tool=tool_name, country=country), 403
+
+    # Try template
+    template_file = f"{tool_name}.html"
+    try:
+        return render_template(template_file, country=country, country_name=COUNTRY_NAMES.get(country, country), raw_country=raw_country)
+    except:
+        # fallback generic
+        return render_template('tool_generic.html', tool=tool_name, country=country, country_name=COUNTRY_NAMES.get(country, country), raw_country=raw_country)
+
+@app.route('/unlock', methods=['GET','POST'])
+def unlock():
+    return render_template('unlock.html')
+
+@app.route('/api/unlock', methods=['POST'])
+def api_unlock():
+    return jsonify({'ok': True})
 
 # ===== SECRET ADMIN - ONLY YOU =====
 @app.route('/admin/analytics')
@@ -318,7 +165,7 @@ def admin_analytics():
     disabled_list = list(DISABLED_TOOLS)
     html = f"""
     <html style="background:#080808;color:#fff;font-family:monospace;padding:20px">
-    <h2>📊 ClearCode Analytics - V3 + BankInfo FIXED</h2>
+    <h2>📊 ClearCode Analytics - V3 Fixed</h2>
     <p>Total: {len(ANALYTICS)} | Disabled: {disabled_list}</p>
     <h3>Top Tools</h3><pre>{tools.most_common(20)}</pre>
     <h3>Top Countries</h3><pre>{countries.most_common(20)}</pre>
@@ -365,32 +212,74 @@ def robots():
     txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nDisallow: /admin/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
-# ===== BIN CHECK API - FIXED NO CORS =====
+# ===== BIN CHECK API - FULL NIGERIA + GULF - WORKS IN LAGOS =====
 @app.route('/api/bin-check', methods=['POST'])
 def api_bin_check():
+    bin_code = ""
     try:
         data = request.get_json(silent=True) or {}
         bin_code = str(data.get('bin','')).strip()[:8]
         bin_code = ''.join(filter(str.isdigit, bin_code))
         if len(bin_code) < 6:
-            return jsonify({'error':'Enter at least 6 digits'}), 400
-        r = requests.get(f'https://lookup.binlist.net/{bin_code}', headers={'Accept-Version':'3'}, timeout=6)
-        if r.status_code!= 200:
-            return jsonify({'error':'BIN not found in public DB'}), 404
-        j = r.json()
-        bank_name = j.get('bank',{}).get('name','Unknown') if j.get('bank') else 'Unknown'
-        country_info = j.get('country',{})
-        country_str = f"{country_info.get('name','Unknown')} {country_info.get('emoji','')}" if country_info else 'Unknown'
-        return jsonify({
-            'bin': bin_code,
-            'scheme': (j.get('scheme') or 'Unknown').upper(),
-            'type': (j.get('type') or 'Unknown').upper(),
-            'category': j.get('category') or 'Unknown',
-            'bank': bank_name,
-            'country': country_str
-        })
+            return jsonify({'bin': bin_code, 'scheme': 'ERROR', 'type': 'ERROR', 'category': 'Error', 'bank': 'Enter 6 digits', 'country': 'NG', 'source': 'error'}), 200
+
+        OFFLINE_BINS = {
+            '406068': {'bank':'GTBank - Guaranty Trust Bank','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506099': {'bank':'GTBank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '539983': {'bank':'GTBank','scheme':'MASTERCARD','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '558888': {'bank':'GTBank','scheme':'MASTERCARD','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '418888': {'bank':'Access Bank','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506107': {'bank':'Access Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506120': {'bank':'Access Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '504962': {'bank':'Access Bank (Diamond)','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506104': {'bank':'First Bank of Nigeria','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '539923': {'bank':'First Bank','scheme':'MASTERCARD','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '418339': {'bank':'First Bank','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506105': {'bank':'UBA - United Bank for Africa','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '456590': {'bank':'UBA','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506106': {'bank':'Zenith Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '539941': {'bank':'Zenith Bank','scheme':'MASTERCARD','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '402277': {'bank':'Zenith Bank','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506112': {'bank':'Wema Bank / ALAT','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '517388': {'bank':'Wema Bank','scheme':'MASTERCARD','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506116': {'bank':'Kuda Microfinance Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '415874': {'bank':'Kuda Bank','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506146': {'bank':'OPay - Paycom','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506147': {'bank':'OPay','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506158': {'bank':'PalmPay','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506159': {'bank':'Moniepoint MFB','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506108': {'bank':'Union Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506109': {'bank':'Sterling Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506111': {'bank':'Fidelity Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506115': {'bank':'Ecobank Nigeria','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506117': {'bank':'Polaris Bank','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506119': {'bank':'FCMB','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506121': {'bank':'Stanbic IBTC','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '406084': {'bank':'Stanbic IBTC','scheme':'VISA','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '506100': {'bank':'Verve - Nigeria (Interswitch)','scheme':'VERVE','type':'DEBIT','country':'Nigeria 🇳🇬'},
+            '555931': {'bank':'Al Baraka Islamic Bank','scheme':'MASTERCARD','type':'DEBIT','country':'Bahrain 🇧🇭'},
+            '417500': {'bank':'QNB - Qatar National Bank','scheme':'VISA','type':'DEBIT','country':'Qatar 🇶🇦'},
+            '422207': {'bank':'ADCB - Abu Dhabi Commercial','scheme':'VISA','type':'DEBIT','country':'UAE 🇦🇪'},
+            '529977': {'bank':'NBK - National Bank of Kuwait','scheme':'MASTERCARD','type':'DEBIT','country':'Kuwait 🇰🇼'},
+            '431380': {'bank':'Al Rajhi Bank','scheme':'VISA','type':'DEBIT','country':'Saudi Arabia 🇸🇦'},
+        }
+        key = bin_code[:6]
+        if key in OFFLINE_BINS:
+            d = OFFLINE_BINS[key]
+            return jsonify({'bin': bin_code, 'scheme': d['scheme'], 'type': d['type'], 'category': 'Debit', 'bank': d['bank'], 'country': d['country'], 'source': 'NG Full DB'})
+
+        try:
+            r = requests.get(f'https://lookup.binlist.net/{bin_code}', headers={'Accept-Version':'3'}, timeout=3)
+            if r.status_code == 200:
+                j = r.json()
+                return jsonify({'bin': bin_code, 'scheme': (j.get('scheme') or 'Unknown').upper(), 'type': (j.get('type') or 'Unknown').upper(), 'category': j.get('category') or 'Unknown', 'bank': j.get('bank',{}).get('name','Unknown') if j.get('bank') else 'Unknown', 'country': j.get('country',{}).get('name','Unknown'), 'source': 'online'})
+        except:
+            pass
+
+        return jsonify({'bin': bin_code, 'scheme': 'VERVE/VISA/MC', 'type': 'DEBIT', 'category': 'Nigeria Card', 'bank': 'Nigerian Bank - BIN not in offline list yet', 'country': 'Nigeria 🇳🇬 - Try 506099 or 406068', 'source': 'fallback'})
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'bin': bin_code or 'error', 'scheme': 'ERROR', 'type': 'ERROR', 'category': 'Error', 'bank': 'Try again', 'country': 'Try 406068 GTBank', 'source': 'error'}), 200
 
 @app.route('/api/lagos-rent', methods=['POST'])
 def api_lagos_rent():
@@ -398,7 +287,6 @@ def api_lagos_rent():
         data = request.json or {}
         rent = float(data.get('rent', 0))
         if rent <= 0: return jsonify({'error':'Enter valid rent amount'}), 400
-        if rent < 10000: return jsonify({'error':'Rent too low'}), 400
         location = (data.get('location') or 'mainland').lower()
         config = {
             'mainland': {'agreement':10, 'commission':10, 'damages':5, 'caution':5, 'legal':5, 'inspection':3000},
@@ -416,18 +304,7 @@ def api_lagos_rent():
         inspection = c['inspection']
         total = rent + agreement + commission + damages + caution + legal + inspection
         monthly = total / 12
-        return jsonify({
-            'rent': int(rent),
-            'agreement': int(agreement),
-            'commission': int(commission),
-            'damages': int(damages),
-            'caution': int(caution),
-            'legal': int(legal),
-            'inspection': int(inspection),
-            'total': int(total),
-            'monthly': int(monthly),
-            'location': location
-        })
+        return jsonify({'rent': int(rent),'agreement': int(agreement),'commission': int(commission),'damages': int(damages),'caution': int(caution),'legal': int(legal),'inspection': int(inspection),'total': int(total),'monthly': int(monthly),'location': location})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

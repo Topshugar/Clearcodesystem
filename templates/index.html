@@ -1,67 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClearCodeSystem - Free Tools for {{country_name}} 2026</title>
+{% extends "base.html" %}
+{% block title %}Free Tools for {{country_name}} 2026{% endblock %}
+{% block content %}
+<div class="container">
+<h1 style="text-align:center;font-size:28px;font-weight:900;margin:20px 0 8px">Free Tools for <span style="color:#00FF88">{{country_name}} 2026</span></h1>
+<p style="text-align:center;color:#666;font-size:13px;margin-bottom:16px">{{ tools|length }} tools available • Detected: {{raw_country}} → {{country}}</p>
 
-<!-- Monetag - ClearCodeSystem - Replace zones with yours -->
-<script>(function(s){s.src='https://gizokraijaw.net/401/8972345';try{(s=document.createElement('script')).src=s.src}catch(e){}})();</script>
-<script>(function(s){s.src='https://vemtoutcheeg.com/400/8972351';try{(s=document.createElement('script')).src=s.src}catch(e){}})();</script>
-<script src="https://al5sm.com/tag.min.js" data-zone="8972356" async data-cfasync="false"></script>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#080808;color:#fff;font-family:system-ui,sans-serif}
-a{text-decoration:none}
-</style>
-</head>
-<body>
-<div style="max-width:900px;margin:0 auto;padding:14px">
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222">
-    <div style="font-weight:900;font-size:18px"><span style="color:#00FF88">ClearCode</span>System</div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <span style="background:#111;border:1px solid #222;padding:6px 10px;border-radius:20px;font-size:11px">{{ tools|length }} LIVE</span>
-      <a href="https://wa.me/2340000000000" style="background:#25D366;color:#fff;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:bold">WhatsApp</a>
-    </div>
-  </div>
-
-  <h1 style="text-align:center;color:#fff;font-size:26px;font-weight:900;margin:16px 0 6px">Free Tools for <span style="color:#00FF88">{{country_name}} 2026</span></h1>
-  <p style="text-align:center;color:#888;font-size:13px;margin-bottom:12px">{{ tools|length }} tools live • Detected: {{raw_country}} → {{country}}</p>
-
-  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:10px;margin:12px 0;display:flex;gap:8px;align-items:center">
-    <span>🌍</span>
-    <select id="cSel" onchange="location.href='/?country='+this.value" style="flex:1;background:#1a1a1a;color:#fff;border:1px solid #333;padding:10px;border-radius:8px">
-      <option value="NG" {% if country=='NG' %}selected{% endif %}>🇳🇬 Nigeria</option>
-      <option value="BH" {% if country=='BH' %}selected{% endif %}>🇧🇭 Bahrain</option>
-      <option value="QA" {% if country=='QA' %}selected{% endif %}>🇶🇦 Qatar</option>
-      <option value="SA" {% if country=='SA' %}selected{% endif %}>🇸🇦 Saudi</option>
-      <option value="AE" {% if country=='AE' %}selected{% endif %}>🇦🇪 UAE</option>
-      <option value="KW" {% if country=='KW' %}selected{% endif %}>🇰🇼 Kuwait</option>
-      <option value="OM" {% if country=='OM' %}selected{% endif %}>🇴🇲 Oman</option>
-      <option value="US" {% if country=='US' %}selected{% endif %}>🇺🇸 USA</option>
-      <option value="UK" {% if country=='UK' %}selected{% endif %}>🇬🇧 UK</option>
-    </select>
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px">
-    {% for tool in tools %}
-    <a href="/tool/{{ tool }}?country={{country}}" style="background:#151515;border:1px solid #222;border-radius:12px;padding:14px;color:#fff;display:block">
-      <div style="font-size:22px">🔧</div>
-      <div style="font-size:13px;font-weight:700;margin-top:6px;text-transform:capitalize">{{ tool.replace('_',' ') }}</div>
-      <div style="font-size:10px;color:#00FF88;margin-top:6px">● LIVE • {{country}}</div>
-    </a>
-    {% endfor %}
-  </div>
-
-  {% if tools|length == 0 %}
-  <div style="text-align:center;padding:30px;background:#111;border-radius:12px;margin-top:20px">
-    <h3 style="color:#ff4444">No tools enabled for {{country}}</h3>
-    <a href="/admin/tools?key=CLEARCODE2026" style="display:inline-block;margin-top:12px;background:#00FF88;color:#000;padding:10px 18px;border-radius:8px;font-weight:bold">Enable Tools</a>
-  </div>
-  {% endif %}
-
-  <div style="text-align:center;margin-top:30px;color:#333;font-size:11px;padding:20px;border-top:1px solid #111">© 2026 ClearCodeSystem • {{country}} • <a href="/admin/tools?key=CLEARCODE2026" style="color:#333">Admin</a></div>
+<div style="background:#111;border:1px solid #222;border-radius:12px;padding:12px;margin:16px 0;display:flex;gap:10px;align-items:center">
+<span>🌍</span>
+<select onchange="location.href='/?country='+this.value" style="flex:1;background:#1a1a1a;color:#fff;border:1px solid #333;padding:12px;border-radius:8px;font-size:14px">
+<option value="NG" {% if country=='NG' %}selected{% endif %}>🇳🇬 Nigeria - 28 tools</option>
+<option value="BH" {% if country=='BH' %}selected{% endif %}>🇧🇭 Bahrain</option>
+<option value="QA" {% if country=='QA' %}selected{% endif %}>🇶🇦 Qatar</option>
+<option value="SA" {% if country=='SA' %}selected{% endif %}>🇸🇦 Saudi Arabia</option>
+<option value="AE" {% if country=='AE' %}selected{% endif %}>🇦🇪 UAE</option>
+<option value="KW" {% if country=='KW' %}selected{% endif %}>🇰🇼 Kuwait</option>
+<option value="OM" {% if country=='OM' %}selected{% endif %}>🇴🇲 Oman</option>
+</select>
 </div>
-</body>
-</html>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:18px">
+{% for tool in tools %}
+<a href="/tool/{{ tool }}?country={{country}}" style="background:#151515;border:1px solid #222;border-radius:14px;padding:16px;display:block">
+<div style="width:36px;height:36px;background:#1f1f1f;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">🔧</div>
+<div style="font-size:14px;font-weight:700;margin-top:12px;text-transform:capitalize;line-height:1.3">{{ tool.replace('_',' ') }}</div>
+<div style="font-size:10px;color:#00FF88;margin-top:8px;font-weight:700">● LIVE • {{country}}</div>
+</a>
+{% endfor %}
+</div>
+
+<div style="text-align:center;margin-top:40px;color:#222;font-size:11px;padding:20px;border-top:1px solid #111">
+© 2026 ClearCodeSystem • {{country}}
+</div>
+
+</div>
+{% endblock %}

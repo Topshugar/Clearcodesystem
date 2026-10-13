@@ -1,40 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
 <div style="max-width:600px;margin:20px auto;padding:20px;background:#0f0f0f;border-radius:12px;color:#fff;font-family:system-ui">
-<h2 style="color:#00FF88">💳 Bank Card Info Checker</h2>
+<h2 style="color:#00D4FF">💳 Bank Card Info Checker</h2>
 <p style="color:#aaa;font-size:13px">Educational tool - Check YOUR own card type only. We don't validate, store, or check if card is live.</p>
 
-<input id="bin" maxlength="8" placeholder="Enter first 6-8 digits of your card (e.g. 555931)" style="width:100%;padding:14px;border-radius:8px;background:#1a1a1a;color:#fff;border:1px solid #333;font-size:16px">
+<input id="bin" maxlength="8" inputmode="numeric" placeholder="Enter first 6-8 digits (e.g. 555931)" style="width:100%;padding:14px;border-radius:8px;background:#1a1a1a;color:#fff;border:1px solid #333;font-size:16px;margin-top:12px">
 
-<button onclick="checkBIN()" style="width:100%;margin-top:12px;padding:14px;background:#00FF88;color:#000;border:0;border-radius:8px;font-weight:bold;cursor:pointer">Check Info</button>
+<button onclick="checkBIN()" id="btn" style="width:100%;margin-top:12px;padding:14px;background:#00D4FF;color:#000;border:0;border-radius:8px;font-weight:bold;cursor:pointer">Check Info</button>
 
 <div id="result" style="margin-top:20px;padding:15px;background:#151515;border-radius:8px;display:none"></div>
 
-<p style="margin-top:15px;color:#666;font-size:11px">Disclaimer: This tool shows public BIN information (card brand, type) for educational purpose only. No VBV check, no balance check, no validation. Do not use other people's cards.</p>
+<p style="margin-top:15px;color:#666;font-size:11px">Disclaimer: Public BIN info only. For your own card. No VBV/LIVE/balance check. Data from public BIN database.</p>
 </div>
 
 <script>
 async function checkBIN(){
- const bin = document.getElementById('bin').value.trim().replace(/\D/g,'').slice(0,8);
- if(bin.length < 6){ alert('Enter at least 6 digits'); return; }
- document.getElementById('result').style.display='block';
- document.getElementById('result').innerHTML='Checking...';
+ const binInput = document.getElementById('bin').value.trim().replace(/\D/g,'').slice(0,8);
+ const result = document.getElementById('result');
+ const btn = document.getElementById('btn');
+ if(binInput.length < 6){ alert('Enter at least 6 digits'); return; }
+ result.style.display='block';
+ result.innerHTML='⏳ Checking...';
+ btn.disabled=true; btn.innerText='Checking...';
  try{
-   const res = await fetch(`https://lookup.binlist.net/${bin}`, {headers:{'Accept-Version':'3'}});
-   if(!res.ok) throw 'Not found';
+   const res = await fetch('/api/bin-check', {
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body: JSON.stringify({bin: binInput})
+   });
    const data = await res.json();
-   document.getElementById('result').innerHTML = `
-    <div><b>BIN:</b> ${bin}</div>
-    <div><b>Brand:</b> ${data.scheme ? data.scheme.toUpperCase() : 'Unknown'}</div>
-    <div><b>Type:</b> ${data.type ? data.type.toUpperCase() : 'Unknown'}</div>
-    <div><b>Category:</b> ${data.category || 'Unknown'}</div>
-    <div><b>Bank:</b> ${data.bank ? data.bank.name : 'Unknown'}</div>
-    <div><b>Country:</b> ${data.country ? data.country.name + ' ' + (data.country.emoji||'') : 'Unknown'}</div>
-    <hr style="border-color:#222">
-    <div style="color:#00FF88;font-size:12px">✓ Educational info only. No fraud check.</div>
+   if(!res.ok){ throw new Error(data.error || 'Not found'); }
+   result.innerHTML = `
+    <div style="display:grid;gap:8px;font-size:14px">
+      <div><span style="color:#888">BIN:</span> <b>${data.bin}</b></div>
+      <div><span style="color:#888">Brand:</span> <b style="color:#00D4FF">${data.scheme}</b></div>
+      <div><span style="color:#888">Type:</span> <b>${data.type}</b></div>
+      <div><span style="color:#888">Category:</span> <b>${data.category}</b></div>
+      <div><span style="color:#888">Bank:</span> <b>${data.bank}</b></div>
+      <div><span style="color:#888">Country:</span> <b>${data.country}</b></div>
+      <hr style="border-color:#222;margin:8px 0">
+      <div style="color:#00FF88;font-size:12px">✓ Educational info only. No fraud check.</div>
+    </div>
    `;
  } catch(e){
-   document.getElementById('result').innerHTML = `<div style="color:#ff4444">BIN not found in public database. Try another 6 digits from your own card.</div>`;
+   result.innerHTML = `<div style="color:#ff4444">❌ ${e.message}. Try another 6 digits from your own card. Example: 406068 for Bahrain AL BARAKA.</div>`;
+ } finally {
+   btn.disabled=false; btn.innerText='Check Info';
  }
 }
 </script>

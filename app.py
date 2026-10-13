@@ -306,6 +306,7 @@ def uk_rent_splitter(): return render_with_country('uk_rent_splitter.html')
 def uk_tip_calculator(): return render_with_country('uk_tip_calculator.html')
 @app.route('/tool/uk-vat-calculator')
 def uk_vat_calculator(): return render_with_country('uk_vat_calculator.html')
+
 # ===== SECRET ADMIN - ONLY YOU =====
 @app.route('/admin/analytics')
 def admin_analytics():
@@ -361,6 +362,30 @@ def sitemap():
 def robots():
     txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nDisallow: /admin/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
+
+# ===== BIN CHECK API - NEW FIXED =====
+@app.route('/api/bin-check', methods=['POST'])
+def api_bin_check():
+    try:
+        data = request.json or {}
+        bin_code = str(data.get('bin','')).strip()[:8]
+        bin_code = ''.join(filter(str.isdigit, bin_code))
+        if len(bin_code) < 6:
+            return jsonify({'error':'Enter at least 6 digits'}), 400
+        r = requests.get(f'https://lookup.binlist.net/{bin_code}', headers={'Accept-Version':'3'}, timeout=5)
+        if r.status_code!= 200:
+            return jsonify({'error':'BIN not found in public DB'}), 404
+        j = r.json()
+        return jsonify({
+            'bin': bin_code,
+            'scheme': (j.get('scheme') or 'Unknown').upper(),
+            'type': (j.get('type') or 'Unknown').upper(),
+            'category': j.get('category') or 'Unknown',
+            'bank': j.get('bank',{}).get('name') if j.get('bank') else 'Unknown',
+            'country': f"{j.get('country',{}).get('name','Unknown')} {j.get('country',{}).get('emoji','')}" if j.get('country') else 'Unknown'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/lagos-rent', methods=['POST'])
 def api_lagos_rent():
@@ -493,3 +518,5 @@ def shell_api():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
+    

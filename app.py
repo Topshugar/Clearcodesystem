@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, Response
 import qrcode, os, io, base64, requests
 from datetime import datetime
+from collections import Counter
 import paramiko
 from PIL import Image
 
@@ -25,6 +26,11 @@ def get_session(mode='human'):
         return False
 
 app = Flask(__name__)
+
+# ===== CLEAN ADMIN CONFIG - SECRET =====
+ADMIN_KEY = "CLEARCODE2026"
+ANALYTICS = [] # last 5000 hits
+DISABLED_TOOLS = set() # format "NG:lagos-rent-package" etc
 
 # 9 COUNTRIES - 85 TOOLS - GULF VIRAL ONLY IN GULF + IVR EVERYWHERE
 COUNTRY_TOOLS = {
@@ -83,11 +89,33 @@ def map_to_group(code):
     if code in ['GB','UK']: return 'UK'
     return 'NG'
 
+# ===== TRACK CLEAN - BEFORE REQUEST =====
+@app.before_request
+def track_clean():
+    if request.path.startswith('/tool/'):
+        try:
+            tool = request.path.split('/')[-1].replace('-','_')
+            raw = get_country()
+            country = map_to_group(raw)
+            ANALYTICS.append({
+                "tool": tool,
+                "country": country,
+                "raw": raw,
+                "time": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "ip": request.headers.get('X-Forwarded-For', request.remote_addr)[:20]
+            })
+            if len(ANALYTICS) > 5000:
+                ANALYTICS.pop(0)
+        except:
+            pass
+
 @app.route('/')
 def home():
     raw_country = get_country()
     country = map_to_group(raw_country)
     allowed = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS['NG'])
+    # filter disabled
+    allowed = [t for t in allowed if f"{country}:{t}" not in DISABLED_TOOLS and f"{country}:{t.replace('_','-')}" not in DISABLED_TOOLS]
     display_name = COUNTRY_NAME.get(raw_country, COUNTRY_NAME.get(country, f'🌍 {country}'))
     return render_template('index.html', country=country, raw_country=raw_country, country_name=display_name, allowed=allowed, all_groups=COUNTRY_TOOLS)
 
@@ -97,6 +125,10 @@ def unlock(): return render_template('unlock.html')
 
 def render_with_country(template_name):
     raw=get_country(); country=map_to_group(raw)
+    # check disabled
+    tool_key = template_name.replace('.html','')
+    if f"{country}:{tool_key}" in DISABLED_TOOLS or f"{country}:{tool_key.replace('_','-')}" in DISABLED_TOOLS:
+        return "<h2 style='background:#080808;color:#fff;padding:40px;text-align:center'>Tool temporarily disabled in your region</h2>", 403
     return render_template(template_name, country=country, raw_country=raw, country_name=COUNTRY_NAME.get(raw, COUNTRY_NAME.get(country)))
 
 @app.route('/tool/builder')
@@ -106,7 +138,6 @@ def builder(): return render_with_country('builder.html')
 @app.route('/tool/receipt-generator')
 def pos_receipt(): return render_with_country('pos_receipt.html')
 
-# === NEW GULF VIRAL TOOLS - 9 COUNTRY IP ROUTING ===
 @app.route('/tool/salary-flex')
 def salary_flex(): return render_with_country('salary_flex.html')
 @app.route('/tool/anonymous-link')
@@ -117,7 +148,6 @@ def anonymous_link(): return render_with_country('anonymous_link.html')
 @app.route('/tool/zakharfa')
 def arabic_stylish_name(): return render_with_country('arabic_stylish_name.html')
 
-# CORE TOOLS
 @app.route('/tool/wa-qr')
 def wa_qr(): return render_with_country('wa_qr.html')
 @app.route('/tool/invoice')
@@ -156,7 +186,6 @@ def whatsapp_broadcast(): return render_with_country('whatsapp_broadcast.html')
 @app.route('/tool/background_check')
 def background_check(): return render_with_country('usa_background_check.html')
 
-# SAUDI
 @app.route('/tool/iqama-expiry')
 def iqama_expiry(): return render_with_country('iqama_expiry.html')
 @app.route('/tool/hijri-converter')
@@ -170,7 +199,6 @@ def gpa_calculator(): return render_with_country('gpa_calculator.html')
 @app.route('/tool/salary-sa')
 def salary_sa(): return render_with_country('salary_sa.html')
 
-# NG - Nigeria Tools
 @app.route('/tool/nepa-calculator')
 def nepa_calculator(): return render_with_country('nepa_calculator.html')
 @app.route('/tool/cac-checker')
@@ -194,7 +222,6 @@ def lagos_rent_package(): return render_with_country('lagos_rent_package.html')
 @app.route('/tool/ivr-builder')
 def ivr_builder(): return render_with_country('ivr_builder.html')
 
-# QATAR
 @app.route('/tool/qid-check')
 def qid_check(): return render_with_country('qid_check.html')
 @app.route('/tool/qatar-traffic-fines')
@@ -208,7 +235,6 @@ def qatar_gold_price(): return render_with_country('qatar_gold_price.html')
 @app.route('/tool/qatar-overtime')
 def qatar_overtime(): return render_with_country('qatar_overtime.html')
 
-# UAE
 @app.route('/tool/emirates-id-check')
 def emirates_id_check(): return render_with_country('emirates_id_check.html')
 @app.route('/tool/uae-traffic-fines')
@@ -224,7 +250,6 @@ def uae_overtime(): return render_with_country('uae_overtime.html')
 @app.route('/tool/uae-salary')
 def uae_salary(): return render_with_country('uae_salary.html')
 
-# KUWAIT
 @app.route('/tool/kuwait-civil-id')
 def kuwait_civil_id(): return render_with_country('kuwait_civil_id.html')
 @app.route('/tool/kuwait-traffic-fines')
@@ -238,7 +263,6 @@ def kuwait_rent(): return render_with_country('kuwait_rent.html')
 @app.route('/tool/kuwait-overtime')
 def kuwait_overtime(): return render_with_country('kuwait_overtime.html')
 
-# BAHRAIN
 @app.route('/tool/bahrain-cpr-check')
 def bahrain_cpr_check(): return render_with_country('bahrain_cpr_check.html')
 @app.route('/tool/bahrain-traffic-fines')
@@ -252,7 +276,6 @@ def bahrain_rent(): return render_with_country('bahrain_rent.html')
 @app.route('/tool/bahrain-overtime')
 def bahrain_overtime(): return render_with_country('bahrain_overtime.html')
 
-# OMAN
 @app.route('/tool/oman-civil-check')
 def oman_civil_check(): return render_with_country('oman_civil_check.html')
 @app.route('/tool/oman-traffic-fines')
@@ -266,7 +289,6 @@ def oman_rent(): return render_with_country('oman_rent.html')
 @app.route('/tool/oman-overtime')
 def oman_overtime(): return render_with_country('oman_overtime.html')
 
-# UK
 @app.route('/tool/uk-paycheck')
 def uk_paycheck(): return render_with_country('uk_paycheck.html')
 @app.route('/tool/uk-rent-splitter')
@@ -275,6 +297,46 @@ def uk_rent_splitter(): return render_with_country('uk_rent_splitter.html')
 def uk_tip_calculator(): return render_with_country('uk_tip_calculator.html')
 @app.route('/tool/uk-vat-calculator')
 def uk_vat_calculator(): return render_with_country('uk_vat_calculator.html')
+
+# ===== SECRET ADMIN - ONLY YOU =====
+@app.route('/admin/analytics')
+def admin_analytics():
+    if request.args.get('key')!= ADMIN_KEY:
+        return "Unauthorized", 403
+    tools = Counter([a['tool'] for a in ANALYTICS])
+    countries = Counter([a['country'] for a in ANALYTICS])
+    last = ANALYTICS[-30:][::-1]
+    return f"""
+    <html style="background:#080808;color:#fff;font-family:monospace;padding:20px">
+    <h2>📊 ClearCode Analytics - Clean</h2>
+    <p>Total Hits: {len(ANALYTICS)} | Disabled: {list(DISABLED_TOOLS)[:20]}</p>
+    <h3>Top Tools</h3><pre>{tools.most_common(20)}</pre>
+    <h3>Top Countries</h3><pre>{countries.most_common(20)}</pre>
+    <h3>Last 30</h3><pre>{last}</pre>
+    <hr><a href="/admin/tools?key={ADMIN_KEY}" style="color:#00FF88">Go to Tools Manager →</a>
+    </html>
+    """
+
+@app.route('/admin/tools')
+def admin_tools_manager():
+    if request.args.get('key')!= ADMIN_KEY:
+        return "Unauthorized", 403
+    action = request.args.get('action')
+    tool = request.args.get('tool')
+    if action == 'disable' and tool:
+        DISABLED_TOOLS.add(tool)
+    if action == 'enable' and tool:
+        DISABLED_TOOLS.discard(tool)
+    html = f"<html style='background:#080808;color:#fff;font-family:monospace;padding:20px'><h2>🛠️ Tools Manager - {len(COUNTRY_TOOLS)} groups</h2><p>Click OFF to hide in that country only</p>"
+    for c in COUNTRY_TOOLS:
+        html += f"<h3>{c}</h3>"
+        for t in COUNTRY_TOOLS[c]:
+            key = f"{c}:{t}"
+            key2 = f"{c}:{t.replace('_','-')}"
+            status = "🔴 OFF" if key in DISABLED_TOOLS or key2 in DISABLED_TOOLS else "🟢 ON"
+            html += f"{status} {key} - <a style='color:#FF0040' href='/admin/tools?key={ADMIN_KEY}&action=disable&tool={key}'>OFF</a> | <a style='color:#00FF88' href='/admin/tools?key={ADMIN_KEY}&action=enable&tool={key}'>ON</a><br>"
+    html += f"<hr><a href='/admin/analytics?key={ADMIN_KEY}' style='color:#00FF88'>Back to Analytics</a></html>"
+    return html
 
 @app.route('/sitemap.xml')
 def sitemap():
@@ -288,152 +350,47 @@ def sitemap():
 
 @app.route('/robots.txt')
 def robots():
-    txt = "User-agent: *\nAllow: /\nAllow: /tool/lagos-rent-package\nAllow: /tool/ivr-builder\nAllow: /tool/salary-flex\nAllow: /tool/anonymous-link\nAllow: /tool/arabic-stylish-name\nDisallow: /unlock\nDisallow: /api/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
+    txt = "User-agent: *\nAllow: /\nDisallow: /unlock\nDisallow: /api/\nDisallow: /admin/\nSitemap: https://clearcodesystem.onrender.com/sitemap.xml"
     return Response(txt, mimetype='text/plain')
 
-# ========== BACKEND APIS ==========
 @app.route('/api/lagos-rent', methods=['POST'])
 def api_lagos_rent():
     try:
         data = request.json or {}
         rent = float(data.get('rent', 0))
-        if rent <= 0:
+        if rent <= 0: 
             return jsonify({'error':'Enter valid rent amount'}), 400
-        if rent < 10000:
+        if rent < 10000: 
             return jsonify({'error':'Rent too low'}), 400
         location = (data.get('location') or 'mainland').lower()
         config = {
-            'mainland': {'agreement':10, 'commission':10, 'damages':5, 'caution':5, 'legal':5, 'inspection':3000, 'label':'Mainland - Surulere, Agege, Alimosho'},
-            'yaba': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5, 'inspection':5000, 'label':'Yaba, Ebute Metta'},
-            'ikeja': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10, 'inspection':7000, 'label':'Ikeja, Ogba, Allen'},
-            'lekki': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10, 'inspection':10000, 'label':'Lekki, Ajah, Sangotedo'},
-            'vi': {'agreement':10, 'commission':10, 'damages':15, 'caution':15, 'legal':10, 'inspection':15000, 'label':'VI, Ikoyi, Banana'},
+            'mainland': {'agreement':10, 'commission':10, 'damages':5, 'caution':5, 'legal':5, 'inspection':3000, 'label':'Mainland'},
+            'yaba': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':5, 'inspection':5000, 'label':'Yaba'},
+            'ikeja': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10, 'inspection':7000, 'label':'Ikeja'},
+            'lekki': {'agreement':10, 'commission':10, 'damages':10, 'caution':10, 'legal':10, 'inspection':10000, 'label':'Lekki'},
+            'vi': {'agreement':10, 'commission':10, 'damages':15, 'caution':15, 'legal':10, 'inspection':15000, 'label':'VI'},
         }
         c = config.get(location, config['mainland'])
-        agreement = rent * c['agreement']/100
-        commission = rent * c['commission']/100
-        damages = rent * c['damages']/100
-        caution = rent * c['caution']/100
-        legal = rent * c['legal']/100
+        agreement = rent * c['agreement'] / 100
+        commission = rent * c['commission'] / 100
+        damages = rent * c['damages'] / 100
+        caution = rent * c['caution'] / 100
+        legal = rent * c['legal'] / 100
         inspection = c['inspection']
         total = rent + agreement + commission + damages + caution + legal + inspection
         monthly = total / 12
-        print(f"[LEAD] Rent:{rent} Loc:{location} Total:{total} IP:{request.headers.get('X-Forwarded-For', request.remote_addr)} Time:{datetime.now()}")
         return jsonify({
-            'rent': int(rent), 'agreement': int(agreement), 'commission': int(commission),
-            'damages': int(damages), 'caution': int(caution), 'legal': int(legal),
-            'inspection': int(inspection), 'total': int(total), 'monthly': int(monthly),
-            'location': location, 'location_label': c['label'],
-            'percent': {'agreement': c['agreement'], 'commission': c['commission'], 'damages': c['damages'], 'caution': c['caution'], 'legal': c['legal']}
+            'rent': int(rent),
+            'agreement': int(agreement),
+            'commission': int(commission),
+            'damages': int(damages),
+            'caution': int(caution),
+            'legal': int(legal),
+            'inspection': int(inspection),
+            'total': int(total),
+            'monthly': int(monthly),
+            'location': location,
+            'location_label': c['label']
         })
     except Exception as e:
-        print(f"lagos-rent error: {e}")
         return jsonify({'error': str(e)}), 500
-
-@app.route('/api/qr', methods=['POST'])
-def gen_qr():
-    try:
-        data = request.json.get('text','').strip()
-        if not data: return jsonify({'error': 'Empty text'}), 400
-        img = qrcode.make(data)
-        buf = io.BytesIO()
-        img.save(buf, format='PNG')
-        b64 = base64.b64encode(buf.getvalue()).decode()
-        return jsonify({'qr': f'data:image/png;base64,{b64}'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/bg-remove', methods=['POST'])
-def api_bg_remove():
-    try:
-        file = request.files.get('image')
-        if not file: return jsonify({'error': 'No image'}), 400
-        mode = request.form.get('mode', 'human')
-        if not get_session(mode): return jsonify({'error': 'AI loading'}), 503
-        from rembg import remove
-        input_img = Image.open(file.stream).convert('RGBA')
-        if mode == 'human' and human_session and human_session!= True:
-            output = remove(input_img, session=human_session, alpha_matting=True)
-        elif cloth_session and cloth_session!= True:
-            output = remove(input_img, session=cloth_session, alpha_matting=True)
-        else:
-            output = remove(input_img)
-        buf = io.BytesIO()
-        output.save(buf, format='PNG')
-        b64 = base64.b64encode(buf.getvalue()).decode()
-        return jsonify({'result': f'data:image/png;base64,{b64}'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/ruler-terminal', methods=['POST'])
-def ruler_api():
-    cmd = request.json.get('cmd','').strip().lower()
-    outs = {'help':'help, clear, ls, pwd, date, echo, whoami, neofetch, hack, matrix, banner, vendors, free, df, uptime','ls':'qid_check.html qatar_gratuity.html uae_gratuity.html emirates_id_check.html kuwait_civil_id.html bahrain_cpr_check.html oman_civil_check.html uk_paycheck.html lagos_rent_package.html ivr_builder.html salary_flex.html anonymous_link.html arabic_stylish_name.html','pwd':'/home/clearcode/vendors','whoami':'clearcode-vendor','date':datetime.now().strftime('%a %b %d %H:%M:%S WAT %Y'),'clear':'__CLEAR__'}
-    if cmd.startswith('echo '): return jsonify({'output': cmd[5:]})
-    if cmd == '': return jsonify({'output': ''})
-    return jsonify({'output': outs.get(cmd, f'Command not found: {cmd}')})
-
-# ================= IVR BUILDER BACKEND - USDT: TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4 - 5 USDT =================
-@app.route('/api/ivr/generate-audio', methods=['POST'])
-def ivr_generate():
-    try:
-        data = request.get_json() or {}
-        text = data.get('text','Welcome to ClearCode')
-        return jsonify({"ok": True, "audio_url": "/static/demo-ivr.mp3", "text": text})
-    except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
-
-@app.route('/api/ivr/verify-usdt', methods=['POST'])
-def ivr_verify():
-    try:
-        data = request.get_json() or {}
-        txid = data.get('txid','').strip()
-        required = 5
-        if len(txid) < 10:
-            return jsonify({"ok": False, "error": "Invalid TxID"})
-        return jsonify({"ok": True, "msg": f"Verified {required} USDT", "wallet": "TRhMjNALZeUMK5cSkDXX7CgjdqJ4YNWVz4", "amount": required})
-    except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
-
-@app.route('/api/ivr/call', methods=['POST'])
-def ivr_call():
-    try:
-        data = request.get_json() or {}
-        phone = data.get('phone','')
-        text = data.get('text','')
-        print(f"[IVR CALL LEAD] Phone:{phone} Text:{text[:50]} IP:{request.headers.get('X-Forwarded-For', request.remote_addr)}")
-        return jsonify({"ok": True, "msg": f"Call queued to {phone}"})
-    except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
-
-@app.route('/api/ivr/download')
-def ivr_download():
-    text = request.args.get('text','Welcome')
-    return jsonify({"ok": True, "text": text, "note": "MP3 generation via gTTS next"})
-# ================= END IVR BACKEND =================
-
-@app.route('/api/clear-shell', methods=['POST'])
-def shell_api():
-    d = request.json
-    if d.get('secret')!= 'CLEARCODE2026':
-        return jsonify({'output': 'Error: Unauthorized. Add secret.'})
-    try:
-        host = d.get('host','').strip()
-        user = d.get('user','root').strip()
-        pwd = d.get('pass','')
-        cmd = d.get('cmd','').strip()
-        if not host or not pwd or not cmd:
-            return jsonify({'output': 'Error: host, password and command required'})
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(host, username=user, password=pwd, timeout=8, banner_timeout=8, auth_timeout=8)
-        stdin, stdout, stderr = client.exec_command(cmd, timeout=10)
-        out = stdout.read().decode(errors='ignore') + stderr.read().decode(errors='ignore')
-        client.close()
-        return jsonify({'output': out or '(No output)'})
-    except Exception as e:
-        return jsonify({'output': f'Error: {str(e)}'})
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)

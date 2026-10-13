@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free {{country_name}} Tools 2026 | ClearCodeSystem</title>
 <link rel="canonical" href="https://clearcodesystem.onrender.com/?country={{country}}">
-<meta name="description" content="Free {{country_name}} tools 2026 - {{allowed|length}} tools for {{country}}. QID check, gratuity, rent, gold price, salary, anonymous link, stylish name, bank card info.">
-<meta name="robots" content="index, follow">
+<meta name="description" content="Free {{country_name}} tools - {{allowed|length}} tools: rent, nepa, gold price, gratuity, bank info, stylish names.">
 <script>(function(s){s.dataset.zone='11970643',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box} body{background:#080808;color:#fff;font-family:Inter,sans-serif}
@@ -17,11 +16,13 @@
 .ip-box{max-width:600px;margin:12px auto;background:#121212;border:1px solid #00FF88;border-radius:12px;padding:10px 12px;font-size:11px;display:flex;justify-content:space-between;color:#aaa}
 .grid{max-width:1100px;margin:14px auto;padding:0 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}} @media(min-width:1000px){.grid{grid-template-columns:repeat(4,1fr)}}
-.tool{background:#121212;border:1px solid #222;border-radius:18px;padding:14px;text-decoration:none;color:#fff;display:block}
-.tool:hover{border-color:#00FF88} .tool h3{font-size:13px;font-weight:800} .tool p{font-size:10px;color:#888;margin-top:4px}
+.tool{background:#121212;border:1px solid #222;border-radius:18px;padding:14px;text-decoration:none;color:#fff;display:block;transition:.2s}
+.tool:hover{border-color:#00FF88;transform:translateY(-2px)} .tool h3{font-size:13px;font-weight:800;line-height:1.2} .tool p{font-size:10px;color:#888;margin-top:4px}
 .badge{font-size:8px;padding:3px 8px;border-radius:20px;font-weight:900;background:#00FF88;color:#000}
-.badge.new{background:#FF0040;color:#fff} .badge.gulf{background:#7000FF;color:#fff}
-.footer{text-align:center;padding:22px;color:#555;font-size:11px;border-top:1px solid #1a1a1a;margin-top:24px;line-height:1.6}
+.badge.new{background:#FF0040;color:#fff} .badge.gulf{background:#7000FF;color:#fff} .badge.bank{background:#00D4FF;color:#000}
+.badge.live{background:#1a1a1a;color:#00FF88;border:1px solid #222}
+.icon{font-size:22px;width:36px;height:36px;background:#1a1a1a;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.footer{text-align:center;padding:22px;color:#555;font-size:11px;border-top:1px solid #1a1a1a;margin-top:24px}
 </style>
 </head>
 <body>
@@ -33,28 +34,65 @@
 </div>
 <div class="grid">
 {% set pinned = ['ivr_builder','lagos_rent_package','salary_flex','anonymous_link','arabic_stylish_name','bank_card_info'] %}
+
 {% for t in pinned %}{% if t in allowed %}
 {% if t=='ivr_builder' %}
-<a href="/tool/ivr-builder" class="tool" style="border-color:#00FF88;background:linear-gradient(135deg,#121212,#0f1f15)"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:24px">📞🔥</span><span class="badge">5 USDT • NEW</span></div><h3>IVR Builder - AI Voice Menu $5 USDT</h3><p>{{country_name}} • Fast Setup</p></a>
+<a href="/tool/ivr-builder" class="tool" style="border-color:#00FF88;background:linear-gradient(135deg,#121212,#0f1f15)"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="icon">📞</div><span class="badge">5 USDT • NEW</span></div><h3>IVR Builder - AI Voice Menu</h3><p>{{country_name}} • Fast Setup</p></a>
 {% elif t=='lagos_rent_package' %}
-<a href="/tool/lagos-rent-package" class="tool" style="border-color:#00FF88"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:24px">🏠🔥</span><span class="badge new">LAGOS HOT</span></div><h3>Lagos Total Rent Package Calculator</h3><p>{{country_name}} • Free</p></a>
+<a href="/tool/lagos-rent-package" class="tool" style="border-color:#FF0040"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="icon">🏠</div><span class="badge new">LAGOS HOT</span></div><h3>Lagos Total Rent Calculator</h3><p>{{country_name}} • Free</p></a>
 {% elif t=='salary_flex' %}
-<a href="/tool/salary-flex" class="tool" style="border-color:#7000FF"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:24px">💸</span><span class="badge gulf">GULF VIRAL</span></div><h3>Salary Flex - سلفة الراتب</h3><p>{{country_name}} • Viral</p></a>
+<a href="/tool/salary-flex" class="tool" style="border-color:#7000FF"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="icon">💸</div><span class="badge gulf">GULF VIRAL</span></div><h3>Salary Flex - سلفة</h3><p>{{country_name}} • Viral</p></a>
 {% elif t=='anonymous_link' %}
-<a href="/tool/anonymous-link" class="tool" style="border-color:#7000FF"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:24px">🔗</span><span class="badge gulf">GULF VIRAL</span></div><h3>Anonymous Link - صراحة NGL</h3><p>{{country_name}} • Viral</p></a>
+<a href="/tool/anonymous-link" class="tool" style="border-color:#7000FF"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="icon">🔗</div><span class="badge gulf">GULF VIRAL</span></div><h3>Anonymous Link - صراحة</h3><p>{{country_name}} • Viral</p></a>
 {% elif t=='arabic_stylish_name' %}
-<a href="/tool/arabic-stylish-name" class="tool" style="border-color:#7000FF"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:24px">✨</span><span class="badge gulf">GULF VIRAL</span></div><h3>زخرفة اسماء - Stylish Name</h3><p>{{country_name}} • PUBG & Free Fire</p></a>
+<a href="/tool/arabic-stylish-name" class="tool" style="border-color:#7000FF"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="icon">✨</div><span class="badge gulf">GULF VIRAL</span></div><h3>زخرفة اسماء - Stylish Name</h3><p>PUBG & Free Fire</p></a>
 {% elif t=='bank_card_info' %}
-<a href="/tool/bank-card-info" class="tool" style="border-color:#00D4FF;background:linear-gradient(135deg,#121212,#0f1a1f)"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:24px">💳</span><span class="badge" style="background:#00D4FF">BANK • NEW</span></div><h3>Bank Card Info - BIN Checker</h3><p>{{country_name}} • Educational</p></a>
+<a href="/tool/bank-card-info" class="tool" style="border-color:#00D4FF;background:linear-gradient(135deg,#121212,#0f1a1f)"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="icon">💳</div><span class="badge bank">BANK • NEW</span></div><h3>Bank Card Info - BIN Checker</h3><p>Educational Only</p></a>
 {% endif %}{% endif %}{% endfor %}
+
 {% for t in allowed %}{% if t not in pinned %}
-<a href="/tool/{{t.replace('_','-')}}" class="tool"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:20px">⚡</span><span class="badge">{{country}} • LIVE</span></div><h3>{{t.replace('_',' ').title()}}</h3><p>{{country_name}} • Free Tool</p></a>
+<a href="/tool/{{t.replace('_','-')}}" class="tool">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px">
+<div class="icon">
+{% if 'nepa' in t %}⚡
+{% elif 'cac' in t %}🏢
+{% elif 'fuel' in t %}⛽
+{% elif 'rent' in t %}🏠
+{% elif 'land' in t %}📏
+{% elif 'paye' in t or 'paycheck' in t or 'salary' in t %}💰
+{% elif 'jamb' in t or 'waec' in t or 'gpa' in t %}🎓
+{% elif 'nin' in t or 'qid' in t or 'cpr' in t or 'civil' in t or 'emirates' in t or 'iqama' in t %}🪪
+{% elif 'pos' in t or 'invoice' in t or 'receipt' in t %}🧾
+{% elif 'wa_qr' in t or 'qr' in t %}📱
+{% elif 'whatsapp' in t %}💬
+{% elif 'bg_' in t %}🖼️
+{% elif 'delivery' in t %}🚚
+{% elif 'fake' in t %}📲
+{% elif 'debt' in t %}📒
+{% elif 'price' in t or 'profit' in t %}📈
+{% elif 'ruler' in t %}📐
+{% elif 'clear_shell' in t %}🔐
+{% elif 'market' in t %}📊
+{% elif 'builder' in t %}🏪
+{% elif 'traffic' in t %}🚗
+{% elif 'gratuity' in t or 'gosi' in t %}💵
+{% elif 'gold' in t %}🥇
+{% elif 'overtime' in t %}⏰
+{% elif 'hijri' in t %}📅
+{% elif 'vat' in t or 'tip' in t %}🧮
+{% elif 'background' in t %}🔍
+{% elif 'usa_notify' in t %}🔔
+{% else %}🛠️
+{% endif %}
+</div>
+<span class="badge live">{{country}} • LIVE</span>
+</div>
+<h3>{{t.replace('_',' ').title()}}</h3>
+<p>{{country_name}} • Free Tool</p>
+</a>
 {% endif %}{% endfor %}
 </div>
-<div class="footer">
-ClearCodeSystem © 2026 • {{country}} - {{country_name}} • {{allowed|length}} Tools<br>
-<a href="/sitemap.xml" style="color:#555">Sitemap</a> • <a href="/robots.txt" style="color:#555">Robots</a> • <a href="/admin/analytics?key=CLEARCODE2026" style="color:#222">.</a>
-</div>
+<div class="footer">ClearCodeSystem © 2026 • {{allowed|length}} Tools • {{country}}<br><a href="/sitemap.xml" style="color:#333">Sitemap</a> • <a href="/robots.txt" style="color:#333">Robots</a></div>
 <script>(function(s){s.dataset.zone='11988352',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 </body>
 </html>

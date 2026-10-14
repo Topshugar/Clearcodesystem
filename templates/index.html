@@ -1,20 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Free Tools for {{country_name}} 2026{% endblock %}
 {% block content %}
-<div class="container">
-<h1 style="text-align:center;font-size:26px;font-weight:900;margin:18px 0 6px">Free Tools for <span style="color:#00FF88">{{country_name}} 2026</span></h1>
-<p style="text-align:center;color:#888;font-size:12px;margin-bottom:14px">{{ tools|length }} LIVE • Auto: {{raw_country}}</p>
 
-<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
-{% for tool in tools %}
-<a href="/tool/{{ tool }}" style="background:#151515;border:1px solid #222;border-radius:16px;padding:14px;min-height:110px;display:flex;flex-direction:column;justify-content:space-between">
-<div style="width:40px;height:40px;background:#1f1f1f;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">🔧</div>
-<div style="font-size:13px;font-weight:700;margin-top:10px;text-transform:capitalize;line-height:1.25;white-space:normal;word-wrap:break-word">{{ tool.replace('_',' ') }}</div>
-<div style="font-size:10px;color:#00FF88;margin-top:8px;font-weight:700">● LIVE • {{country}}</div>
-</a>
-{% endfor %}
+<div class="text-center py-5">
+  <h1 class="fw-bold">76 Free Tools for {{ country_name }}</h1>
+  <p class="text-muted">Auto-detected from your IP: {{ user_ip }} • {{ user_country }}</p>
+  <div class="mt-3">
+    <span class="badge bg-primary">{{ tools|length }} Tools Available</span>
+    <span class="badge bg-success">No Watermark</span>
+    <span class="badge bg-info">4K HD</span>
+  </div>
 </div>
 
-<div style="text-align:center;margin-top:30px;color:#333;font-size:10px">© 2026 ClearCodeSystem • {{country}}</div>
+<!-- SEARCH -->
+<div class="row mb-4">
+  <div class="col-md-6 mx-auto">
+    <input type="text" id="searchTool" class="form-control form-control-lg" placeholder="Search tools... e.g. POS, Background, Gold">
+  </div>
 </div>
+
+<!-- TOOLS GRID -->
+<div class="row g-4" id="toolsGrid">
+  {% for tool in tools %}
+  <div class="col-md-4 col-sm-6 tool-item" data-name="{{ tool.name|lower }}">
+    <a href="{{ tool.url }}" style="text-decoration:none;color:inherit">
+      <div class="tool-card">
+        <div class="tool-icon">{{ tool.icon }}</div>
+        <h6 class="fw-bold mb-1">{{ tool.name }}</h6>
+        <p class="small text-muted mb-2">{{ tool.desc }}</p>
+        <span class="badge badge-country bg-light text-dark border">{{ tool.country }}</span>
+        {% if tool.is_new %}<span class="badge bg-danger ms-1">NEW</span>{% endif %}
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+document.getElementById('searchTool').addEventListener('input', function(e){
+  let q = e.target.value.toLowerCase();
+  document.querySelectorAll('.tool-item').forEach(el=>{
+    el.style.display = el.dataset.name.includes(q) ? 'block' : 'none';
+  });
+});
+</script>
+
+<!-- SEO CONTENT FOR GOOGLE -->
+<div class="card mt-5 p-4">
+  <h5>Why Clearcode System?</h5>
+  <p class="small text-muted">We provide 76+ free tools auto-detected by your country. Nigeria gets POS Calculator, Invoice, Rent, Delivery. Bahrain, Saudi, Kuwait, UAE, Qatar, Oman get Gold Price, CPR Check, Salary, Rent in local currency. All tools are free, no watermark, 4K HD export, works on Android & iPhone.</p>
+</div>
+
 {% endblock %}

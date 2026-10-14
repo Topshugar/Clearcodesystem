@@ -2,8 +2,8 @@ import os
 from flask import Flask, render_template, request, abort, session, redirect, url_for
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "clearcode-admin-2026-change-me")
-ADMIN_KEY = os.environ.get("ADMIN_KEY", "CLEARCODE2026")
+app.secret_key = os.environ.get("SECRET_KEY")
+ADMIN_KEY = os.environ.get("ADMIN_KEY")
 
 def n(s):
     return s.lower().replace('.html','').strip()
@@ -93,7 +93,7 @@ def index():
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        if request.form.get('key') == ADMIN_KEY:
+        if ADMIN_KEY and request.form.get('key') == ADMIN_KEY:
             session['is_admin'] = True
             return redirect(url_for('admin_tools'))
         return "<h3>Wrong Admin Key</h3><a href='/admin/login'>Try again</a>", 403

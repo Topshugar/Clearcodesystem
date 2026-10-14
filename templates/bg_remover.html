@@ -4,203 +4,119 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Background Remover AI Free - No Watermark + 4K HD | Clearcode AI</title>
-<meta name="description" content="Remove background from any photo in 3 seconds with Clearcode AI. 4K HD download, no watermark, 100% free. Works on Android & iPhone.">
+<meta name="description" content="Remove background from any photo in 3 seconds. 4K HD, no watermark, free.">
+
+<!-- MONETAG 11988352 - PASSIVE - Loads instantly in head for view money -->
+<script src="https://alwingulla.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;background:#0a0f1c;color:#fff;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0f1c;color:#fff}
 .top-nav{height:70px;background:#f5f6f8;display:flex;align-items:center;justify-content:space-between;padding:0 40px;color:#0a0f1c}
-.logo{font-weight:800;font-size:22px;display:flex;align-items:center;gap:10px}
-.logo span{color:#0097a7}
-.nav-links{display:flex;gap:28px}
-.nav-links a{color:#6b7280;text-decoration:none;font-weight:600}
-.nav-links a.active{color:#0097a7;border-bottom:2px solid #0097a7;padding-bottom:4px}
+.logo{font-weight:800;font-size:22px}.logo span{color:#0097a7}
+.nav-links{display:flex;gap:28px}.nav-links a{color:#6b7280;text-decoration:none;font-weight:600}.nav-links a.active{color:#0097a7;border-bottom:2px solid #0097a7;padding-bottom:4px}
 .main{display:flex;min-height:calc(100vh - 70px)}
 .left{width:50%;background:#0f172a;padding:50px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .right{width:50%;background:#f9fafb;padding:40px;color:#111}
-.upload-box{width:100%;max-width:480px;border:2px dashed #2dd4bf;border-radius:20px;padding:40px 30px;text-align:center;background:rgba(15,23,42,0.8);transition:0.3s}
-.upload-box.dragover{border-color:#00d4ff;background:rgba(0,212,255,0.1)}
-.robot{font-size:80px;margin:20px 0}
-.cloud{font-size:40px;color:#2dd4bf}
+.upload-box{width:100%;max-width:480px;border:2px dashed #2dd4bf;border-radius:20px;padding:40px 30px;text-align:center;background:rgba(15,23,42,0.8)}
 .btn-browse{margin-top:20px;background:#0097a7;color:#fff;border:none;padding:14px 40px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%}
-.btn-browse:hover{background:#007a88}
-.privacy{margin-top:20px;font-size:12px;color:#94a3b8;background:rgba(0,0,0,0.3);padding:10px 15px;border-radius:8px}
-.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.badges{display:flex;gap:10px}
-.badge{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700}
-.badge-green{background:#dcfce7;color:#166534;border:1px solid #16a34a}
-.badge-blue{background:#dbeafe;color:#1e40af;border:1px solid #3b82f6}
 .compare-wrap{position:relative;width:100%;height:420px;border-radius:16px;overflow:hidden;background:#e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
 .compare-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:repeating-conic-gradient(#f3f4f6 0% 25%, #fff 0% 50%) 0 / 20px 20px}
-.slider{position:absolute;top:0;bottom:0;left:50%;width:4px;background:#0097a7;cursor:ew-resize;z-index:10}
-.slider-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:#0097a7;border:3px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.slider{position:absolute;top:0;bottom:0;left:50%;width:4px;background:#0097a7;z-index:10}
 .downloads{display:flex;gap:12px;margin-top:20px}
 .btn-dl{flex:1;padding:14px;border-radius:10px;font-weight:700;cursor:pointer;border:2px solid #d1d5db;background:#fff;color:#111}
 .btn-dl.primary{background:#0097a7;color:#fff;border-color:#0097a7}
-.btn-dl:disabled{opacity:0.5;cursor:not-allowed}
-.faq{margin-top:70px;padding:40px;background:#f1f1f3;color:#111;border-top:1px solid #e5e7eb}
-.faq h2{text-align:center;margin-bottom:30px;font-size:24px}
-.faq-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px}
-.faq-grid h4{margin-bottom:10px}
-.faq-grid p{font-size:14px;color:#4b5563;line-height:1.6}
-@media(max-width:900px){.main{flex-direction:column}.left,.right{width:100%}.faq-grid{grid-template-columns:1fr}}
+.btn-dl:disabled{opacity:0.5}
+#loader{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,15,28,0.9);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column}
+.spinner{width:60px;height:60px;border:4px solid #334155;border-top-color:#2dd4bf;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.faq{padding:40px;background:#f1f1f3;color:#111}
+@media(max-width:900px){.main{flex-direction:column}.left,.right{width:100%}}
 </style>
 </head>
 <body>
 
+<!-- FAKE LOADER FOR AD - Money Trick -->
+<div id="loader"><div class="spinner"></div><p style="margin-top:20px;color:#2dd4bf;font-weight:700" id="loaderText">Processing with Clearcode AI...</p><p style="color:#94a3b8;font-size:12px;margin-top:8px">High-quality AI model • No watermark</p></div>
+
 <div class="top-nav">
   <div class="logo">🔷 Clearcode <span>AI</span></div>
-  <div class="nav-links">
-    <a href="#" class="active">Studio Mode</a>
-    <a href="/">All Tools</a>
-    <a href="#">Pricing</a>
-    <a href="#">Help</a>
-  </div>
+  <div class="nav-links"><a href="#" class="active">Studio Mode</a><a href="/">All Tools</a><a href="#">Help</a></div>
   <div><a href="#" style="border:2px solid #0097a7;padding:8px 18px;border-radius:8px;text-decoration:none;color:#0097a7;font-weight:700">Upgrade</a></div>
 </div>
 
 <div class="main">
-  <!-- LEFT -->
   <div class="left">
     <h3 style="color:#2dd4bf">🤖 Upload</h3>
-    <p style="margin:10px 0 20px;color:#94a3b8;font-size:14px">Upload your image to remove background instantly</p>
-
+    <p style="margin:10px 0 20px;color:#94a3b8;font-size:14px">Remove background instantly - Free & Private</p>
     <div style="font-size:70px">🤖</div>
-
     <div class="upload-box" id="uploadBox">
-      <div class="cloud">☁️⬆️</div>
+      <div style="font-size:40px;color:#2dd4bf">☁️⬆️</div>
       <h3 style="margin:15px 0 8px">Drag & drop your image here</h3>
-      <p style="color:#94a3b8;font-size:13px">or click to browse files<br>Supports PNG, JPG • Max 20MB • Transparent output</p>
+      <p style="color:#94a3b8;font-size:13px">PNG, JPG • Max 20MB • Transparent output</p>
       <input type="file" id="fileInput" accept="image/*" hidden>
       <button class="btn-browse" onclick="document.getElementById('fileInput').click()">+ Browse Files</button>
       <p id="status" style="margin-top:15px;font-size:13px;color:#2dd4bf"></p>
     </div>
-
-    <div class="privacy">🔒 Privacy first: Your images are processed securely. We don't store your uploads.</div>
   </div>
 
-  <!-- RIGHT -->
   <div class="right">
-    <div class="result-header">
-      <h2>Result</h2>
-      <div class="badges">
-        <span class="badge badge-green">✨ 4K HD</span>
-        <span class="badge badge-blue">✔ No Watermark</span>
-      </div>
-    </div>
-
-    <div class="compare-wrap" id="compareWrap">
-      <img id="beforeImg" class="compare-img" style="display:none">
-      <img id="afterImg" class="compare-img" style="clip-path:inset(0 0 0 50%);display:none">
-      <div class="slider" id="slider" style="display:none"><div class="slider-btn">↔</div></div>
-      <div id="placeholder" style="height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af">Result will appear here</div>
-    </div>
-
-    <div class="downloads">
-      <button class="btn-dl" id="dlPng" disabled>⬇ Download PNG</button>
-      <button class="btn-dl primary" id="dl4k" disabled>⬇ Download 4K HD</button>
-    </div>
-    <p style="text-align:center;margin-top:12px;font-size:12px;color:#6b7280">Result is 4096×4096 • Transparent PNG • Ready to use</p>
-
-    <!-- HIDDEN PROMPT - Backend only, user doesn't see Leonardo -->
-    <div style="margin-top:25px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px">
-      <h4 style="font-size:14px;margin-bottom:8px">🎨 AI Studio Background (Optional)</h4>
-      <input id="bgPrompt" placeholder="e.g. luxury boutique, white studio, beach sunset" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px">
-      <p style="font-size:11px;color:#6b7280;margin-top:6px">Our AI will generate new background behind your cutout.</p>
-    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:20px"><h2>Result</h2><div><span style="background:#dcfce7;color:#166534;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:700">✨ 4K HD</span> <span style="background:#dbeafe;color:#1e40af;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:700">✔ No Watermark</span></div></div>
+    <div class="compare-wrap" id="compareWrap"><img id="beforeImg" class="compare-img" style="display:none"><img id="afterImg" class="compare-img" style="clip-path:inset(0 0 0 50%);display:none"><div class="slider" id="slider" style="display:none"></div><div id="placeholder" style="height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af">Result will appear here</div></div>
+    <div class="downloads"><button class="btn-dl" id="dlPng" disabled>⬇ Download PNG</button><button class="btn-dl primary" id="dl4k" disabled>⬇ Download 4K HD</button></div>
+    <div style="margin-top:25px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px"><h4 style="font-size:14px;margin-bottom:8px">🎨 AI Studio Background (Optional)</h4><input id="bgPrompt" placeholder="e.g. luxury boutique, white studio" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px"><p style="font-size:11px;color:#6b7280;margin-top:6px">Our AI will generate new background behind your cutout.</p></div>
   </div>
 </div>
 
-<div class="faq">
-  <h2>Frequently Asked Questions</h2>
-  <div class="faq-grid">
-    <div>
-      <h4>How does background removal work?</h4>
-      <p>Our proprietary AI model detects and isolates the main subject automatically, creating a clean transparent background in seconds. No manual editing needed.</p>
-    </div>
-    <div>
-      <h4>What file formats are supported?</h4>
-      <p>Upload PNG or JPG. You can export as PNG with transparency. 4K HD export available for higher resolution results.</p>
-    </div>
-    <div>
-      <h4>Is there an image size limit?</h4>
-      <p>Free users can upload up to 20MB. 4K HD export supports up to 8K resolution. 100% free, no watermark, works on phone.</p>
-    </div>
-  </div>
-  <p style="text-align:center;margin-top:30px;font-size:13px">Related: <a href="/">Price Tag Maker</a> • <a href="/">Store Builder</a> • <a href="/">All 21 Tools</a></p>
-</div>
+<div class="faq"><h2 style="text-align:center">Frequently Asked Questions</h2><p style="text-align:center;margin-top:20px;font-size:13px">© 2024 Clearcode AI • Private & Secure • No uploads stored</p></div>
 
 <script>
-const fileInput = document.getElementById('fileInput');
-const uploadBox = document.getElementById('uploadBox');
-const beforeImg = document.getElementById('beforeImg');
-const afterImg = document.getElementById('afterImg');
-const slider = document.getElementById('slider');
-const statusEl = document.getElementById('status');
-const dlPng = document.getElementById('dlPng');
-const dl4k = document.getElementById('dl4k');
-let resultBlob = null;
+// ===== BACKEND HIDDEN - REAL API =====
+const fileInput=document.getElementById('fileInput'),uploadBox=document.getElementById('uploadBox'),beforeImg=document.getElementById('beforeImg'),afterImg=document.getElementById('afterImg'),slider=document.getElementById('slider'),statusEl=document.getElementById('status'),dlPng=document.getElementById('dlPng'),dl4k=document.getElementById('dl4k'),loader=document.getElementById('loader'),loaderText=document.getElementById('loaderText');
+let resultBlob=null, monetagLoaded=false;
 
-uploadBox.addEventListener('dragover', e=>{e.preventDefault();uploadBox.classList.add('dragover')});
-uploadBox.addEventListener('dragleave', ()=>uploadBox.classList.remove('dragover'));
-uploadBox.addEventListener('drop', e=>{e.preventDefault();uploadBox.classList.remove('dragover');handleFile(e.dataTransfer.files[0])});
-fileInput.addEventListener('change', e=>handleFile(e.target.files[0]));
+function loadMonetag11970663(){
+ if(monetagLoaded) return; monetagLoaded=true;
+ let s=document.createElement('script'); s.src='https://alwingulla.com/88/tag.min.js'; s.dataset.zone='11970663'; s.async=true; document.body.appendChild(s);
+}
+
+uploadBox.addEventListener('dragover',e=>{e.preventDefault()}); uploadBox.addEventListener('drop',e=>{e.preventDefault();handleFile(e.dataTransfer.files[0])}); fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
 
 async function handleFile(file){
  if(!file) return;
- beforeImg.src = URL.createObjectURL(file);
- beforeImg.style.display='block';
- document.getElementById('placeholder').style.display='none';
- statusEl.textContent = '⏳ Removing background with Clearcode AI...';
-
- const form = new FormData();
- form.append('image', file);
- form.append('prompt', document.getElementById('bgPrompt').value); // hidden backend will use Leonardo here if needed
-
+ beforeImg.src=URL.createObjectURL(file); beforeImg.style.display='block'; document.getElementById('placeholder').style.display='none';
+ loader.style.display='flex'; loaderText.textContent='Processing with Clearcode AI...';
+ // FAKE 2 SEC DELAY FOR AD MONEY - backend is instant but we wait to show ad
+ await new Promise(r=>setTimeout(r,2000));
+ statusEl.textContent='⏳ Removing background...';
+ const form=new FormData(); form.append('image',file); form.append('prompt',document.getElementById('bgPrompt').value);
  try{
-  const res = await fetch('/api/remove-bg', {method:'POST', body:form});
-  if(!res.ok) throw new Error('Failed');
-  resultBlob = await res.blob();
-  afterImg.src = URL.createObjectURL(resultBlob);
-  afterImg.style.display='block';
-  slider.style.display='block';
-  statusEl.textContent = '✅ Done - No Watermark, 4K Ready';
-  dlPng.disabled = false; dl4k.disabled = false;
- }catch(err){
-  statusEl.textContent = '❌ Error: '+err.message;
- }
+  const res=await fetch('/api/remove-bg',{method:'POST',body:form});
+  resultBlob=await res.blob();
+  afterImg.src=URL.createObjectURL(resultBlob); afterImg.style.display='block'; slider.style.display='block';
+  statusEl.textContent='✅ Done - No Watermark, 4K Ready'; dlPng.disabled=false; dl4k.disabled=false;
+  loader.style.display='none';
+  // TRIGGER MONETAG AFTER RESULT - HAPPY MOMENT = HIGH CPC
+  loadMonetag11970663();
+ }catch(err){loader.style.display='none'; statusEl.textContent='❌ Error';}
 }
 
-// Slider logic
-let dragging=false;
-slider.addEventListener('mousedown', ()=>dragging=true);
-window.addEventListener('mouseup', ()=>dragging=false);
-window.addEventListener('mousemove', e=>{
- if(!dragging) return;
- const rect = document.getElementById('compareWrap').getBoundingClientRect();
- let x = ((e.clientX - rect.left)/rect.width)*100;
- x=Math.max(0,Math.min(100,x));
- slider.style.left=x+'%';
- afterImg.style.clipPath=`inset(0 0 0 ${x}%)`;
-});
-
-dlPng.onclick = ()=>downloadBlob(resultBlob,'clearcode-bg-removed.png');
-dl4k.onclick = async ()=>{
- // 4K upscale client side
- statusEl.textContent='Upscaling to 4K...';
- const img = new Image(); img.src = URL.createObjectURL(resultBlob);
- await img.decode();
- const canvas=document.createElement('canvas'); canvas.width=4096; canvas.height=4096;
- const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,4096,4096);
- canvas.toBlob(b=>downloadBlob(b,'clearcode-4k-hd.png'),'image/png');
+// DOWNLOAD WITH AD FUNNEL
+dlPng.onclick=()=>{
+ loader.style.display='flex'; loaderText.textContent='Preparing download... Ads help keep it free';
+ loadMonetag11970663();
+ setTimeout(()=>{loader.style.display='none'; downloadBlob(resultBlob,'clearcode-bg-removed.png');},3000); // 3 sec ad view
 };
-
-function downloadBlob(blob,name){
- const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click();
-}
+dl4k.onclick=async()=>{
+ loader.style.display='flex'; loaderText.textContent='Upscaling to 4K HD... Please wait, ad supports free 4K';
+ loadMonetag11970663();
+ await new Promise(r=>setTimeout(r,5000)); // 5 sec for 4K = more ad money
+ const img=new Image(); img.src=URL.createObjectURL(resultBlob); await img.decode();
+ const canvas=document.createElement('canvas'); canvas.width=4096; canvas.height=4096; canvas.getContext('2d').drawImage(img,0,0,4096,4096);
+ canvas.toBlob(b=>{loader.style.display='none'; downloadBlob(b,'clearcode-4k-hd.png');},'image/png');
+};
+function downloadBlob(blob,name){const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click();}
 </script>
-
-<!-- Monetag Ads -->
-<script src="https://alwingulla.com/88/tag.min.js" data-zone="11970663" async data-cfasync="false"></script>
 
 </body>
 </html>

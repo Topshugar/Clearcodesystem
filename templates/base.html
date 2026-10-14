@@ -3,70 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}Clearcode System - 76 Free Tools{% endblock %}</title>
-<meta name="description" content="76+ Free Tools for Nigeria & Gulf - POS, Invoice, Rent, Gold Price. No watermark.">
-
-<!-- MONETAG 11988352 - PASSIVE - MUST BE IN HEAD -->
-<script src="https://alwingulla.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
-
+<title>Clearcode AI Tools</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+<!-- MONETAG 1: In-Page Push 10323198 -->
+<script>(function(s){s.dataset.zone='10323198',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+<!-- MONETAG 2: Vignette Banner 10323166 -->
+<script>(function(s){s.dataset.zone='10323166',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 <style>
-:root{--primary:#0097a7;--dark:#0f172a}
-body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-.navbar{background:var(--dark)!important}
-.navbar-brand{font-weight:800}
-.tool-card{border:1px solid #e2e8f0;border-radius:16px;padding:20px;background:#fff;transition:0.2s;height:100%}
-.tool-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,0.1);border-color:var(--primary)}
-.tool-icon{width:48px;height:48px;background:#e0f2f1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px}
-.badge-country{font-size:10px;padding:4px 8px;border-radius:20px}
-footer{background:var(--dark);color:#94a3b8;padding:40px 0;margin-top:60px}
+body{background:#f8f9fa}
+.tool-card{transition:0.2s}
+.tool-card:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,0.1)}
 </style>
-{% block head %}{% endblock %}
 </head>
 <body>
-
-<nav class="navbar navbar-dark sticky-top">
-  <div class="container">
-    <a class="navbar-brand" href="/">🔷 Clearcode System</a>
-    <div class="d-flex align-items-center gap-3">
-      <span class="text-light small"><i class="bi bi-geo-alt"></i> {{ user_country }} - {{ country_name }}</span>
-      <a href="/?test=NG&key=CLEARCODE2026" class="btn btn-sm btn-outline-light">Test NG</a>
-      <a href="/?test=BH&key=CLEARCODE2026" class="btn btn-sm btn-outline-light">Test BH</a>
-    </div>
-  </div>
+<nav class="navbar navbar-dark bg-dark">
+<div class="container">
+<a class="navbar-brand" href="/">🧠 Clearcode AI - {{ country_name }}</a>
+<span class="text-white-50 small">{{ user_ip }} | {{ user_country }}</span>
+</div>
 </nav>
 
 <div class="container py-4">
-  {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 </div>
 
-<footer>
-  <div class="container text-center">
-    <p>© 2026 Clearcode System • 76 Tools • Nigeria & Gulf • No Watermark • 4K HD</p>
-    <p class="small">Privacy: No data stored • Secure Processing • Monetag ID 11970663 + 11988352</p>
-  </div>
-</footer>
-
-<!-- MONETAG 11970663 - LOADED ON INTERACTION FOR HIGH CPC -->
-<script>
-let monetagMainLoaded = false;
-function loadMainMonetag(){
-  if(monetagMainLoaded) return;
-  monetagMainLoaded = true;
-  let s=document.createElement('script');
-  s.src='https://alwingulla.com/88/tag.min.js';
-  s.dataset.zone='11970663';
-  s.async=true;
-  document.body.appendChild(s);
-}
-// Load on first click or scroll = higher CPC
-window.addEventListener('click', loadMainMonetag, {once:true});
-window.addEventListener('scroll', loadMainMonetag, {once:true});
-setTimeout(loadMainMonetag, 5000); // fallback after 5 sec
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-{% block scripts %}{% endblock %}
 </body>
 </html>

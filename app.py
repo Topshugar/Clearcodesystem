@@ -1,112 +1,61 @@
-import os, io, requests
-from flask import Flask, render_template, request, jsonify, send_file, abort
-from PIL import Image
-
+import os
+from flask import Flask, render_template, request, abort, jsonify
 app = Flask(__name__)
 ADMIN_KEY = "CLEARCODE2026"
 
-def get_user_country():
-    test = request.args.get('test')
-    key = request.args.get('key')
-    if test and key == ADMIN_KEY:
-        return test.upper()
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr or "")
-    if ',' in ip: ip = ip.split(',')[0].strip()
-    try:
-        r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=3)
-        c = r.text.strip().upper()
-        if len(c)==2 and c.isalpha(): return c
-    except: pass
-    return "NG"
+NG_TOOLS = ["Builder","Cac_Checker","Clan_Logo","Clear_Shell","Debt_Book","Delivery_Fee","Fake_Excuse_Generator","Fake_Text","Fake_Whatsapp_Chat","Fuel_Calculator","Gamer_Tag","Gpa_Calculator","Invoice","Ivr_Builder","Ivr_Software","Jamb_Calculator","Lagos_Rent_Package","Land_Converter","Market_Ledger","Marketwatch_Demo","Nepa_Calculator","Nin_Validator","Paycheck","Paye_Calculator","Pos_Charges","Pos_Receipt","Price_Tag","Profit_Calculator","Rent_Splitter","Ruler_Terminal","Salary_Flex","Sensitivity","Sleep_Calculator","Tip_Calculator","Tournament","Unlock","Bank_Card_Info","Wa_Qr","Waec_Calculator","Whatsapp_Broadcast"]
+GULF_TOOLS = ["Arabic_Stylish_Name","Bahrain_Cpr_Check","Bahrain_Gold_Price","Bahrain_Gratuity","Bahrain_Overtime","Bahrain_Rent","Bahrain_Traffic_Fines","Emirates_Id_Check","Gosi_Calculator","Hijri_Converter","Iqama_Expiry","Kuwait_Traffic_Fines","Oman_Civil_Check","Oman_Gold_Price","Oman_Gratuity","Oman_Overtime","Oman_Rent","Oman_Traffic_Fines","Qatar_Gold_Price","Qatar_Overtime","Qatar_Rent_Splitter","Salary_Sa","Uae_Gold_Price","Uae_Gratuity","Uae_Overtime","Uae_Rent_Splitter","Uae_Salary","Uae_Traffic_Fines","Zatca_Qr"]
+UK_TOOLS = ["Uk_Paycheck","Uk_Rent_Splitter","Uk_Tip_Calculator","Uk_Vat_Calculator"]
+US_TOOLS = ["Usa_Background_Check","Usa_Notify"]
+GLOBAL_TOOLS = ["Bg_Remover"]
 
-TOOL_COUNTRY = {
-    # NG ONLY - Will NEVER show in Gulf
-    "Builder":"NG", "Cac_Checker":"NG", "Clan_Logo":"NG", "Clear_Shell":"NG", "Debt_Book":"NG",
-    "Delivery_Fee":"NG", "Fake_Excuse_Generator":"NG", "Fake_Text":"NG", "Fake_Whatsapp_Chat":"NG",
-    "Fuel_Calculator":"NG", "Gamer_Tag":"NG", "Gpa_Calculator":"NG", "Invoice":"NG", "Ivr_Builder":"NG",
-    "Ivr_Software":"NG", "Jamb_Calculator":"NG", "Lagos_Rent_Package":"NG", "Land_Converter":"NG",
-    "Market_Ledger":"NG", "Marketwatch_Demo":"NG", "Nepa_Calculator":"NG", "Nin_Validator":"NG",
-    "Paycheck":"NG", "Paye_Calculator":"NG", "Pos_Charges":"NG", "Pos_Receipt":"NG", "Price_Tag":"NG",
-    "Profit_Calculator":"NG", "Rent_Splitter":"NG", "Ruler_Terminal":"NG", "Salary_Flex":"NG",
-    "Sensitivity":"NG", "Sleep_Calculator":"NG", "Tip_Calculator":"NG", "Tournament":"NG", "Unlock":"NG",
-    "Bank_Card_Info":"NG", "Wa_Qr":"NG", "Waec_Calculator":"NG", "Whatsapp_Broadcast":"NG",
-    "Paycheck":"NG", "Fuel_Calculator":"NG",
-    # GULF ONLY - Will NEVER show in NG
-    "Arabic_Stylish_Name":"BH,SA,AE,QA,KW,OM", "Bahrain_Cpr_Check":"BH", "Bahrain_Gold_Price":"BH",
-    "Bahrain_Gratuity":"BH", "Bahrain_Overtime":"BH", "Bahrain_Rent":"BH", "Bahrain_Traffic_Fines":"BH",
-    "Emirates_Id_Check":"AE", "Gosi_Calculator":"SA", "Hijri_Converter":"SA,AE,BH,QA,KW,OM",
-    "Iqama_Expiry":"SA", "Kuwait_Traffic_Fines":"KW", "Oman_Civil_Check":"OM", "Oman_Gold_Price":"OM",
-    "Oman_Gratuity":"OM", "Oman_Overtime":"OM", "Oman_Rent":"OM", "Oman_Traffic_Fines":"OM",
-    "Qatar_Gold_Price":"QA", "Qatar_Overtime":"QA", "Qatar_Rent_Splitter":"QA", "Salary_Sa":"SA",
-    "Uae_Gold_Price":"AE", "Uae_Gratuity":"AE", "Uae_Overtime":"AE", "Uae_Rent_Splitter":"AE",
-    "Uae_Salary":"AE", "Uae_Traffic_Fines":"AE", "Zatca_Qr":"SA",
-    # UK / USA ONLY
-    "Uk_Paycheck":"UK", "Uk_Rent_Splitter":"UK", "Uk_Tip_Calculator":"UK", "Uk_Vat_Calculator":"UK",
-    "Usa_Background_Check":"US", "Usa_Notify":"US",
-    # GLOBAL
-    "Bg_Remover":"ALL",
-}
+def get_country():
+    if request.args.get('key')==ADMIN_KEY and request.args.get('test'):
+        return request.args.get('test').upper()
+    return request.headers.get('CF-IPCountry','NG').upper()
 
-def load_tools():
-    tools = []
-    t_path = os.path.join(app.root_path, 'templates')
-    for file in os.listdir(t_path):
-        if not file.endswith('.html'): continue
-        if file.lower() in ['base.html','index.html','coming_soon.html']: continue
-        name = file.replace('.html','')
-        country = TOOL_COUNTRY.get(name, "ALL")
-        # Fallback detect if new file added
-        if name not in TOOL_COUNTRY:
-            low = name.lower()
-            if 'bahrain' in low or 'emirates' in low or 'uae' in low or 'qatar' in low or 'oman' in low or 'kuwait' in low or 'saudi' in low or 'gosi' in low or 'iqama' in low: country = "BH,SA,AE,QA,KW,OM"
-        tools.append({"name": name, "url": f"/{name}", "country": country})
-    return sorted(tools, key=lambda x: x["name"])
-
-def filter_tools(user_country):
-    out = []
-    for t in load_tools():
-        c = t["country"]
-        if c == "ALL" or user_country in c.split(','):
-            out.append(t)
-    return out
+def get_filtered(country):
+    base = os.path.join(app.root_path,'templates')
+    all_files = [f.replace('.html','') for f in os.listdir(base) if f.endswith('.html') and f.lower() not in ['base.html','index.html']]
+    out=[]
+    for n in all_files:
+        if n in GLOBAL_TOOLS: out.append(n)
+        elif country=='NG' and n in NG_TOOLS: out.append(n)
+        elif country in ['BH','SA','AE','QA','KW','OM'] and n in GULF_TOOLS: out.append(n)
+        elif country=='UK' and n in UK_TOOLS: out.append(n)
+        elif country=='US' and n in US_TOOLS: out.append(n)
+    return sorted(out)
 
 @app.route('/')
 def index():
-    country = get_user_country()
-    return render_template('index.html', tools=filter_tools(country), user_country=country)
-@app.route('/<tool_name>')
-def tool_page(tool_name):
-    try:
-        return render_template(f'{tool_name}.html', user_country=get_user_country())
-    except:
-        abort(404)
-
-@app.route('/api/remove-bg', methods=['POST'])
-def remove_bg_api():
-    try:
-        from rembg import remove
-        file = request.files.get('image')
-        if not file: return jsonify({"error":"No image"}), 400
-        img = Image.open(file.stream).convert("RGBA")
-        buf = io.BytesIO()
-        remove(img).save(buf, format='PNG')
-        buf.seek(0)
-        return send_file(buf, mimetype='image/png')
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    c=get_country()
+    tools=[{"name":n,"url":f"/{n}"} for n in get_filtered(c)]
+    return render_template('index.html', tools=tools, user_country=c)
 
 @app.route('/admin-tools')
 def admin_tools():
-    if request.args.get('key')!= ADMIN_KEY:
-        abort(403)
-    # ADMIN SEES ALL - No filter
-    return render_template('index.html', tools=load_tools(), user_country="ADMIN")
+    if request.args.get('key')!=ADMIN_KEY: abort(403)
+    base = os.path.join(app.root_path,'templates')
+    all_files = [f.replace('.html','') for f in os.listdir(base) if f.endswith('.html') and f.lower() not in ['base.html','index.html']]
+    data = {
+        "NG": [f for f in all_files if f in NG_TOOLS],
+        "GULF": [f for f in all_files if f in GULF_TOOLS],
+        "UK": [f for f in all_files if f in UK_TOOLS],
+        "US": [f for f in all_files if f in US_TOOLS],
+        "GLOBAL": [f for f in all_files if f in GLOBAL_TOOLS],
+        "UNMAPPED": [f for f in all_files if f not in NG_TOOLS+GULF_TOOLS+UK_TOOLS+US_TOOLS+GLOBAL_TOOLS]
+    }
+    tools=[{"name":n,"url":f"/{n}"} for n in sorted(all_files)]
+    return render_template('index.html', tools=tools, user_country=f"ADMIN - {len(all_files)} TOTAL", admin_data=data)
 
-@app.route('/test-ip')
-def test_ip():
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    country = get_user_country()
-    return jsonify({"ip": ip, "country": country, "filtered_count": len(filter_tools(country))})
+@app.route('/<tool_name>')
+def tool_page(tool_name):
+    try: return render_template(f'{tool_name}.html')
+    except: abort(404)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/debug')
+def debug():
+    if request.args.get('key')!=ADMIN_KEY: abort(403)
+    return jsonify({"country":get_country(),"ng":len(NG_TOOLS),"gulf":len(GULF_TOOLS),"ip_header":request.headers.get('CF-IPCountry')})
+
+if __name__=='__main__': app.run()

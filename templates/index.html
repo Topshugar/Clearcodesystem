@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ClearCodeSystem</title>
 <style>
-body{background:#0a0a0a;color:#fff;font-family:Arial;padding:20px;margin:0}
-a{color:#00ff88;text-decoration:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
-.card{background:#1a1a1a;padding:14px;border-radius:10px;border:1px solid #333}
-.top{color:#00ff88;font-weight:bold}
+body{background:#0a0a0a;color:#fff;font-family:system-ui,Arial;margin:0;padding:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.card{background:#151515;border:1px solid #2a2a2a;padding:14px;border-radius:12px;font-size:14px}
+a{color:#fff;text-decoration:none}
+.h{font-weight:700;letter-spacing:.2px}
+.s{color:#777;font-size:12px;margin-top:4px}
 </style>
 </head>
 <body>
-<div class="top">ClearCodeSystem - {{ user_country }} - {{ tools|length }} tools</div>
+<div class="h">ClearCodeSystem</div>
+<div class="s">{{ user_country }} • {{ tools|length }} tools</div>
 <div class="grid">
 {% for t in tools %}
 <a href="{{ t.url }}"><div class="card">{{ t.name }}</div></a>
 {% endfor %}
 </div>
-{% if tools|length == 0 %}
-<p style="margin-top:40px;color:#888">No tools found for {{ user_country }}. Check app.py lists.</p>
-{% endif %}
 </body>
 </html>

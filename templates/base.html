@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ seo_title if seo_title else 'ClearCode System - Free Online Tools for Nigeria, Gulf, UK, USA' }}</title>
 <meta name="description" content="{{ seo_desc if seo_desc else 'ClearCode System offers 100+ free online tools - NIN validator, salary calculator, gold price, rent splitter, invoice and more. Fast, secure, no signup.' }}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://clearcode.system{{ request.path }}">
 <meta property="og:title" content="{{ seo_title if seo_title else 'ClearCode System' }}">
 <meta property="og:description" content="{{ seo_desc if seo_desc else '100+ free tools' }}">
-<meta property="og:type" content="website">
 <style>
-body{font-family:Arial,sans-serif;background:#f5f5f7;margin:0;padding:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.card{background:white;padding:16px;border-radius:12px;text-align:center;text-decoration:none;color:black;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.card:hover{transform:translateY(-2px)}
+body{background:#0a0a0a;color:#fff;font-family:system-ui,Arial;margin:0;padding:18px}
+.h{font-weight:800;font-size:20px;letter-spacing:.3px}
+.s{color:#777;font-size:12px;margin-top:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.card{background:linear-gradient(180deg,#171717,#131313);border:1px solid #2a2a2a;padding:14px;border-radius:14px;font-size:14px;display:flex;align-items:center;gap:10px;transition:all .2s ease;animation:fadeIn .4s ease both}
+.card:hover{transform:translateY(-3px) scale(1.02);border-color:#3a3a3a;background:#1b1b1b;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.icon{font-size:18px;flex-shrink:0}
+.name{font-weight:500;letter-spacing:.2px}
+a{color:#fff;text-decoration:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
 {% block head %}{% endblock %}
 </head>
 <body>
 {% block content %}{% endblock %}
 </body>
-  </html> 
+</html>

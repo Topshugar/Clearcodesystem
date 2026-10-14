@@ -1,24 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="text-center mb-4">
-<h2>🔧 Clearcode AI Tools for {{ country_name }}</h2>
-<p class="text-muted">{{ tools|length }} Tools Available - No Watermark - 4K HD</p>
-</div>
-
-<div class="row g-3">
+<div class="grid">
 {% for tool in tools %}
-<div class="col-6 col-md-3">
-<div class="card tool-card h-100 text-center p-3">
-<div style="font-size:30px">{{ tool.icon }}</div>
-<h6 class="mt-2">{{ tool.name }} {% if tool.is_new %}<span class="badge bg-danger">NEW</span>{% endif %}</h6>
-<p class="small text-muted">{{ tool.desc }}</p>
-<a href="{{ tool.url }}" class="btn btn-primary btn-sm w-100">Open</a>
+<a href="{{ tool.url }}">
+<div class="card">
+<div class="icon">🔧</div>
+<div class="title">{{ tool.name }}</div>
+<div class="live">● LIVE • {{ tool.country if tool.country != 'ALL' else user_country }}</div>
 </div>
-</div>
+</a>
 {% endfor %}
 </div>
-
-{% if tools|length == 0 %}
-<div class="alert alert-warning text-center">No tools for {{ user_country }}. <a href="/?test=NG&key=CLEARCODE2026">Test NG</a></div>
-{% endif %}
 {% endblock %}

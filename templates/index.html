@@ -1,43 +1,20 @@
 {% extends "base.html" %}
+{% block title %}Free Tools for {{country_name}} 2026{% endblock %}
 {% block content %}
 <div class="container">
-<div style="background:#111;border:1px solid #00FF88;border-radius:20px;padding:16px">
-<h2 style="color:#00CCFF;font-size:20px">💳 Bank Card Info - {{country}}</h2>
-<p style="color:#888;font-size:12px;margin:6px 0 12px">Educational only. Check YOUR own card.</p>
+<h1 style="text-align:center;font-size:26px;font-weight:900;margin:18px 0 6px">Free Tools for <span style="color:#00FF88">{{country_name}} 2026</span></h1>
+<p style="text-align:center;color:#888;font-size:12px;margin-bottom:14px">{{ tools|length }} LIVE • Auto: {{raw_country}}</p>
 
-<input id="bin" value="506099" style="width:100%;background:#000;color:#fff;border:1px solid #333;border-radius:12px;padding:14px;font-size:20px;letter-spacing:4px;text-align:center;font-weight:700">
-
-<button onclick="check()" style="width:100%;background:#00CCFF;color:#000;border:none;border-radius:12px;padding:14px;font-weight:900;margin-top:10px">CHECK NOW → {{country}}</button>
-
-<div id="result" style="margin-top:12px;background:#000;border-radius:12px;padding:12px;font-size:13px;min-height:40px"></div>
-
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-<button onclick="setBin('406068')" style="background:#00FF88;color:#000;border:none;padding:8px 12px;border-radius:20px;font-size:12px;font-weight:700">GTB 406068</button>
-<button onclick="setBin('506099')" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px">Verve 506099</button>
-<button onclick="setBin('506116')" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px">Kuda 506116</button>
-<button onclick="setBin('506146')" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px">OPay 506146</button>
-</div>
-<p style="color:#444;font-size:10px;margin-top:12px">Detected: {{raw_country}} → {{country}} • BIN DB offline • No live check • Educational</p>
-</div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+{% for tool in tools %}
+<a href="/tool/{{ tool }}" style="background:#151515;border:1px solid #222;border-radius:16px;padding:14px;min-height:110px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="width:40px;height:40px;background:#1f1f1f;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">🔧</div>
+<div style="font-size:13px;font-weight:700;margin-top:10px;text-transform:capitalize;line-height:1.25;white-space:normal;word-wrap:break-word">{{ tool.replace('_',' ') }}</div>
+<div style="font-size:10px;color:#00FF88;margin-top:8px;font-weight:700">● LIVE • {{country}}</div>
+</a>
+{% endfor %}
 </div>
 
-<script>
-const BIN_DB = {
-'406068': 'GTBank Verve - Nigeria - Debit',
-'506099': 'Verve - Nigeria - Debit - Verve',
-'506116': 'Kuda MFB - Nigeria - Debit',
-'506146': 'OPay - Nigeria - Prepaid',
-'506105': 'First Bank Verve - Nigeria',
-'506102': 'GTBank Verve - Nigeria'
-};
-function setBin(v){ document.getElementById('bin').value=v; check(); }
-function check(){
-  const v = document.getElementById('bin').value.trim().substring(0,6);
-  const res = document.getElementById('result');
-  if(!v || v.length<6){ res.innerHTML='<span style="color:#f55">Enter 6 digits</span>'; return; }
-  const info = BIN_DB[v] || 'BIN not in local DB - Educational demo only';
-  res.innerHTML = '<span style="color:#00FF88">BIN '+v+'</span><br>'+info+'<br><small style="color:#666">Source: Public BIN list</small>';
-}
-check();
-</script>
+<div style="text-align:center;margin-top:30px;color:#333;font-size:10px">© 2026 ClearCodeSystem • {{country}}</div>
+</div>
 {% endblock %}

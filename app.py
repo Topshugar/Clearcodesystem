@@ -19,7 +19,7 @@ def get_all_tools():
     return sorted(tools)
 
 ALL_TOOLS = get_all_tools()
-print(f"DETECTED TOOLS: {ALL_TOOLS}")
+print(f"DETECTED: {ALL_TOOLS}")
 def get_ip_country():
     cf = request.headers.get('CF-IPCountry','').upper()
     if cf and cf!='XX' and cf in COUNTRY_NAMES:
@@ -31,14 +31,27 @@ def get_ip_country():
 
 def get_enabled_tools(country):
     country = country.upper()
+    # 1. Try STRICT whitelist first
+    try:
+        if os.path.exists('allowed_tools.json'):
+            with open('allowed_tools.json','r') as f:
+                data = json.load(f)
+                if country in data and data[country]:
+                    allowed = data[country]
+                    # only return tools that both exist AND are allowed
+                    return [t for t in ALL_TOOLS if t in allowed]
+    except Exception as e:
+        print(f"allowed_tools error: {e}")
+
+    # 2. Fallback to old disabled list
     try:
         if os.path.exists('disabled_tools.json'):
             with open('disabled_tools.json','r') as f:
                 data = json.load(f)
                 disabled = data.get(country, [])
                 return [t for t in ALL_TOOLS if t not in disabled]
-    except Exception as e:
-        print(f"Error reading disabled_tools: {e}")
+    except:
+        pass
     return ALL_TOOLS
 @app.route('/')
 def index():
@@ -58,26 +71,27 @@ def tool_page(tool_name):
     test_key = request.args.get('key','')
     if test_country in COUNTRY_NAMES and test_key == 'CLEARCODE2026':
         country = test_country
-    
+
+    # Security: Block if tool not allowed for this country
+    enabled = get_enabled_tools(country)
+    if tool_name not in enabled:
+        return f"Tool {tool_name} not available in {country}. Available: {enabled}", 403
+
     template_file = f'{tool_name}.html'
-    template_path = os.path.join('templates', template_file)
-    if not os.path.exists(template_path):
-        return f"Template {template_file} not found. Available: {ALL_TOOLS}", 404
-    
-    try:
-        return render_template(template_file, country=country, raw_country=country, country_name=COUNTRY_NAMES.get(country, country))
-    except Exception as e:
-        return f"Error loading {template_file}: {str(e)}", 500
+    if not os.path.exists(os.path.join('templates', template_file)):
+        return f"Template {template_file} not found", 404
+
+    return render_template(template_file, country=country, raw_country=country, country_name=COUNTRY_NAMES.get(country, country))
 @app.route('/admin/tools')
 def admin_tools():
     key = request.args.get('key','')
-    if key != 'CLEARCODE2026':
-        return "Unauthorized - use ?key=CLEARCODE2026", 403
+    if key!= 'CLEARCODE2026':
+        return "Unauthorized - use?key=CLEARCODE2026", 403
     country = request.args.get('country','NG').upper()
     if country not in COUNTRY_NAMES:
         country = 'NG'
     tools = get_enabled_tools(country)
-    return render_template('admin_tools.html', tools=tools, country=country, all_tools=ALL_TOOLS, country_name=COUNTRY_NAMES.get(country))
+    return render_template('admin_tools.html', tools=tools, country=country, all_tools=ALL_TOOLS, country_name=COUNTRY_NAMES.get(country, country))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

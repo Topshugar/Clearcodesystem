@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, session, redirect, url_for
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "clearcode-admin-2026-change-me")
 ADMIN_KEY = os.environ.get("ADMIN_KEY", "CLEARCODE2026")
 
 def n(s):
@@ -89,10 +90,31 @@ def index():
     tools = [{"name": pretty(t), "url": f"/{t}", "icon": icon_for(t)} for t in sorted(filtered)]
     return render_template('index.html', tools=tools, user_country=country)
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        if request.form.get('key') == ADMIN_KEY:
+            session['is_admin'] = True
+            return redirect(url_for('admin_tools'))
+        return "<h3>Wrong Admin Key</h3><a href='/admin/login'>Try again</a>", 403
+    return '''
+    <div style="max-width:400px;margin:100px auto;font-family:sans-serif;padding:20px;border:1px solid #ccc;border-radius:10px;">
+    <h2>ClearCode Admin</h2>
+    <form method="POST">
+    <input type="password" name="key" placeholder="Enter Admin Key" style="width:100%;padding:12px;box-sizing:border-box;" required>
+    <button type="submit" style="width:100%;padding:12px;margin-top:10px;background:black;color:white;border:0;border-radius:5px;">Login</button>
+    </form></div>
+    '''
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('is_admin', None)
+    return redirect(url_for('admin_login'))
+
 @app.route('/admin-tools')
 def admin_tools():
-    if request.args.get('key') != ADMIN_KEY:
-        abort(403)
+    if not session.get('is_admin'):
+        abort(404)
     folder = os.path.join(app.root_path, 'templates')
     files = [f for f in os.listdir(folder) if f.endswith('.html') and f.lower() != 'base.html']
     tools = [{"name": pretty(f[:-5]), "url": f"/{f[:-5]}", "icon": icon_for(f[:-5])} for f in sorted(files)]

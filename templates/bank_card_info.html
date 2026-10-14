@@ -1,86 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="max-width:600px;margin:15px auto;padding:16px;background:#111;border:1px solid #00D4FF;border-radius:16px;color:#fff;font-family:system-ui">
-<h2 style="color:#00D4FF;margin:0">💳 Bank Card Info - {{country}} {{country_name}}</h2>
-<p style="color:#888;font-size:12px;margin:8px 0">Educational only. Check YOUR own card. Works in Nigeria & Gulf.</p>
+<div class="container">
+<div style="background:#111;border:1px solid #00FF88;border-radius:20px;padding:16px">
+<h2 style="color:#00CCFF;font-size:20px">💳 Bank Card Info - {{country}}</h2>
+<p style="color:#888;font-size:12px;margin:6px 0 12px">Educational only. Check YOUR own card.</p>
 
-<input id="bin" type="tel" maxlength="8" placeholder="Enter 6 digits" style="width:100%;padding:14px;border-radius:10px;background:#1a1a1a;color:#fff;border:1px solid #333;font-size:20px;text-align:center;letter-spacing:3px;font-weight:bold">
+<input id="bin" value="506099" style="width:100%;background:#000;color:#fff;border:1px solid #333;border-radius:12px;padding:14px;font-size:20px;letter-spacing:4px;text-align:center;font-weight:700">
 
-<button onclick="checkBIN()" id="btn" style="width:100%;margin-top:12px;padding:14px;background:#00D4FF;color:#000;border:0;border-radius:10px;font-weight:900;font-size:16px">CHECK NOW → {{country}}</button>
+<button onclick="check()" style="width:100%;background:#00CCFF;color:#000;border:none;border-radius:12px;padding:14px;font-weight:900;margin-top:10px">CHECK NOW → {{country}}</button>
 
-<div id="result" style="margin-top:16px;padding:14px;background:#151515;border-radius:10px;display:none;font-size:13px;line-height:1.8"></div>
+<div id="result" style="margin-top:12px;background:#000;border-radius:12px;padding:12px;font-size:13px;min-height:40px"></div>
 
-<div style="margin-top:14px">
-<p style="color:#555;font-size:11px;margin-bottom:6px">Try examples for {{country_name}}:</p>
-<div style="display:flex;gap:6px;flex-wrap:wrap">
-
-{% if country == 'NG' %}
-<button onclick="setBIN('406068')" style="padding:7px 12px;border-radius:20px;background:#008751;color:#fff;border:0;font-size:12px;font-weight:bold">🇳🇬 GTB 406068</button>
-<button onclick="setBIN('506099')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">Verve 506099</button>
-<button onclick="setBIN('506116')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">Kuda 506116</button>
-<button onclick="setBIN('506146')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">OPay 506146</button>
-
-{% elif country == 'BH' %}
-<button onclick="setBIN('555931')" style="padding:7px 12px;border-radius:20px;background:#CE1126;color:#fff;border:0;font-size:12px;font-weight:bold">🇧🇭 Al Baraka 555931</button>
-<button onclick="setBIN('406068')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">BBK 406068</button>
-<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">NBB 417500</button>
-
-{% elif country == 'QA' %}
-<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#8D1B3D;color:#fff;border:0;font-size:12px;font-weight:bold">🇶🇦 QNB 417500</button>
-<button onclick="setBIN('555931')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">QIB 555931</button>
-<button onclick="setBIN('422207')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">Doha Bank 422207</button>
-
-{% elif country == 'SA' %}
-<button onclick="setBIN('431380')" style="padding:7px 12px;border-radius:20px;background:#006C35;color:#fff;border:0;font-size:12px;font-weight:bold">🇸🇦 Rajhi 431380</button>
-<button onclick="setBIN('422207')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">NCB 422207</button>
-
-{% elif country == 'AE' %}
-<button onclick="setBIN('422207')" style="padding:7px 12px;border-radius:20px;background:#00732F;color:#fff;border:0;font-size:12px;font-weight:bold">🇦🇪 ADCB 422207</button>
-<button onclick="setBIN('529977')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">FAB 529977</button>
-
-{% elif country == 'KW' %}
-<button onclick="setBIN('529977')" style="padding:7px 12px;border-radius:20px;background:#007A3D;color:#fff;border:0;font-size:12px;font-weight:bold">🇰🇼 NBK 529977</button>
-<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">KFH 417500</button>
-
-{% else %}
-<button onclick="setBIN('406068')" style="padding:7px 12px;border-radius:20px;background:#00D4FF;color:#000;border:0;font-size:12px;font-weight:bold">GTB 406068</button>
-<button onclick="setBIN('555931')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">MC 555931</button>
-<button onclick="setBIN('417500')" style="padding:7px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333;font-size:12px">VISA 417500</button>
-{% endif %}
-
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+<button onclick="setBin('406068')" style="background:#00FF88;color:#000;border:none;padding:8px 12px;border-radius:20px;font-size:12px;font-weight:700">GTB 406068</button>
+<button onclick="setBin('506099')" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px">Verve 506099</button>
+<button onclick="setBin('506116')" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px">Kuda 506116</button>
+<button onclick="setBin('506146')" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px">OPay 506146</button>
 </div>
+<p style="color:#444;font-size:10px;margin-top:12px">Detected: {{raw_country}} → {{country}} • BIN DB offline • No live check • Educational</p>
 </div>
-
-<p style="margin-top:14px;color:#333;font-size:10px;text-align:center">Detected: {{raw_country}} → {{country}} • Public BIN DB only • No live check • Educational</p>
 </div>
 
 <script>
-function setBIN(v){document.getElementById('bin').value=v; checkBIN();}
-async function checkBIN(){
- const binInput = document.getElementById('bin').value.replace(/\D/g,'').slice(0,8);
- const result = document.getElementById('result');
- const btn = document.getElementById('btn');
- if(binInput.length < 6){ alert('Enter 6 digits'); return; }
- result.style.display='block';
- result.innerHTML='⏳ Checking {{country}} BIN...';
- btn.disabled=true; btn.innerText='Checking...';
- try{
-   const res = await fetch('/api/bin-check', {method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({bin: binInput})});
-   const data = await res.json();
-   result.innerHTML = `
-      <div style="display:flex;justify-content:space-between"><span style="color:#888">BIN</span><b>${data.bin} <span style="font-size:10px;color:#444">${data.source}</span></b></div>
-      <div style="display:flex;justify-content:space-between"><span style="color:#888">Brand</span><b style="color:#00D4FF">${data.scheme}</b></div>
-      <div style="display:flex;justify-content:space-between"><span style="color:#888">Type</span><b>${data.type} • ${data.category}</b></div>
-      <div style="display:flex;justify-content:space-between"><span style="color:#888">Bank</span><b style="color:#00FF88">${data.bank}</b></div>
-      <div style="display:flex;justify-content:space-between"><span style="color:#888">Country</span><b>${data.country}</b></div>
-      <hr style="border-color:#222;margin:10px 0">
-      <div style="color:#555;font-size:11px">✓ {{country_name}} tool • Educational only</div>
-   `;
- } catch(e){
-   result.innerHTML = `<span style="color:#ff4444">Error: ${e.message}. Try 406068</span>`;
- } finally {
-   btn.disabled=false; btn.innerText='CHECK NOW → {{country}}';
- }
+const BIN_DB = {
+'406068': 'GTBank Verve - Nigeria - Debit',
+'506099': 'Verve - Nigeria - Debit - Verve',
+'506116': 'Kuda MFB - Nigeria - Debit',
+'506146': 'OPay - Nigeria - Prepaid',
+'506105': 'First Bank Verve - Nigeria',
+'506102': 'GTBank Verve - Nigeria'
+};
+function setBin(v){ document.getElementById('bin').value=v; check(); }
+function check(){
+  const v = document.getElementById('bin').value.trim().substring(0,6);
+  const res = document.getElementById('result');
+  if(!v || v.length<6){ res.innerHTML='<span style="color:#f55">Enter 6 digits</span>'; return; }
+  const info = BIN_DB[v] || 'BIN not in local DB - Educational demo only';
+  res.innerHTML = '<span style="color:#00FF88">BIN '+v+'</span><br>'+info+'<br><small style="color:#666">Source: Public BIN list</small>';
 }
+check();
 </script>
 {% endblock %}

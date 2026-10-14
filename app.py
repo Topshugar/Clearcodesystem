@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, abort
 
 app = Flask(__name__)
-ADMIN_KEY = "CLEARCODE2026"
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "CLEARCODE2026")
 
 def n(s):
     return s.lower().replace('.html','').strip()
@@ -13,8 +13,8 @@ def pretty(s):
 def icon_for(t):
     t = t.lower()
     if "bank" in t or "card" in t: return "💳"
-    if "bg_remover" in t: return "🖼️"
-    if "builder" in t: return "🛠️"
+    if "bg_remover" in t: return "🖼"
+    if "builder" in t: return "🛠"
     if "cac" in t: return "🏢"
     if "logo" in t: return "🎨"
     if "debt" in t or "ledger" in t: return "📒"
@@ -33,7 +33,7 @@ def icon_for(t):
     if "nin" in t: return "🪪"
     if "paycheck" in t or "salary" in t or "paye" in t: return "💰"
     if "pos" in t: return "💵"
-    if "price" in t or "profit" in t: return "🏷️"
+    if "price" in t or "profit" in t: return "🏷"
     if "ruler" in t: return "📏"
     if "sleep" in t: return "😴"
     if "tip" in t: return "💸"
@@ -104,10 +104,14 @@ def health():
 
 @app.route('/<tool_name>')
 def page(tool_name):
+    folder = os.path.join(app.root_path, 'templates')
     try:
-        return render_template(f'{tool_name}.html')
+        allowed = [f[:-5] for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
     except:
+        allowed = []
+    if tool_name not in allowed:
         abort(404)
+    return render_template(f'{tool_name}.html')
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))

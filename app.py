@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, abort, session, redirect, url_for
+from flask import Flask, render_template, request, abort, session, redirect, url_for, Response
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -57,15 +57,15 @@ us = ["usa_background_check","usa_notify"]
 global_tools = ["bg_remover","data_to_earn"]
 
 def get_country():
-    c = request.headers.get('CF-IPCountry')
-    if c: return c.upper()
-    c = request.headers.get('X-Country-Code')
-    if c: return c.upper()
+    cf = request.headers.get('CF-IPCountry')
+    if cf and len(cf) == 2:
+        return cf.upper()
+    cc = request.headers.get('X-Country-Code')
+    if cc and len(cc) == 2 and request.headers.get('CF-Ray'):
+        return cc.upper()
     return 'NG'
 
-@app.route('/')
-def index():
-    country = get_country()
+def get_tools_for_country(country):
     folder = os.path.join(app.root_path, 'templates')
     try:
         files = [f for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
@@ -85,9 +85,38 @@ def index():
             filtered.append(orig)
         elif country == 'US' and low in us:
             filtered.append(orig)
-        elif country == 'NG':
-            filtered.append(orig)
-    tools = [{"name": pretty(t), "url": f"/{t}", "icon": icon_for(t)} for t in sorted(filtered)]
+    return filtered
+
+@app.route('/robots.txt')
+def robots():
+    txt = """User-agent: *
+Allow: /
+Sitemap: https://clearcode.system/sitemap.xml
+"""
+    return Response(txt, mimetype='text/plain')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    domain = "https://clearcode.system"
+    folder = os.path.join(app.root_path, 'templates')
+    try:
+        files = [f for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
+    except:
+        files = []
+    urls = [f"{domain}/"]
+    for f in files:
+        urls.append(f"{domain}/{f[:-5]}")
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for u in urls:
+        xml += f"  <url><loc>{u}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n"
+    xml += "</urlset>"
+    return Response(xml, mimetype='application/xml')
+
+@app.route('/')
+def index():
+    country = get_country()
+    tools_list = get_tools_for_country(country)
+    tools = [{"name": pretty(t), "url": f"/{t}", "icon": icon_for(t), "desc": f"{pretty(t)} - Free online {pretty(t)} tool"} for t in sorted(tools_list)]
     return render_template('index.html', tools=tools, user_country=country)
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -126,14 +155,21 @@ def health():
 
 @app.route('/<tool_name>')
 def page(tool_name):
+    country = get_country()
     folder = os.path.join(app.root_path, 'templates')
     try:
-        allowed = [f[:-5] for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
+        allowed_all = [f[:-5] for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
     except:
-        allowed = []
-    if tool_name not in allowed:
+        allowed_all = []
+    if tool_name not in allowed_all:
         abort(404)
-    return render_template(f'{tool_name}.html')
+    allowed_for_ip = get_tools_for_country(country)
+    if tool_name not in allowed_for_ip and tool_name not in global_tools:
+        if not session.get('is_admin'):
+            abort(404)
+    seo_title = f"{pretty(tool_name)} - Free Online Tool | ClearCode System"
+    seo_desc = f"Use {pretty(tool_name)} free online. Fast, secure, no signup needed at ClearCode System."
+    return render_template(f'{tool_name}.html', seo_title=seo_title, seo_desc=seo_desc)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))

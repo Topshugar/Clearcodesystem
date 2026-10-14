@@ -1,8 +1,5 @@
-Flask
-qrcode
-Pillow
-requests
-paramiko
-gunicorn
-rembg
-onnxruntime
+Flask==2.3.3
+gunicorn==21.2.0
+qrcode[pil]==7.4.2
+Pillow==10.0.1
+requests==2.31.0

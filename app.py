@@ -1,12 +1,11 @@
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify
 import json, os
-from datetime import datetime
 
 app = Flask(__name__)
 
 COUNTRY_NAMES = {
 'NG':'Nigeria','BH':'Bahrain','QA':'Qatar','SA':'Saudi Arabia',
-'AE':'UAE','KW':'Kuwait','OM':'Oman','US':'USA','UK':'UK'
+'AE':'UAE','KW':'Kuwait','OM':'Oman'
 }
 
 ALL_TOOLS = [
@@ -17,71 +16,67 @@ ALL_TOOLS = [
 'hashtag_gen','currency_converter','fuel_calc','rent_calc','salary_calc',
 'age_in_days','days_until'
 ]
-def get_user_country():
-    param = request.args.get('country','').upper()
-    if param in COUNTRY_NAMES:
-        return param, param
+def get_ip_country():
+    # 1. Cloudflare real country (Render fix)
     cf = request.headers.get('CF-IPCountry','').upper()
-    if cf and cf!= 'XX' and cf in COUNTRY_NAMES:
-        return cf, cf
-    fwd = request.headers.get('X-Forwarded-For','').split(',')[0].strip()
-    ip = fwd or request.remote_addr or 'NG'
-    raw = 'NG'
-    if raw == 'US':
+    if cf and cf!='XX' and cf in COUNTRY_NAMES:
+        return cf
+    
+    # 2. X-Forwarded-For fallback
+    raw = request.headers.get('X-Country-Code','NG').upper()
+    if raw not in COUNTRY_NAMES:
         raw = 'NG'
-    return raw, param if param else raw
+    return raw
 
 def get_enabled_tools(country):
     country = country.upper()
     try:
         if os.path.exists('disabled_tools.json'):
             with open('disabled_tools.json','r') as f:
-                disabled = json.load(f)
-                if country in disabled:
-                    return [t for t in ALL_TOOLS if t not in disabled[country]]
+                data = json.load(f)
+                disabled = data.get(country, [])
+                return [t for t in ALL_TOOLS if t not in disabled]
     except:
         pass
     return ALL_TOOLS
 @app.route('/')
 def index():
-    raw_country, country = get_user_country()
-    # If?country= param exists, use it
-    q = request.args.get('country','').upper()
-    if q in COUNTRY_NAMES:
-        country = q
-        raw_country = q
-    else:
-        if raw_country not in COUNTRY_NAMES:
-            raw_country = 'NG'
-        country = raw_country
-
+    country = get_ip_country()
     tools = get_enabled_tools(country)
+    
     return render_template('index.html',
         country=country,
-        raw_country=raw_country,
-        country_name=COUNTRY_NAMES.get(country,country),
+        raw_country=country,
+        country_name=COUNTRY_NAMES.get(country, country),
         tools=tools)
 @app.route('/tool/<tool_name>')
 def tool_page(tool_name):
-    raw_country, country = get_user_country()
-    q = request.args.get('country','').upper()
-    if q in COUNTRY_NAMES:
-        country = q
+    country = get_ip_country()
+    
+    # Allow admin test ?test=BH only if key present
+    test_country = request.args.get('test','').upper()
+    test_key = request.args.get('key','')
+    if test_country in COUNTRY_NAMES and test_key == 'CLEARCODE2026':
+        country = test_country
+    
     if tool_name not in ALL_TOOLS:
         return "Tool not found", 404
+        
     try:
-        return render_template(f'{tool_name}.html', country=country, raw_country=raw_country)
+        return render_template(f'{tool_name}.html', country=country, raw_country=country)
     except:
-        return render_template('bank_card_info.html', country=country, raw_country=raw_country)
+        return render_template('bank_card_info.html', country=country, raw_country=country)
 
 @app.route('/admin/tools')
 def admin_tools():
     key = request.args.get('key','')
-    if key!= 'CLEARCODE2026':
-        return "Unauthorized", 403
+    if key != 'CLEARCODE2026':
+        return "Unauthorized - use ?key=CLEARCODE2026", 403
     country = request.args.get('country','NG').upper()
-    tools = ALL_TOOLS
-    return render_template('admin_tools.html', tools=tools, country=country)
+    if country not in COUNTRY_NAMES:
+        country = 'NG'
+    tools = get_enabled_tools(country)
+    return render_template('admin_tools.html', tools=tools, country=country, all_tools=ALL_TOOLS)
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)

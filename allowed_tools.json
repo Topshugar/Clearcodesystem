@@ -1,9 +1,96 @@
 {
-"NG": ["bank_card_info","delivery_fee","fuel_calculator","pos_charges","data_bundle"],
-"BH": ["bahrain_cpr_check","bahrain_gold_price","bahrain_gratuity","bahrain_overtime","bahrain_rent","bahrain_traffic_fines","arabic_stylish_name"],
-"AE": ["emirates_id_check"],
-"QA": [],
-"SA": [],
-"KW": [],
-"OM": []
+  "NG": [
+    "bank_card_info",
+    "bg_remover",
+    "builder",
+    "cac_checker",
+    "clan_logo",
+    "clear_shell",
+    "debt_book",
+    "delivery_fee",
+    "fake_excuse_generator",
+    "fake_text",
+    "fake_whatsapp_chat",
+    "fuel_calculator",
+    "gamer_tag",
+    "gpa_calculator",
+    "invoice",
+    "jamb_calculator",
+    "lagos_rent_package",
+    "land_converter",
+    "market_ledger",
+    "marketwatch_demo",
+    "nepa_calculator",
+    "nin_validator",
+    "paycheck",
+    "paye_calculator",
+    "pos_charges",
+    "pos_receipt",
+    "price_tag",
+    "profit_calculator",
+    "rent_splitter",
+    "ruler_terminal",
+    "salary_flex",
+    "sensitivity",
+    "sleep_calculator",
+    "tip_calculator",
+    "tournament",
+    "wa_qr",
+    "waec_calculator",
+    "whatsapp_broadcast",
+    "gamer_tag",
+    "ivl_builder",
+    "ivr_software"
+  ],
+  "BH": [
+    "bahrain_cpr_check",
+    "bahrain_gold_price",
+    "bahrain_gratuity",
+    "bahrain_overtime",
+    "bahrain_rent",
+    "bahrain_traffic_fines",
+    "arabic_stylish_name"
+  ],
+  "AE": [
+    "emirates_id_check",
+    "uae_gold_price",
+    "uae_gratuity",
+    "uae_overtime",
+    "uae_rent_splitter",
+    "uae_salary",
+    "uae_traffic_fines"
+  ],
+  "SA": [
+    "gosi_calculator",
+    "iqama_expiry",
+    "salary_sa",
+    "zatca_qr",
+    "hijri_converter"
+  ],
+  "QA": [
+    "qatar_gold_price",
+    "qatar_overtime",
+    "qatar_rent_splitter"
+  ],
+  "KW": [
+    "kuwait_traffic_fines"
+  ],
+  "OM": [
+    "oman_civil_check",
+    "oman_gold_price",
+    "oman_gratuity",
+    "oman_overtime",
+    "oman_rent",
+    "oman_traffic_fines"
+  ],
+  "US": [
+    "usa_background_check",
+    "usa_notify"
+  ],
+  "UK": [
+    "uk_paycheck",
+    "uk_rent_splitter",
+    "uk_tip_calculator",
+    "uk_vat_calculator"
+  ]
 }

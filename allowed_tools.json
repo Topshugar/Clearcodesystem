@@ -1,0 +1,9 @@
+{
+"NG": ["bank_card_info","delivery_fee","fuel_calculator","pos_charges","data_bundle"],
+"BH": ["bahrain_cpr_check","bahrain_gold_price","bahrain_gratuity","bahrain_overtime","bahrain_rent","bahrain_traffic_fines","arabic_stylish_name"],
+"AE": ["emirates_id_check"],
+"QA": [],
+"SA": [],
+"KW": [],
+"OM": []
+}

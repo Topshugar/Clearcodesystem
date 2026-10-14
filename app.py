@@ -53,22 +53,23 @@ ng = ["builder","cac_checker","clan_logo","clear_shell","debt_book","delivery_fe
 gulf = ["arabic_stylish_name","bahrain_cpr_check","bahrain_gold_price","bahrain_gratuity","bahrain_overtime","bahrain_rent","bahrain_traffic_fines","emirates_id_check","gosi_calculator","hijri_converter","iqama_expiry","kuwait_traffic_fines","oman_civil_check","oman_gold_price","oman_gratuity","oman_overtime","oman_rent","oman_traffic_fines","qatar_gold_price","qatar_overtime","qatar_rent_splitter","salary_sa","uae_gold_price","uae_gratuity","uae_overtime","uae_rent_splitter","uae_salary","uae_traffic_fines","zatca_qr"]
 uk = ["uk_paycheck","uk_rent_splitter","uk_tip_calculator","uk_vat_calculator"]
 us = ["usa_background_check","usa_notify"]
-global_tools = ["bg_remover"]
+global_tools = ["bg_remover","data_to_earn"]
 
 def get_country():
     c = request.headers.get('CF-IPCountry')
-    if c:
-        return c.upper()
+    if c: return c.upper()
     c = request.headers.get('X-Country-Code')
-    if c:
-        return c.upper()
+    if c: return c.upper()
     return 'NG'
 
 @app.route('/')
 def index():
     country = get_country()
     folder = os.path.join(app.root_path, 'templates')
-    files = [f for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
+    try:
+        files = [f for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
+    except:
+        files = []
     filtered = []
     for f in files:
         orig = f[:-5]
@@ -82,6 +83,8 @@ def index():
         elif country in ['GB','UK'] and low in uk:
             filtered.append(orig)
         elif country == 'US' and low in us:
+            filtered.append(orig)
+        elif country == 'NG':
             filtered.append(orig)
     tools = [{"name": pretty(t), "url": f"/{t}", "icon": icon_for(t)} for t in sorted(filtered)]
     return render_template('index.html', tools=tools, user_country=country)
@@ -107,4 +110,5 @@ def page(tool_name):
         abort(404)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)

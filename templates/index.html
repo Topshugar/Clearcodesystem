@@ -6,11 +6,15 @@
 <title>ClearCodeSystem</title>
 <style>
 body{background:#0a0a0a;color:#fff;font-family:system-ui,Arial;margin:0;padding:18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-.card{background:#151515;border:1px solid #2a2a2a;padding:14px;border-radius:12px;font-size:14px}
+.h{font-weight:800;font-size:20px;letter-spacing:.3px}
+.s{color:#777;font-size:12px;margin-top:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.card{background:linear-gradient(180deg,#171717,#131313);border:1px solid #2a2a2a;padding:14px;border-radius:14px;font-size:14px;display:flex;align-items:center;gap:10px;transition:all .2s ease;animation:fadeIn .4s ease both}
+.card:hover{transform:translateY(-3px) scale(1.02);border-color:#3a3a3a;background:#1b1b1b;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.icon{font-size:18px;flex-shrink:0}
+.name{font-weight:500;letter-spacing:.2px}
 a{color:#fff;text-decoration:none}
-.h{font-weight:700;letter-spacing:.2px}
-.s{color:#777;font-size:12px;margin-top:4px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -18,7 +22,7 @@ a{color:#fff;text-decoration:none}
 <div class="s">{{ user_country }} • {{ tools|length }} tools</div>
 <div class="grid">
 {% for t in tools %}
-<a href="{{ t.url }}"><div class="card">{{ t.name }}</div></a>
+<a href="{{ t.url }}"><div class="card" style="animation-delay: {{ loop.index0 * 0.02 }}s"><span class="icon">{{ t.icon }}</span><span class="name">{{ t.name }}</span></div></a>
 {% endfor %}
 </div>
 </body>

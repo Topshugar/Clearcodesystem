@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.rc-box{max-width:520px;margin:10px auto}
+.rc-form{background:#171717;border:1px solid #2a2a2a;border-radius:18px;padding:18px}
+.rc-form input{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#0f0f0f;color:#fff;font-size:16px;box-sizing:border-box}
+.rc-form button{width:100%;padding:14px;margin-top:12px;border-radius:12px;border:0;background:#fff;color:#000;font-weight:700;font-size:16px}
+.rc-card{background:#fff;color:#111;border-radius:16px;padding:20px;margin-top:16px}
+.rc-card.h{color:#111;font-size:18px;font-weight:800;text-align:center;margin-bottom:4px}
+.rc-card.s{color:#777;font-size:12px;text-align:center;margin-bottom:14px}
+.rc-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
+.rc-row b{color:#111}
+.rc-badge{display:inline-block;background:#111;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px}
+.rc-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+a.rc-btn{text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;display:block}
+.rc-print{background:#111;color:#fff}
+.rc-wa{background:#25D366;color:#fff}
+.rc-err{background:#2a1717;border:1px solid #5a2a2a;color:#ff8a8a;padding:12px;border-radius:12px;margin-top:14px;font-size:14px}
+</style>
+
+<div class="rc-box">
+<div class="h">Receipt Checker</div>
+<div class="s">NG • IP LOCKED • Verify Nigeria Customer Receipt</div>
+
+<div class="rc-form">
+<form method="POST" action="/receipt">
+<input name="code" placeholder="Enter Code e.g. NG-001" value="{{ code if code else '' }}" required>
+<button type="submit">Verify Receipt</button>
+</form>
+</div>
+
+{% if error %}
+<div class="rc-err">{{ error }}</div>
+{% endif %}
+
+{% if record %}
+<div class="rc-card">
+<div class="h">YOUR BUSINESS NAME</div>
+<div class="s">ClearCode Verified Receipt • Nigeria<br><span class="rc-badge" style="margin-top:8px;display:inline-block">{{ record[0] }}</span></div>
+<div class="rc-row"><span>Customer</span><b>{{ record[1] }}</b></div>
+<div class="rc-row"><span>Item / Service</span><b>{{ record[2] }}</b></div>
+<div class="rc-row"><span>Date</span><b>{{ record[3] }}</b></div>
+<div class="rc-row"><span>Status</span><b style="color:#0a8a00">VERIFIED • PAID</b></div>
+<div class="rc-btns">
+<a href="javascript:window.print()" class="rc-btn rc-print">Print</a>
+<a href="https://wa.me/?text=Check+your+receipt+{{ record[0] }}+verified+at+ClearCode+System+https://clearcodesystem.onrender.com/receipt/{{ record[0] }}" class="rc-btn rc-wa" target="_blank">Share WhatsApp</a>
+</div>
+</div>
+{% endif %}
+
+</div>
+{% endblock %}

@@ -1,26 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="h">ClearCode System - Tools for {{ country_name }}</div>
-<div class="s">{{ detected_country }} • {{ country_code }} • IP LOCKED • {{ total_tools }} TOOLS LIVE</div>
 
 <div class="grid">
 
 <a href="/receipt" class="card">
 <span>🧾</span>
-<span>Receipt Checker<br><small style="color:#666">{{ country_code }} • {{ detected_country }} • LIVE</small></span>
+<span>Receipt Checker</span>
 </a>
 
 {% for tool in tools %}
 {% if tool!= 'receipt_checker' %}
 <a href="/tools/{{ tool }}" class="card">
 <span>{{ emojis.get(tool, "⚡") }}</span>
-<span>{{ tool.replace("_", " ").title() }}<br><small style="color:#666">{{ country_code }} • {{ detected_country }} • LIVE</small></span>
+<span>{{ tool.replace("_", " ").title() }}</span>
 </a>
 {% endif %}
 {% endfor %}
 </div>
 
 <div style="margin-top:30px;padding-top:16px;border-top:1px solid #222;color:#555;font-size:11px;letter-spacing:0.06em">
-© 2026 CLEARCODE SYSTEM — PORTFOLIO GRADE • FLASK • RENDER • MONETAG • IP LOCKED • {{ detected_country }}
+© 2026 CLEARCODE SYSTEM — PORTFOLIO GRADE • FLASK • RENDER • MONETAG
 </div>
 {% endblock %}

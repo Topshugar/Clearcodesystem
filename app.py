@@ -11,7 +11,7 @@ COUNTRY_TOOLS = {
     "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
     "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
     "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
-    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "tournament", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
     "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
     "KW": ["kuwait", "kuwait_traffic_fines", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
     "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
@@ -36,7 +36,8 @@ TOOL_EMOJIS = {
     "pos_charges": "💳", "salary_flex": "💰", "tip_calculator": "🧮", "waec_calculator": "🎓",
     "pos_receipt": "🧾", "invoice": "🧾", "profit_calculator": "📈", "bank_card_info": "💳",
     "wa_qr": "🔳", "delivery_fee": "🛵", "debt_book": "📒", "market_ledger": "📒",
-    "hijri_calculator": "🕌", "fake_whatsapp": "💬", "fake_text": "📝", "fake_excuse": "🤥", "stylish_arabic": "✨",
+    "whatsapp_broadcast": "📢", "hijri_calculator": "🕌", "fake_whatsapp": "💬", "fake_text": "📝", "fake_excuse": "🤥", "stylish_arabic": "✨",
+    "zatca_qr": "🔳", "tournament": "🏆",
 }
 
 def get_country_by_ip():
@@ -60,9 +61,14 @@ def get_all_tools():
     return sorted(files)
 
 def filter_tools_by_country(tools, country):
-    gulf_only_tools = ["hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"]
     if country == "NG":
-        return sorted([t for t in tools if t not in gulf_only_tools and "hijri" not in t.lower() and "fake" not in t.lower() and "stylish" not in t.lower() and "arabic" not in t.lower() and "uk_" not in t.lower() and "usa_" not in t.lower() and "bahrain" not in t.lower() and "uae" not in t.lower() and "qatar" not in t.lower() and "oman" not in t.lower() and "kuwait" not in t.lower() and "emirates" not in t.lower()])
+        blocked = ["hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic", "fake", "stylish", "arabic", "excuse", "zatca", "tournament", "gosi", "iqama", "uk_", "usa_", "bahrain", "uae", "emirates", "qatar", "oman", "kuwait"]
+        clean = []
+        for t in tools:
+            if any(b in t.lower() for b in blocked):
+                continue
+            clean.append(t)
+        return sorted(clean)
     keywords = COUNTRY_TOOLS.get(country, [])
     if not keywords:
         return tools

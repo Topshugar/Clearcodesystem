@@ -14,7 +14,7 @@ COUNTRY_TOOLS = {
     "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry"],
     "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines"],
     "KW": ["kuwait", "kuwait_traffic_fines"],
-    "NG": ["nin", "nepa", "cac_checker", "jamb", "waec", "fuel_calculator", "paye_calculator", "land_converter", "pos_charges", "lagos_rent_package", "tip_calculator", "salary_flex"],
+    "NG": ["nin", "nepa", "cac_checker", "jamb", "waec", "fuel_calculator", "paye_calculator", "land_converter", "pos_charges", "lagos_rent_package", "tip_calculator", "salary_flex", "nigeria", "naira"],
     "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
     "US": ["usa", "usa_background_check", "usa_notify", "paycheck"],
 }
@@ -29,6 +29,50 @@ GOLD_PRICES = {
     "NG": {"code": "NGN", "price": 145000, "name": "Nigeria"},
     "GB": {"code": "GBP", "price": 65.20, "name": "UK"},
     "US": {"code": "USD", "price": 85.50, "name": "USA"},
+}
+
+TOOL_EMOJIS = {
+    "bahrain_gold_price": "🥇",
+    "gold_bahrain": "🥇",
+    "uae_gold_price": "🥇",
+    "qatar_gold_price": "🥇",
+    "oman_gold_price": "🥇",
+    "oman_civil_check": "🪪",
+    "salary_bahrain": "💰",
+    "salary_sa": "💰",
+    "uae_salary": "💰",
+    "salary_flex": "💰",
+    "paycheck": "💰",
+    "uk_paycheck": "💰",
+    "rent_bahrain": "🏠",
+    "bahrain_rent": "🏠",
+    "uae_rent_splitter": "🏠",
+    "qatar_rent_splitter": "🏠",
+    "oman_rent": "🏠",
+    "lagos_rent_package": "🏠",
+    "rent_splitter": "🏠",
+    "uk_rent_splitter": "🏠",
+    "bahrain_cpr_check": "🪪",
+    "emirates_id_check": "🪪",
+    "nin_validator": "🪪",
+    "nepa_calculator": "⚡",
+    "fuel_calculator": "⛽",
+    "cac_checker": "🏢",
+    "jamb_calculator": "📚",
+    "waec_calculator": "📚",
+    "gpa_calculator": "📚",
+    "gosi_calculator": "📊",
+    "bahrain_gratuity": "🧾",
+    "uae_gratuity": "🧾",
+    "oman_gratuity": "🧾",
+    "paye_calculator": "💸",
+    "pos_charges": "💳",
+    "bank_card_info": "💳",
+    "tip_calculator": "💵",
+    "profit_calculator": "📈",
+    "invoice": "🧾",
+    "zatca_qr": "🔳",
+    "wa_qr": "🔳",
 }
 
 def get_country_by_ip():
@@ -59,7 +103,7 @@ def filter_tools_by_country(tools, country):
             if kw in t.lower():
                 filtered.append(t)
                 break
-    if len(filtered) < 5:
+    if len(filtered) < 3:
         return tools
     return filtered
 
@@ -73,6 +117,7 @@ def home():
         seo_title=f'ClearCode System - Free Tools for {data["name"]}',
         seo_desc=f'Free tools for {data["name"]} - Strictly by IP.',
         tools=tools,
+        emojis=TOOL_EMOJIS,
         country_code=data["code"],
         country_name=data["name"],
         detected_country=country,

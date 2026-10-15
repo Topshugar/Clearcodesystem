@@ -1,12 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="h">ClearCode System - {{ country_name }} {{ emojis.get('bahrain_gold_price','') }}</div>
-<div class="s">📍 IP: {{ detected_country }} | {{ country_code }} | {{ tools|length }} tools for {{ country_name }} ({{ total_tools }} total)</div>
+<style>
+.hero{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;gap:20px;flex-wrap:wrap}
+.hero h1{font-size:38px;font-weight:800;letter-spacing:-0.04em;line-height:0.95;color:#fff}
+.hero h1 span{color:#3f3f46}
+.hero p{margin-top:12px;color:#71717a;font-size:13px;line-height:1.5;max-width:440px;font-family:'JetBrains Mono',monospace}
+.badges{display:flex;gap:8px}
+.badge{background:#111113;border:1px solid #1f1f23;padding:8px 12px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#a1a1aa}
+.badge b{color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:#18181b;border:1px solid #18181b;border-radius:14px;overflow:hidden}
+.card{background:#0e0e10;padding:18px;text-decoration:none;display:flex;flex-direction:column;gap:10px;transition:.15s}
+.card:hover{background:#141416}
+.top{display:flex;justify-content:space-between}
+.icon{width:32px;height:32px;background:#18181b;border:1px solid #27272a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.arrow{color:#27272a}
+.card:hover.arrow{color:#fff}
+.card h3{font-size:13px;font-weight:600;color:#fff}
+.card p{font-size:10px;color:#52525b;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em}
+.foot{margin-top:32px;border-top:1px solid #18181b;padding-top:16px;display:flex;justify-content:space-between;color:#3f3f46;font-size:10px;font-family:'JetBrains Mono',monospace}
+</style>
+<div class="hero">
+<div>
+<h1>Built for <span>{{ country_name }}.</span><br>Deployed globally.</h1>
+<p>{{ tools|length }} tools active for {{ detected_country }} IP • {{ country_code }} currency • Strictly by IP • Portfolio: Flask + Render + Monetag</p>
+</div>
+<div class="badges">
+<div class="badge"><b>{{ tools|length }}</b> ACTIVE</div>
+<div class="badge"><b>{{ total_tools }}</b> TOTAL</div>
+<div class="badge">BY <b>CLEARCODE</b></div>
+</div>
+</div>
 <div class="grid">
 {% for tool in tools %}
 <a href="/tools/{{ tool }}" class="card">
-<span style="font-size:18px">{{ emojis.get(tool, '⚡') }}</span> {{ tool.replace('_',' ').title() }}
+<div class="top"><div class="icon">{{ emojis.get(tool, '⚡') }}</div><div class="arrow">↗</div></div>
+<h3>{{ tool.replace('_',' ').title() }}</h3>
+<p>{{ country_code }} • {{ detected_country }} • Live</p>
 </a>
 {% endfor %}
+</div>
+<div class="foot">
+<div>© 2026 CLEARCODE — PORTFOLIO / PRODUCTION READY</div>
+<div>STACK: PYTHON FLASK • IPAPI • RENDER • MONETAG 11970643 / 11988352</div>
 </div>
 {% endblock %}

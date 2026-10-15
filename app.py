@@ -8,12 +8,12 @@ app = Flask(__name__)
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html"}
 
 COUNTRY_TOOLS = {
-    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi"],
-    "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines"],
-    "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime"],
-    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry"],
-    "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines"],
-    "KW": ["kuwait", "kuwait_traffic_fines"],
+    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri", "fake", "stylish", "arabic", "excuse"],
+    "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri", "fake", "stylish", "arabic", "excuse"],
+    "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri", "fake", "stylish", "arabic", "excuse"],
+    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "hijri", "fake", "stylish", "arabic", "excuse"],
+    "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri", "fake", "stylish", "arabic", "excuse"],
+    "KW": ["kuwait", "kuwait_traffic_fines", "hijri", "fake", "stylish", "arabic", "excuse"],
     "NG": ["nigeria", "naira"],
     "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
     "US": ["usa", "usa_background_check", "usa_notify", "paycheck"],
@@ -32,13 +32,38 @@ GOLD_PRICES = {
 }
 
 TOOL_EMOJIS = {
-    "cac_checker": "🏢", "fuel_calculator": "⛽", "jamb_calculator": "🎓", "lagos_rent_package": "🏘️",
-    "land_converter": "📐", "nepa_calculator": "⚡", "nin_validator": "🪪", "paye_calculator": "💸",
-    "pos_charges": "💳", "salary_flex": "💰", "tip_calculator": "🧮", "uk_tip_calculator": "🧮",
-    "waec_calculator": "🎓", "pos_receipt": "🧾", "invoice": "🧾", "profit_calculator": "📈",
-    "bank_card_info": "💳", "wa_qr": "🔳", "zatca_qr": "🔳", "delivery_fee": "🛵",
-    "debt_book": "📒", "market_ledger": "📒", "bahrain_gold_price": "🥇", "gold_bahrain": "🥇",
-    "salary_bahrain": "💰", "rent_bahrain": "🏠", "gosi_calculator": "📊", "bahrain_cpr_check": "🪪",
+    "cac_checker": "🏢",
+    "fuel_calculator": "⛽",
+    "jamb_calculator": "🎓",
+    "lagos_rent_package": "🏘️",
+    "land_converter": "📐",
+    "nepa_calculator": "⚡",
+    "nin_validator": "🪪",
+    "paye_calculator": "💸",
+    "pos_charges": "💳",
+    "salary_flex": "💰",
+    "tip_calculator": "🧮",
+    "waec_calculator": "🎓",
+    "pos_receipt": "🧾",
+    "invoice": "🧾",
+    "profit_calculator": "📈",
+    "bank_card_info": "💳",
+    "wa_qr": "🔳",
+    "zatca_qr": "🔳",
+    "delivery_fee": "🛵",
+    "debt_book": "📒",
+    "market_ledger": "📒",
+    "bahrain_gold_price": "🥇",
+    "gold_bahrain": "🥇",
+    "salary_bahrain": "💰",
+    "rent_bahrain": "🏠",
+    "gosi_calculator": "📊",
+    "bahrain_cpr_check": "🪪",
+    "hijri_calculator": "🕌",
+    "fake_whatsapp": "💬",
+    "fake_text": "📝",
+    "fake_excuse": "🤥",
+    "stylish_arabic": "✨",
 }
 
 def get_country_by_ip():
@@ -62,13 +87,25 @@ def get_all_tools():
     return sorted(files)
 
 def filter_tools_by_country(tools, country):
+    gulf_keywords = ["hijri", "fake", "stylish", "arabic", "excuse"]
+    gulf_countries = ["BH", "AE", "SA", "QA", "OM", "KW"]
     if country == "NG":
-        exclude = ["bahrain", "uae", "emirates", "qatar", "oman", "kuwait", "uk_", "usa_", "salary_sa", "rent_bahrain", "gold_bahrain", "gosi", "zatca", "iqama", "gratuity", "overtime", "traffic_fines", "civil_check", "cpr_check"]
+        exclude = ["bahrain", "uae", "emirates", "qatar", "oman", "kuwait", "uk_", "usa_", "salary_sa", "rent_bahrain", "gold_bahrain", "gosi", "zatca", "iqama", "gratuity", "overtime", "traffic_fines", "civil_check", "cpr_check", "hijri", "fake", "stylish", "arabic", "excuse"]
         result = []
         for t in tools:
             if not any(e in t.lower() for e in exclude):
                 result.append(t)
         return sorted(result)
+    if country in gulf_countries:
+        keywords = COUNTRY_TOOLS.get(country, []) + gulf_keywords
+        filtered = []
+        for t in tools:
+            low = t.lower()
+            for kw in keywords:
+                if kw in low:
+                    filtered.append(t)
+                    break
+        return sorted(set(filtered))
     keywords = COUNTRY_TOOLS.get(country, [])
     filtered = []
     for t in tools:

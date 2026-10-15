@@ -8,13 +8,13 @@ app = Flask(__name__)
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html"}
 
 COUNTRY_TOOLS = {
-    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi_calculator"],
+    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi"],
     "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines"],
     "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime"],
     "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry"],
     "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines"],
     "KW": ["kuwait", "kuwait_traffic_fines"],
-    "NG": ["nin", "nepa", "cac_checker", "jamb", "waec", "fuel_calculator", "paye_calculator", "land_converter", "pos_charges", "lagos_rent_package", "tip_calculator", "salary_flex", "nigeria", "naira"],
+    "NG": ["nigeria", "naira"],
     "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
     "US": ["usa", "usa_background_check", "usa_notify", "paycheck"],
 }
@@ -32,47 +32,13 @@ GOLD_PRICES = {
 }
 
 TOOL_EMOJIS = {
-    "bahrain_gold_price": "🥇",
-    "gold_bahrain": "🥇",
-    "uae_gold_price": "🥇",
-    "qatar_gold_price": "🥇",
-    "oman_gold_price": "🥇",
-    "oman_civil_check": "🪪",
-    "salary_bahrain": "💰",
-    "salary_sa": "💰",
-    "uae_salary": "💰",
-    "salary_flex": "💰",
-    "paycheck": "💰",
-    "uk_paycheck": "💰",
-    "rent_bahrain": "🏠",
-    "bahrain_rent": "🏠",
-    "uae_rent_splitter": "🏠",
-    "qatar_rent_splitter": "🏠",
-    "oman_rent": "🏠",
-    "lagos_rent_package": "🏠",
-    "rent_splitter": "🏠",
-    "uk_rent_splitter": "🏠",
-    "bahrain_cpr_check": "🪪",
-    "emirates_id_check": "🪪",
-    "nin_validator": "🪪",
-    "nepa_calculator": "⚡",
-    "fuel_calculator": "⛽",
-    "cac_checker": "🏢",
-    "jamb_calculator": "📚",
-    "waec_calculator": "📚",
-    "gpa_calculator": "📚",
-    "gosi_calculator": "📊",
-    "bahrain_gratuity": "🧾",
-    "uae_gratuity": "🧾",
-    "oman_gratuity": "🧾",
-    "paye_calculator": "💸",
-    "pos_charges": "💳",
-    "bank_card_info": "💳",
-    "tip_calculator": "💵",
-    "profit_calculator": "📈",
-    "invoice": "🧾",
-    "zatca_qr": "🔳",
-    "wa_qr": "🔳",
+    "cac_checker": "🏢", "fuel_calculator": "⛽", "jamb_calculator": "🎓", "lagos_rent_package": "🏘️",
+    "land_converter": "📐", "nepa_calculator": "⚡", "nin_validator": "🪪", "paye_calculator": "💸",
+    "pos_charges": "💳", "salary_flex": "💰", "tip_calculator": "🧮", "uk_tip_calculator": "🧮",
+    "waec_calculator": "🎓", "pos_receipt": "🧾", "invoice": "🧾", "profit_calculator": "📈",
+    "bank_card_info": "💳", "wa_qr": "🔳", "zatca_qr": "🔳", "delivery_fee": "🛵",
+    "debt_book": "📒", "market_ledger": "📒", "bahrain_gold_price": "🥇", "gold_bahrain": "🥇",
+    "salary_bahrain": "💰", "rent_bahrain": "🏠", "gosi_calculator": "📊", "bahrain_cpr_check": "🪪",
 }
 
 def get_country_by_ip():
@@ -96,7 +62,14 @@ def get_all_tools():
     return sorted(files)
 
 def filter_tools_by_country(tools, country):
-    keywords = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS["NG"])
+    if country == "NG":
+        exclude = ["bahrain", "uae", "emirates", "qatar", "oman", "kuwait", "uk_", "usa_", "salary_sa", "rent_bahrain", "gold_bahrain", "gosi", "zatca", "iqama", "gratuity", "overtime", "traffic_fines", "civil_check", "cpr_check"]
+        result = []
+        for t in tools:
+            if not any(e in t.lower() for e in exclude):
+                result.append(t)
+        return sorted(result)
+    keywords = COUNTRY_TOOLS.get(country, [])
     filtered = []
     for t in tools:
         for kw in keywords:
@@ -105,7 +78,7 @@ def filter_tools_by_country(tools, country):
                 break
     if len(filtered) < 3:
         return tools
-    return filtered
+    return sorted(set(filtered))
 
 @app.route('/')
 def home():
@@ -114,8 +87,8 @@ def home():
     tools = filter_tools_by_country(all_tools, country)
     data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
     return render_template('index.html',
-        seo_title=f'ClearCode System - Free Tools for {data["name"]}',
-        seo_desc=f'Free tools for {data["name"]} - Strictly by IP.',
+        seo_title=f'ClearCode System - Tools for {data["name"]} | Portfolio Project',
+        seo_desc=f'Professional tools for {data["name"]} built with Flask. Strictly by IP.',
         tools=tools,
         emojis=TOOL_EMOJIS,
         country_code=data["code"],
@@ -158,7 +131,7 @@ def tool_page(tool_name):
     country = get_country_by_ip()
     data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
     return render_template(target + ".html",
-        seo_title=f'{target.replace("_", " ").title()} - ClearCode System',
+        seo_title=f'{target.replace("_", " ").title()} - ClearCode',
         seo_desc=f'Free {target.replace("_", " ")} tool.',
         country_code=data["code"],
         country_name=data["name"],

@@ -4,11 +4,19 @@
 <div class="s">{{ detected_country }} • {{ country_code }} • IP LOCKED • {{ total_tools }} TOOLS LIVE</div>
 
 <div class="grid">
+
+<a href="/receipt" class="card">
+<span>🧾</span>
+<span>Receipt Checker<br><small style="color:#666">{{ country_code }} • {{ detected_country }} • LIVE</small></span>
+</a>
+
 {% for tool in tools %}
+{% if tool!= 'receipt_checker' %}
 <a href="/tools/{{ tool }}" class="card">
 <span>{{ emojis.get(tool, "⚡") }}</span>
 <span>{{ tool.replace("_", " ").title() }}<br><small style="color:#666">{{ country_code }} • {{ detected_country }} • LIVE</small></span>
 </a>
+{% endif %}
 {% endfor %}
 </div>
 

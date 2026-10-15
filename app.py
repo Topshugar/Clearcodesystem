@@ -8,13 +8,12 @@ app = Flask(__name__)
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html"}
 
 COUNTRY_TOOLS = {
-    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri", "fake", "stylish", "arabic", "excuse"],
-    "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri", "fake", "stylish", "arabic", "excuse"],
-    "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri", "fake", "stylish", "arabic", "excuse"],
-    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "hijri", "fake", "stylish", "arabic", "excuse"],
-    "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri", "fake", "stylish", "arabic", "excuse"],
-    "KW": ["kuwait", "kuwait_traffic_fines", "hijri", "fake", "stylish", "arabic", "excuse"],
-    "NG": ["nigeria", "naira"],
+    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "KW": ["kuwait", "kuwait_traffic_fines", "hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
     "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
     "US": ["usa", "usa_background_check", "usa_notify", "paycheck"],
 }
@@ -32,38 +31,12 @@ GOLD_PRICES = {
 }
 
 TOOL_EMOJIS = {
-    "cac_checker": "🏢",
-    "fuel_calculator": "⛽",
-    "jamb_calculator": "🎓",
-    "lagos_rent_package": "🏘️",
-    "land_converter": "📐",
-    "nepa_calculator": "⚡",
-    "nin_validator": "🪪",
-    "paye_calculator": "💸",
-    "pos_charges": "💳",
-    "salary_flex": "💰",
-    "tip_calculator": "🧮",
-    "waec_calculator": "🎓",
-    "pos_receipt": "🧾",
-    "invoice": "🧾",
-    "profit_calculator": "📈",
-    "bank_card_info": "💳",
-    "wa_qr": "🔳",
-    "zatca_qr": "🔳",
-    "delivery_fee": "🛵",
-    "debt_book": "📒",
-    "market_ledger": "📒",
-    "bahrain_gold_price": "🥇",
-    "gold_bahrain": "🥇",
-    "salary_bahrain": "💰",
-    "rent_bahrain": "🏠",
-    "gosi_calculator": "📊",
-    "bahrain_cpr_check": "🪪",
-    "hijri_calculator": "🕌",
-    "fake_whatsapp": "💬",
-    "fake_text": "📝",
-    "fake_excuse": "🤥",
-    "stylish_arabic": "✨",
+    "cac_checker": "🏢", "fuel_calculator": "⛽", "jamb_calculator": "🎓", "lagos_rent_package": "🏘️",
+    "land_converter": "📐", "nepa_calculator": "⚡", "nin_validator": "🪪", "paye_calculator": "💸",
+    "pos_charges": "💳", "salary_flex": "💰", "tip_calculator": "🧮", "waec_calculator": "🎓",
+    "pos_receipt": "🧾", "invoice": "🧾", "profit_calculator": "📈", "bank_card_info": "💳",
+    "wa_qr": "🔳", "delivery_fee": "🛵", "debt_book": "📒", "market_ledger": "📒",
+    "hijri_calculator": "🕌", "fake_whatsapp": "💬", "fake_text": "📝", "fake_excuse": "🤥", "stylish_arabic": "✨",
 }
 
 def get_country_by_ip():
@@ -87,26 +60,19 @@ def get_all_tools():
     return sorted(files)
 
 def filter_tools_by_country(tools, country):
-    gulf_keywords = ["hijri", "fake", "stylish", "arabic", "excuse"]
-    gulf_countries = ["BH", "AE", "SA", "QA", "OM", "KW"]
     if country == "NG":
-        exclude = ["bahrain", "uae", "emirates", "qatar", "oman", "kuwait", "uk_", "usa_", "salary_sa", "rent_bahrain", "gold_bahrain", "gosi", "zatca", "iqama", "gratuity", "overtime", "traffic_fines", "civil_check", "cpr_check", "hijri", "fake", "stylish", "arabic", "excuse"]
+        blocked = ["hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic", "stylish", "fake"]
         result = []
         for t in tools:
-            if not any(e in t.lower() for e in exclude):
-                result.append(t)
+            if any(b in t.lower() for b in blocked):
+                continue
+            if "uk_" in t.lower() or "usa_" in t.lower() or "bahrain" in t.lower() or "uae" in t.lower() or "qatar" in t.lower() or "oman" in t.lower() or "kuwait" in t.lower() or "emirates" in t.lower():
+                continue
+            result.append(t)
         return sorted(result)
-    if country in gulf_countries:
-        keywords = COUNTRY_TOOLS.get(country, []) + gulf_keywords
-        filtered = []
-        for t in tools:
-            low = t.lower()
-            for kw in keywords:
-                if kw in low:
-                    filtered.append(t)
-                    break
-        return sorted(set(filtered))
     keywords = COUNTRY_TOOLS.get(country, [])
+    if not keywords:
+        return tools
     filtered = []
     for t in tools:
         for kw in keywords:
@@ -124,8 +90,8 @@ def home():
     tools = filter_tools_by_country(all_tools, country)
     data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
     return render_template('index.html',
-        seo_title=f'ClearCode System - Tools for {data["name"]} | Portfolio Project',
-        seo_desc=f'Professional tools for {data["name"]} built with Flask. Strictly by IP.',
+        seo_title=f'ClearCode System - Tools for {data["name"]}',
+        seo_desc=f'Professional tools for {data["name"]} built with Flask.',
         tools=tools,
         emojis=TOOL_EMOJIS,
         country_code=data["code"],

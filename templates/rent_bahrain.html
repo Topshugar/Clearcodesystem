@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width:600px;margin:auto">
+<h1>Rent Splitter Bahrain (BHD)</h1>
+<div style="background:#1a1a1a;padding:20px;border-radius:16px;margin-top:20px">
+<label>Total Rent + Bills (BHD)</label><input id="rent" type="number" value="250" style="width:100%;padding:12px;margin:8px 0;background:#222;border:1px solid #444;color:#fff;border-radius:8px">
+<label>Number of Roommates</label><input id="people" type="number" value="2" style="width:100%;padding:12px;margin:8px 0;background:#222;border:1px solid #444;color:#fff;border-radius:8px">
+<button onclick="split()" style="width:100%;padding:12px;background:#fff;color:#000;border-radius:8px;font-weight:700;margin-top:10px">Split</button>
+<h2 id="out" style="margin-top:20px"></h2>
+</div>
+<script>
+function split(){
+ let r=parseFloat(document.getElementById('rent').value);
+ let p=parseFloat(document.getElementById('people').value);
+ document.getElementById('out').innerHTML=`Each Pays: <span style="color:#FFD700">${(r/p).toFixed(3)} BHD</span>`;
+}
+split();
+</script>
+</div>
+{% endblock %}

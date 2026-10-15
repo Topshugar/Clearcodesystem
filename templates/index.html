@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="h">ClearCode System - {{ country_name }}</div>
-<div class="s">📍 Detected by IP: {{ detected_country }} | Currency: {{ country_code }} | Showing {{ tools|length }} tools for {{ country_name }} ({{ total_tools }} total)</div>
+<div class="h">ClearCode System - {{ country_name }} {{ emojis.get('bahrain_gold_price','') }}</div>
+<div class="s">📍 IP: {{ detected_country }} | {{ country_code }} | {{ tools|length }} tools for {{ country_name }} ({{ total_tools }} total)</div>
 <div class="grid">
 {% for tool in tools %}
-<a href="/tools/{{ tool }}" class="card">{{ tool.replace('_',' ').title() }}</a>
+<a href="/tools/{{ tool }}" class="card">
+<span style="font-size:18px">{{ emojis.get(tool, '⚡') }}</span> {{ tool.replace('_',' ').title() }}
+</a>
 {% endfor %}
 </div>
 {% endblock %}

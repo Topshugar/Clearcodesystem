@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <div style="max-width:600px;margin:auto">
-<h1>Gold Price in Bahrain Today</h1>
-<p style="color:#aaa">Live 15 Oct 2026 - per gram in BHD</p>
+<h1>Gold Price in {{ country_name }} Today</h1>
+<p style="color:#00ff88;font-size:12px">📍 Detected by IP: {{ detected_country }} - Showing in {{ country_code }}</p>
 <div style="background:#1a1a1a;padding:20px;border-radius:16px;margin-top:20px;border:1px solid #333">
-<p>24K Gold: <b style="color:#FFD700">{{ price_24k }} BHD / gram</b></p>
-<p>22K Gold: <b>{{ price_22k }} BHD / gram</b></p>
-<p>21K Gold: <b>{{ price_21k }} BHD / gram</b></p>
-<p style="margin-top:15px;font-size:12px;color:#777">1 Tola = 11.66g = {{ (price_24k*11.66)|round(2) }} BHD</p>
+<p>24K Gold: <b style="color:#FFD700">{{ price_24k }} {{ country_code }} / gram</b></p>
+<p>22K Gold: <b>{{ price_22k }} {{ country_code }} / gram</b></p>
+<p>21K Gold: <b>{{ price_21k }} {{ country_code }} / gram</b></p>
+<p style="margin-top:15px;font-size:11px;color:#555">Strictly by IP - Updated live</p>
 </div>
-<p style="margin-top:20px"><a href="/tools/gold-price">→ Check Gold Price in UAE, Saudi, Qatar also</a></p>
 </div>
 {% endblock %}

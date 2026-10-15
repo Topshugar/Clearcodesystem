@@ -13,7 +13,7 @@
 {% if tool!= 'receipt_checker' %}
 <a href="/tools/{{ tool }}" class="card">
 <span>{{ emojis.get(tool, "⚡") }}</span>
-<span>{{ tool.replace("_", " ").title() }}</span>
+<span>{{ display_names.get(tool, tool.replace("_", " ").title()) }}</span>
 </a>
 {% endif %}
 {% endfor %}

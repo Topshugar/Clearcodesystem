@@ -7,6 +7,18 @@ app = Flask(__name__)
 
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html"}
 
+COUNTRY_TOOLS = {
+    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi_calculator"],
+    "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines"],
+    "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime"],
+    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry"],
+    "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines"],
+    "KW": ["kuwait", "kuwait_traffic_fines"],
+    "NG": ["nin", "nepa", "cac_checker", "jamb", "waec", "fuel_calculator", "paye_calculator", "land_converter", "pos_charges", "lagos_rent_package", "tip_calculator", "salary_flex"],
+    "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
+    "US": ["usa", "usa_background_check", "usa_notify", "paycheck"],
+}
+
 GOLD_PRICES = {
     "BH": {"code": "BHD", "price": 32.850, "name": "Bahrain"},
     "AE": {"code": "AED", "price": 320.50, "name": "UAE"},
@@ -25,10 +37,10 @@ def get_country_by_ip():
         if ip:
             ip = ip.split(',')[0].strip()
         r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=3)
-        country = r.text.strip() if r.status_code == 200 else "BH"
+        country = r.text.strip() if r.status_code == 200 else "NG"
         return country
     except:
-        return "BH"
+        return "NG"
 
 def get_all_tools():
     folder = os.path.join(app.root_path, "templates")
@@ -39,13 +51,32 @@ def get_all_tools():
                 files.append(f[:-5])
     return sorted(files)
 
+def filter_tools_by_country(tools, country):
+    keywords = COUNTRY_TOOLS.get(country, COUNTRY_TOOLS["NG"])
+    filtered = []
+    for t in tools:
+        for kw in keywords:
+            if kw in t.lower():
+                filtered.append(t)
+                break
+    if len(filtered) < 5:
+        return tools
+    return filtered
+
 @app.route('/')
 def home():
-    tools = get_all_tools()
+    all_tools = get_all_tools()
+    country = get_country_by_ip()
+    tools = filter_tools_by_country(all_tools, country)
+    data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
     return render_template('index.html',
-        seo_title='ClearCode System - 100+ Free Online Tools for Nigeria, Gulf, UK, USA',
-        seo_desc='Free online tools - NIN validator, salary calculator, Bahrain gold price, rent splitter. Fast, secure, no signup.',
-        tools=tools
+        seo_title=f'ClearCode System - Free Tools for {data["name"]}',
+        seo_desc=f'Free tools for {data["name"]} - Strictly by IP.',
+        tools=tools,
+        country_code=data["code"],
+        country_name=data["name"],
+        detected_country=country,
+        total_tools=len(all_tools)
     )
 
 @app.route('/robots.txt')
@@ -61,7 +92,6 @@ def sitemap():
     urls = [base_url + "/"]
     for t in tools:
         urls.append(f"{base_url}/tools/{t}")
-        urls.append(f"{base_url}/tools/{t.replace('_', '-')}")
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for url in set(urls):
         xml += f" <url><loc>{url}</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>\n"
@@ -70,76 +100,28 @@ def sitemap():
 
 @app.route('/tools/<tool_name>')
 def tool_page(tool_name):
-    tools = get_all_tools()
-    if tool_name in tools:
-        template = tool_name + ".html"
-        country = get_country_by_ip()
-        data = GOLD_PRICES.get(country, GOLD_PRICES["BH"])
-        return render_template(template,
-            seo_title=f'{tool_name.replace("-", " ").replace("_", " ").title()} - Free Tool | ClearCode System',
-            seo_desc=f'Free {tool_name.replace("-", " ").replace("_", " ")} tool online.',
-            country_code=data["code"],
-            country_name=data["name"],
-            detected_country=country
-        )
-    alt = tool_name.replace("-", "_")
-    if alt in tools:
-        template = alt + ".html"
-        country = get_country_by_ip()
-        data = GOLD_PRICES.get(country, GOLD_PRICES["BH"])
-        return render_template(template,
-            seo_title=f'{alt.replace("_", " ").title()} - Free Tool | ClearCode System',
-            seo_desc=f'Free {alt.replace("_", " ")} tool online.',
-            country_code=data["code"],
-            country_name=data["name"],
-            detected_country=country
-        )
-    alt2 = tool_name.replace("_", "-")
-    if alt2 in tools:
-        template = alt2 + ".html"
-        country = get_country_by_ip()
-        data = GOLD_PRICES.get(country, GOLD_PRICES["BH"])
-        return render_template(template,
-            seo_title=f'{tool_name.replace("-", " ").replace("_", " ").title()} - Free Tool | ClearCode System',
-            seo_desc=f'Free {tool_name.replace("-", " ").replace("_", " ")} tool online.',
-            country_code=data["code"],
-            country_name=data["name"],
-            detected_country=country
-        )
-    return abort(404)
-
-def gold_price_bahrain():
+    all_tools = get_all_tools()
+    target = None
+    if tool_name in all_tools:
+        target = tool_name
+    else:
+        alt = tool_name.replace("-", "_")
+        if alt in all_tools:
+            target = alt
+    if not target:
+        return abort(404)
     country = get_country_by_ip()
-    data = GOLD_PRICES.get(country, GOLD_PRICES["BH"])
-    return render_template('gold_bahrain.html',
-        seo_title=f'Gold Price {data["name"]} Today - Gold Price in {data["code"]} | ClearCode',
-        seo_desc=f'Live gold price in {data["name"]} today in {data["code"]}. Strictly by IP location.',
+    data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
+    return render_template(target + ".html",
+        seo_title=f'{target.replace("_", " ").title()} - ClearCode System',
+        seo_desc=f'Free {target.replace("_", " ")} tool.',
+        country_code=data["code"],
+        country_name=data["name"],
+        detected_country=country,
         price_24k=data["price"],
         price_22k=round(data["price"] * 0.916, 3),
-        price_21k=round(data["price"] * 0.875, 3),
-        country_code=data["code"],
-        country_name=data["name"],
-        detected_country=country)
-
-def salary_bahrain():
-    country = get_country_by_ip()
-    data = GOLD_PRICES.get(country, GOLD_PRICES["BH"])
-    return render_template('salary_bahrain.html',
-        seo_title=f'Salary Calculator {data["name"]} - {data["code"]} | ClearCode',
-        seo_desc=f'Salary calculator {data["name"]} strictly by IP.',
-        country_code=data["code"],
-        country_name=data["name"],
-        detected_country=country)
-
-def rent_bahrain():
-    country = get_country_by_ip()
-    data = GOLD_PRICES.get(country, GOLD_PRICES["BH"])
-    return render_template('rent_bahrain.html',
-        seo_title=f'Rent Splitter {data["name"]} - {data["code"]} | ClearCode',
-        seo_desc=f'Rent splitter {data["name"]} strictly by IP.',
-        country_code=data["code"],
-        country_name=data["name"],
-        detected_country=country)
+        price_21k=round(data["price"] * 0.875, 3)
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)

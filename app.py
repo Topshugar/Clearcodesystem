@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, abort, session, redirect, url
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 ADMIN_KEY = os.environ.get("ADMIN_KEY")
+DOMAIN = "https://clearcodesystem.onrender.com"
 
 def n(s):
     return s.lower().replace('.html','').strip()
@@ -89,23 +90,22 @@ def get_tools_for_country(country):
 
 @app.route('/robots.txt')
 def robots():
-    txt = """User-agent: *
+    txt = f"""User-agent: *
 Allow: /
-Sitemap: https://clearcode.system/sitemap.xml
+Sitemap: {DOMAIN}/sitemap.xml
 """
     return Response(txt, mimetype='text/plain')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    domain = "https://clearcode.system"
     folder = os.path.join(app.root_path, 'templates')
     try:
         files = [f for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
     except:
         files = []
-    urls = [f"{domain}/"]
+    urls = [f"{DOMAIN}/"]
     for f in files:
-        urls.append(f"{domain}/{f[:-5]}")
+        urls.append(f"{DOMAIN}/{f[:-5]}")
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for u in urls:
         xml += f"  <url><loc>{u}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n"
@@ -155,7 +155,6 @@ def health():
 
 @app.route('/<tool_name>')
 def page(tool_name):
-    country = get_country()
     folder = os.path.join(app.root_path, 'templates')
     try:
         allowed_all = [f[:-5] for f in os.listdir(folder) if f.endswith('.html') and f.lower() not in ['base.html', 'index.html']]
@@ -163,6 +162,7 @@ def page(tool_name):
         allowed_all = []
     if tool_name not in allowed_all:
         abort(404)
+    country = get_country()
     allowed_for_ip = get_tools_for_country(country)
     if tool_name not in allowed_for_ip and tool_name not in global_tools:
         if not session.get('is_admin'):

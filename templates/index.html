@@ -1,10 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="h">ClearCodeSystem</div>
-<div class="s">{{ user_country }} • {{ tools|length }} tools</div>
+<div class="h">ClearCode System</div>
+<div class="s">100+ Free Tools - Bahrain, UAE, Qatar, UK, USA, Nigeria</div>
+
 <div class="grid">
-{% for t in tools %}
-<a href="{{ t.url }}"><div class="card" style="animation-delay: {{ loop.index0 * 0.02 }}s"><span class="icon">{{ t.icon }}</span><span class="name">{{ t.name }}</span></div></a>
+{% for tool in tools %}
+<a href="/tools/{{ tool }}" class="card">
+<span style="font-size:18px">⚡</span> {{ tool.replace('_',' ').replace('-',' ').title() }}
+</a>
 {% endfor %}
+</div>
+
+<div style="margin-top:40px;border-top:1px solid #222;padding-top:20px;color:#555;font-size:12px">
+<h3 style="color:#888">Popular in Bahrain</h3>
+<p>
+<a href="/tools/bahrain_gold_price" style="color:#aaa;text-decoration:underline">Gold Price Bahrain</a> • 
+<a href="/tools/bahrain_rent" style="color:#aaa;text-decoration:underline">Rent Splitter BHD</a> • 
+<a href="/tools/bahrain_cpr_check" style="color:#aaa;text-decoration:underline">CPR Check</a> • 
+<a href="/tools/uae_gold_price" style="color:#aaa;text-decoration:underline">Gold Price UAE</a> • 
+<a href="/tools/qatar_gold_price" style="color:#aaa;text-decoration:underline">Gold Price Qatar</a>
+</p>
+<p style="margin-top:15px">Verified on Google Search Console - {{ tools|length }} tools live</p>
 </div>
 {% endblock %}

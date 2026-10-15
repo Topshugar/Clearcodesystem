@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <div style="max-width:600px;margin:auto">
-<h1>Salary Calculator Bahrain</h1>
+<h1>Salary Calculator {{ country_name }}</h1>
+<p style="color:#00ff88;font-size:12px">📍 Detected by IP: {{ detected_country }} - Currency: {{ country_code }}</p>
 <div style="background:#1a1a1a;padding:20px;border-radius:16px;margin-top:20px">
-<label>Monthly Salary (BHD):</label><br>
+<label>Monthly Salary ({{ country_code }}):</label><br>
 <input id="sal" type="number" value="500" style="width:100%;padding:12px;margin:10px 0;background:#222;border:1px solid #444;color:#fff;border-radius:8px">
 <button onclick="calc()" style="width:100%;padding:12px;background:#fff;color:#000;border-radius:8px;font-weight:700">Calculate</button>
 <div id="res" style="margin-top:20px;line-height:1.8"></div>
@@ -15,7 +16,7 @@ function calc(){
  let net=s-gosi;
  let hourly=(net/30/8).toFixed(3);
  let yearly=(net*12).toFixed(2);
- document.getElementById('res').innerHTML=`Net after GOSI 1%: <b>${net.toFixed(3)} BHD</b><br>Hourly: <b>${hourly} BHD/hr</b><br>Yearly: <b>${yearly} BHD</b><br>GOSI Deduction: ${gosi.toFixed(3)} BHD`;
+ document.getElementById('res').innerHTML=`Net after 1%: <b>${net.toFixed(3)} {{ country_code }}</b><br>Hourly: <b>${hourly} {{ country_code }}/hr</b><br>Yearly: <b>${yearly} {{ country_code }}</b>`;
 }
 calc();
 </script>

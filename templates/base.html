@@ -1,27 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="Jk3eIUavFcyrBGAoygbHl2b0KPa8UVxABKwCMvnBVIA" />
 <title>{{ seo_title if seo_title else 'ClearCode System - Free Online Tools' }}</title>
-<meta name="description" content="{{ seo_desc if seo_desc else 'ClearCode System offers 100+ free online tools.' }}">
+<meta name="description" content="{{ seo_desc if seo_desc else 'ClearCode System offers 100+ free online tools for Nigeria, USA, UK, and GCC. Built with Flask.' }}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://clearcodesystem.onrender.com{{ request.path }}">
+<!-- Monetag Tags -->
 <script src="https://fpyf8.com/88/tag.min.js" data-zone="11970643" async data-cfasync="false"></script>
 <script src="https://fpyf8.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
 <style>
-body{background:#0a0a0a;color:#fff;font-family:system-ui,Arial;margin:0;padding:18px}
-.h{font-weight:800;font-size:20px;letter-spacing:0.02em}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
-.card{background:#171717;border:1px solid #2a2a2a;padding:14px;border-radius:14px;font-size:14px;display:block;transition:border-color 0.2s}
-.card:hover{border-color:#3a3a3a}
-a{color:#fff;text-decoration:none}
-small{color:#666}
+:root{--bg:#0a0a0a;--card:#171717;--border:#232323;--border2:#2a2a2a;--text:#ffffff;--muted:#888;--dim:#555}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:0;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:18px}
+.logo{font-weight:800;font-size:18px;letter-spacing:0.04em}
+.logo span{color:var(--muted);font-weight:400;font-size:13px;margin-left:8px}
+.h{font-weight:800;font-size:22px;letter-spacing:0.02em;margin:18px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--border2);padding:16px;border-radius:14px;font-size:14px;display:block;transition:all 0.2s ease;text-transform:lowercase}
+.card:hover{border-color:#3a3a3a;transform:translateY(-1px)}
+.card span{color:var(--text)}
+a{color:var(--text);text-decoration:none}
+.footer{margin-top:40px;padding:20px 0 30px;border-top:1px solid var(--border);color:var(--dim);font-size:11px;letter-spacing:0.06em;text-align:center}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}}
 </style>
 {% block head %}{% endblock %}
 </head>
 <body>
+<div class="wrap">
+<div class="header">
+<div class="logo">CLEARCODE SYSTEM <span>portfolio grade</span></div>
+<a href="/receipt" style="font-size:12px;color:#888">receipt checker</a>
+</div>
 {% block content %}{% endblock %}
+<div class="footer">© 2026 CLEARCODE SYSTEM</div>
+</div>
 </body>
   </html>

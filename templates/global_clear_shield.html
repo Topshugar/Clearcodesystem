@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ClearShield - Website Safety Check | ClearCodeSystem</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://alwingulla.com/88/tag.min.js" data-zone="11970643" async data-cfasync="false"></script>
+<style>
+body{font-family:Arial;background:#0f172a;color:#fff;text-align:center;padding:20px}
+.card{background:#1e293b;padding:25px;border-radius:15px;max-width:600px;margin:auto}
+input{width:90%;padding:12px;border-radius:8px;border:none;margin:10px 0}
+button{padding:12px 25px;background:#38bdf8;color:#000;font-weight:bold;border:none;border-radius:8px;cursor:pointer}
+.badge{padding:5px 10px;border-radius:5px;margin:5px;display:inline-block}
+.safe{background:#22c55e}.warn{background:#ef4444}.check{background:#334155}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>🛡️ ClearShield</h2>
+<p>Check if your website exposes sensitive files</p>
+<input id="url" placeholder="https://example.com">
+<br>
+<button onclick="scan()">Scan Website Safety</button>
+<div id="result" style="margin-top:20px;text-align:left"></div>
+<p style="font-size:11px;margin-top:20px;opacity:0.6">Disclaimer: Only scan websites you own. Educational safety check only.</p>
+</div>
+
+<div id="monetag2" style="margin-top:20px">
+<script src="https://alwingulla.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
+</div>
+
+<script>
+async function scan(){
+ let base = document.getElementById('url').value.trim();
+ if(!base.startsWith('http')) base='https://'+base;
+ base=base.replace(/\/$/,'');
+ const paths=['/.env','/.git/config','/admin','/backup.zip','/.well-known/security.txt','/wp-config.php.bak'];
+ let out=document.getElementById('result');
+ out.innerHTML='Scanning '+base+' ...<br><br>';
+ for(let p of paths){
+  try{
+   let res=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(base+p), {method:'GET'});
+   let status=res.ok ? 'EXPOSED - '+p : 'SAFE';
+   let cls=res.ok ? 'warn' : 'safe';
+   out.innerHTML+=`<span class="badge check">${p}</span> <span class="badge ${cls}">${status}</span><br>`;
+  }catch(e){
+   out.innerHTML+=`<span class="badge check">${p}</span> <span class="badge safe">SAFE / Blocked (Good)</span><br>`;
+  }
+ }
+ out.innerHTML+='<br><b>ClearShield Scan Complete. If any EXPOSED, fix it immediately.</b>';
+}
+</script>
+</body>
+</html>

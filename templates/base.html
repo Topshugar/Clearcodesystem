@@ -12,14 +12,16 @@
 <script src="https://fpyf8.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
 <style>
 body{background:#0a0a0a;color:#fff;font-family:system-ui,Arial;margin:0;padding:18px}
-.h{font-weight:800;font-size:20px}
+.h{font-weight:800;font-size:20px;letter-spacing:0.02em}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
-.card{background:#171717;border:1px solid #2a2a2a;padding:14px;border-radius:14px;font-size:14px;display:flex;gap:10px}
+.card{background:#171717;border:1px solid #2a2a2a;padding:14px;border-radius:14px;font-size:14px;display:block;transition:border-color 0.2s}
+.card:hover{border-color:#3a3a3a}
 a{color:#fff;text-decoration:none}
+small{color:#666}
 </style>
 {% block head %}{% endblock %}
 </head>
 <body>
 {% block content %}{% endblock %}
 </body>
-</html>
+  </html>

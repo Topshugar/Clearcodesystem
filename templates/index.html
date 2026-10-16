@@ -1,0 +1,5 @@
+{% extends "base.html" %} {% block content %}
+ClearCode System - Tools for {{ country_name }}
+receipt checker {% for tool in tools %} {% if tool!= 'receipt_checker' %} {{ display_names.get(tool, tool.replace("_", " ").lower()) }} {% endif %} {% endfor %}
+© 2026 CLEARCODE SYSTEM 
+{% endblock %}

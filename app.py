@@ -5,8 +5,8 @@ import requests
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "clearcode-nigeria-2026-secret")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "ClearCode2026Admin")
+app.secret_key = os.environ.get("SECRET_KEY")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html", "receipt_checker.html"}
 
@@ -46,9 +46,9 @@ TOOL_EMOJIS = {
 }
 
 TOOL_DISPLAY_NAMES = {
-    "paycheck": "USA Take-Home Pay Calculator",
-    "usa_paycheck": "USA Take-Home Pay Calculator",
-    "paye_calculator": "Nigeria PAYE Calculator",
+    "paycheck": "usa take-home pay calculator",
+    "usa_paycheck": "usa take-home pay calculator",
+    "paye_calculator": "nigeria paye calculator",
 }
 
 DB_PATH = os.path.join(app.root_path, "records.db")
@@ -245,7 +245,7 @@ def tool_page(tool_name):
         return abort(404)
     country = get_country_by_ip()
     data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
-    return render_template(target + ".html", seo_title=f'{TOOL_DISPLAY_NAMES.get(target, target.replace("_", " ").title())} - ClearCode', seo_desc=f'Free {target.replace("_", " ")} tool.', country_code=data["code"], country_name=data["name"], detected_country=country, price_24k=data["price"], price_22k=round(data["price"] * 0.916, 3), price_21k=round(data["price"] * 0.875, 3))
+    return render_template(target + ".html", seo_title=f'{TOOL_DISPLAY_NAMES.get(target, target.replace("_", " ").lower())} - ClearCode', seo_desc=f'Free {target.replace("_", " ")} tool.', country_code=data["code"], country_name=data["name"], detected_country=country, price_24k=data["price"], price_22k=round(data["price"] * 0.916, 3), price_21k=round(data["price"] * 0.875, 3))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

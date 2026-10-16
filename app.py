@@ -8,28 +8,17 @@ import ipaddress
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
-ADMIN_IPS = os.environ.get("ADMIN_IPS", "")  # comma-separated whitelist, empty = allow all
+ADMIN_IPS = os.environ.get("ADMIN_IPS", "")
 
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html", "receipt_checker.html"}
 
-COUNTRY_TOOLS = {
-    "BH": ["bahrain", "gulf", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri", "fake_whatsapp", "stylish_arabic", "gulf_bahrain"],
-    "AE": ["uae", "emirates", "gulf", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri", "gulf"],
-    "QA": ["qatar", "gulf", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri", "gulf"],
-    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "gulf", "tournament", "hijri", "gulf_salary", "gulf_zatca", "gulf_iqama"],
-    "OM": ["oman", "gulf", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri", "gulf"],
-    "KW": ["kuwait", "gulf", "kuwait_traffic_fines", "hijri", "gulf"],
-    "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
-    "US": ["usa", "paycheck", "usa_paycheck", "usa_take_home", "usa_background_check", "usa_notify", "usa_fake_text", "usa_tip_calculator"],
-    "NG": ["nigeria", "paye", "cac", "nin", "fuel", "pos", "jamb", "waec", "lagos", "land"],
-    "GLOBAL": ["global", "worldwide", "universal"],
-}
+GULF_COUNTRIES = ["SA", "AE", "QA", "KW", "OM", "BH"]
 
 GOLD_PRICES = {
     "BH": {"code": "BHD", "price": 32.850, "name": "Bahrain"},
     "AE": {"code": "AED", "price": 320.50, "name": "UAE"},
     "QA": {"code": "QAR", "price": 335.20, "name": "Qatar"},
-    "SA": {"code": "SAR", "price": 345.80, "name": "Saudi"},
+    "SA": {"code": "SAR", "price": 345.80, "name": "Saudi Arabia"},
     "OM": {"code": "OMR", "price": 35.60, "name": "Oman"},
     "KW": {"code": "KWD", "price": 28.30, "name": "Kuwait"},
     "NG": {"code": "NGN", "price": 145000, "name": "Nigeria"},
@@ -41,13 +30,12 @@ TOOL_DISPLAY_NAMES = {
     "paycheck": "usa take-home pay calculator",
     "usa_paycheck": "usa take-home pay calculator",
     "paye_calculator": "nigeria paye calculator",
+    "gpa_calculator": "nigeria gpa calculator",
+    "receipt_checker": "receipt checker",
     "global_ivr_builder": "global ivr builder",
     "global_ivr_software": "global ivr software",
     "global_ruler_terminal": "global ruler terminal",
     "global_whatsapp_broadcast": "global whatsapp broadcast",
-    "gulf_bahrain_arabic_stylish_name": "gulf bahrain arabic stylish name",
-    "gulf_civil_check": "gulf civil check",
-
 }
 
 DB_PATH = os.path.join(app.root_path, "records.db")
@@ -67,7 +55,6 @@ def get_client_ip():
     return ip
 
 def is_ip_allowed_for_admin():
-    # Strict IP restriction for admin
     if not ADMIN_IPS:
         return True
     client_ip = get_client_ip()
@@ -80,7 +67,6 @@ def is_ip_allowed_for_admin():
 def get_country_by_ip():
     try:
         ip = get_client_ip()
-        # Block private/reserved spoofed IPs
         try:
             if ipaddress.ip_address(ip).is_private:
                 return "NG"
@@ -102,55 +88,93 @@ def get_all_tools():
     files.append("receipt_checker")
     return sorted(set(files))
 
-def filter_tools_by_country(tools, country):
-    # Global tools show everywhere
-    GLOBAL_KEYWORDS = ["global", "worldwide", "universal", "all_countries"]
+def get_grouped_tools(tools, country):
+    tools_lower = [t.lower() for t in tools]
+    # Map lower -> original
+    lower_to_orig = {t.lower(): t for t in tools}
+    
+    gulf_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("gulf")]
+    global_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("global")]
+    nigeria_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("nigeria") or t in ["receipt_checker", "gpa_calculator", "nigeria_receipt_checker"]]
+    usa_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("usa_") or t in ["usa_paycheck", "paycheck", "usa_background_check", "usa_notify"]]
+    uk_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("uk_")]
+    bahrain_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("bahrain_")]
+    uae_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("uae_") or t.startswith("emirates_")]
     
     if country == "NG":
-        blocked = ["hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic", "fake", "stylish", "arabic", "excuse", "zatca", "tournament", "gosi", "iqama", "uk_", "usa_", "usa_take_home", "paycheck", "bahrain", "uae", "emirates", "qatar", "oman", "kuwait"]
-        clean = []
-        for t in tools:
-            if t == "receipt_checker":
-                clean.append(t)
-                continue
-            # Global always allowed for NG
-            if any(g in t.lower() for g in GLOBAL_KEYWORDS):
-                clean.append(t)
-                continue
-            if any(b in t.lower() for b in blocked):
-                continue
-            clean.append(t)
-        return sorted(clean)
-    keywords = COUNTRY_TOOLS.get(country, [])
-    if not keywords:
-        return tools
-    filtered = []
-    for t in tools:
-        if t == "receipt_checker":
-            continue
-        # Global tools always included
-        if any(g in t.lower() for g in GLOBAL_KEYWORDS):
-            filtered.append(t)
-            continue
-        for kw in keywords:
-            if kw in t.lower():
-                filtered.append(t)
-                break
-    if len(filtered) < 3:
-        return tools
-    # Always add global tools to any country result
-    for t in tools:
-        if any(g in t.lower() for g in GLOBAL_KEYWORDS) and t not in filtered:
-            filtered.append(t)
-    return sorted(set(filtered))
+        # NG sees ONLY Nigeria + Global, NO Gulf
+        return {
+            "nigeria": sorted(set(nigeria_tools)),
+            "global": sorted(set(global_tools)),
+            "gulf": [],
+            "usa": [],
+            "uk": [],
+            "bahrain": [],
+            "uae": [],
+            "country_specific": []
+        }
+    elif country in GULF_COUNTRIES:
+        # Gulf countries see ONLY Gulf + Global + their own specific
+        country_specific = []
+        if country == "BH":
+            country_specific = bahrain_tools
+        elif country == "AE":
+            country_specific = uae_tools
+        
+        return {
+            "gulf": sorted(set(gulf_tools)),
+            "global": sorted(set(global_tools)),
+            "nigeria": [],
+            "usa": [],
+            "uk": [],
+            "country_specific": sorted(set(country_specific))
+        }
+    elif country == "US":
+        return {
+            "usa": sorted(set(usa_tools)),
+            "global": sorted(set(global_tools)),
+            "gulf": [],
+            "nigeria": [],
+        }
+    elif country == "GB":
+        return {
+            "uk": sorted(set(uk_tools)),
+            "global": sorted(set(global_tools)),
+            "gulf": [],
+            "nigeria": [],
+        }
+    else:
+        return {
+            "global": sorted(set(global_tools)),
+            "gulf": [],
+            "nigeria": [],
+        }
 
 @app.route('/')
 def home():
     all_tools = get_all_tools()
     country = get_country_by_ip()
-    tools = filter_tools_by_country(all_tools, country)
+    grouped = get_grouped_tools(all_tools, country)
     data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
-    return render_template('index.html', seo_title=f'ClearCode System - Tools for {data["name"]}', seo_desc=f'Professional tools for {data["name"]} built with Flask.', tools=tools, display_names=TOOL_DISPLAY_NAMES, country_code=data["code"], country_name=data["name"], detected_country=country, total_tools=len(all_tools))
+    country_display = data["name"]
+    
+    # Title is tools for [Detected Country]
+    if country in GULF_COUNTRIES:
+        title_country = f"{country_display} - Gulf (GCC)"
+    else:
+        title_country = country_display
+    
+    return render_template('index.html', 
+        seo_title=f'ClearCode System - Tools for {data["name"]}', 
+        seo_desc=f'Professional tools for {data["name"]} built with Flask.',
+        grouped=grouped,
+        display_names=TOOL_DISPLAY_NAMES, 
+        country_code=data["code"], 
+        country_name=country_display,
+        title_country=title_country,
+        detected_country=country, 
+        is_gulf=country in GULF_COUNTRIES,
+        total_tools=len(all_tools))
 
 @app.route('/receipt', methods=['GET', 'POST'])
 def receipt_checker():
@@ -190,7 +214,6 @@ def receipt_direct(code):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
-    # Strict IP restriction
     if not is_ip_allowed_for_admin():
         abort(403)
     if request.method == 'POST':
@@ -199,7 +222,7 @@ def admin_login():
             session['admin'] = True
             return redirect('/admin/dashboard')
         else:
-            return '''<h3 style="color:#ff5555;font-family:system-ui;padding:20px">Invalid password or ADMIN_PASSWORD not set in env</h3><a href="/admin">Back</a>''', 403
+            return '''<h3 style="color:#ff5555;font-family:system-ui;padding:20px">Invalid password</h3><a href="/admin">Back</a>''', 403
     if session.get('admin'):
         return redirect('/admin/dashboard')
     return '''<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{background:#0a0a0a;color:#fff;font-family:system-ui;padding:20px}.box{max-width:400px;margin:60px auto;background:#171717;border:1px solid #2a2a2a;border-radius:16px;padding:20px}input{width:100%;padding:13px;border-radius:10px;border:1px solid #333;background:#0f0f0f;color:#fff;box-sizing:border-box}button{width:100%;padding:13px;margin-top:12px;border-radius:10px;border:0;background:#fff;color:#000;font-weight:700}</style></head><body><div class="box"><h3>Admin Login - IP Restricted</h3><form method="post"><input type="password" name="password" placeholder="ADMIN_PASSWORD" required><button type="submit">Login</button></form></div></body></html>'''

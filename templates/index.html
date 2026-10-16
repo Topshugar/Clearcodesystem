@@ -1,25 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="h">tools for {{ title_country|lower }}</div>
-<div style="color:#666;font-size:12px;margin-bottom:18px">detected: {{ detected_country }} • {{ country_code }} • {{ total_tools }} tools total</div>
+<div class="h">Available Tools - {{ total_tools }} tools total</div>
 
 {% if is_gulf %}
   {% if grouped.gulf %}
   <div style="margin-top:24px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:10px">tools for gulf (gcc)</div>
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px">Tools for Gulf (GCC)</div>
     <div class="grid">
       {% for tool in grouped.gulf %}
-      <a href="/tools/{{ tool }}" class="card"><span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span></a>
+      {% set raw = display_names.get(tool, tool.replace("_", " ").lower()) %}
+      {% set clean = raw.lower().replace("nigeria ", "").replace("global ", "").replace("gulf ", "").replace("usa ", "").replace("uk ", "").replace("bahrain ", "").replace("uae ", "").strip() %}
+      <a href="/tools/{{ tool }}" class="card"><span>{{ clean.title() }}</span></a>
       {% endfor %}
     </div>
   </div>
   {% endif %}
   {% if grouped.country_specific %}
   <div style="margin-top:24px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:10px">tools for {{ country_name|lower }}</div>
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px">Local Tools</div>
     <div class="grid">
       {% for tool in grouped.country_specific %}
-      <a href="/tools/{{ tool }}" class="card"><span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span></a>
+      {% set raw = display_names.get(tool, tool.replace("_", " ").lower()) %}
+      {% set clean = raw.lower().replace("nigeria ", "").replace("global ", "").replace("gulf ", "").replace("usa ", "").replace("uk ", "").replace("bahrain ", "").replace("uae ", "").strip() %}
+      <a href="/tools/{{ tool }}" class="card"><span>{{ clean.title() }}</span></a>
       {% endfor %}
     </div>
   </div>
@@ -27,42 +30,51 @@
 {% else %}
   {% if grouped.nigeria %}
   <div style="margin-top:24px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:10px">tools for nigeria</div>
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px">Tools for Nigeria</div>
     <div class="grid">
       {% for tool in grouped.nigeria %}
-      <a href="/tools/{{ tool }}" class="card"><span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span></a>
+      {% set raw = display_names.get(tool, tool.replace("_", " ").lower()) %}
+      {% set clean = raw.lower().replace("nigeria ", "").replace("global ", "").replace("gulf ", "").replace("usa ", "").replace("uk ", "").replace("bahrain ", "").replace("uae ", "").strip() %}
+      <a href="/tools/{{ tool }}" class="card"><span>{{ clean.title() }}</span></a>
       {% endfor %}
     </div>
   </div>
   {% endif %}
   {% if grouped.usa %}
   <div style="margin-top:24px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:10px">tools for usa</div>
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px">Tools for USA</div>
     <div class="grid">
       {% for tool in grouped.usa %}
-      <a href="/tools/{{ tool }}" class="card"><span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span></a>
+      {% set raw = display_names.get(tool, tool.replace("_", " ").lower()) %}
+      {% set clean = raw.lower().replace("nigeria ", "").replace("global ", "").replace("gulf ", "").replace("usa ", "").replace("uk ", "").replace("bahrain ", "").replace("uae ", "").strip() %}
+      <a href="/tools/{{ tool }}" class="card"><span>{{ clean.title() }}</span></a>
       {% endfor %}
     </div>
   </div>
   {% endif %}
   {% if grouped.uk %}
   <div style="margin-top:24px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:10px">tools for uk</div>
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px">Tools for UK</div>
     <div class="grid">
       {% for tool in grouped.uk %}
-      <a href="/tools/{{ tool }}" class="card"><span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span></a>
+      {% set raw = display_names.get(tool, tool.replace("_", " ").lower()) %}
+      {% set clean = raw.lower().replace("nigeria ", "").replace("global ", "").replace("gulf ", "").replace("usa ", "").replace("uk ", "").replace("bahrain ", "").replace("uae ", "").strip() %}
+      <a href="/tools/{{ tool }}" class="card"><span>{{ clean.title() }}</span></a>
       {% endfor %}
     </div>
   </div>
   {% endif %}
 {% endif %}
 
+{# GLOBAL TOOLS BYPASS - NO IP RESTRICTION, SHOW ON ALL IPs #}
 {% if grouped.global %}
 <div style="margin-top:28px">
-  <div style="font-weight:700;font-size:16px;margin-bottom:10px;color:#aaa">global tools</div>
+  <div style="font-weight:700;font-size:16px;margin-bottom:10px;color:#aaa">Global Tools</div>
   <div class="grid">
     {% for tool in grouped.global %}
-    <a href="/tools/{{ tool }}" class="card" style="border-color:#2f2f2f"><span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span></a>
+    {% set raw = display_names.get(tool, tool.replace("_", " ").lower()) %}
+    {% set clean = raw.lower().replace("nigeria ", "").replace("global ", "").replace("gulf ", "").replace("usa ", "").replace("uk ", "").replace("bahrain ", "").replace("uae ", "").strip() %}
+    <a href="/tools/{{ tool }}" class="card" style="border-color:#2f2f2f"><span>{{ clean.title() }}</span></a>
     {% endfor %}
   </div>
 </div>

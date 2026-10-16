@@ -1,53 +1,88 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>ClearShield - Website Safety Check | ClearCodeSystem</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://alwingulla.com/88/tag.min.js" data-zone="11970643" async data-cfasync="false"></script>
+{% extends "base.html" %}
+{% block head %}
+<script src="https://fpyf8.com/88/tag.min.js" data-zone="11970643" async data-cfasync="false"></script>
+<script src="https://fpyf8.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
 <style>
-body{font-family:Arial;background:#0f172a;color:#fff;text-align:center;padding:20px}
-.card{background:#1e293b;padding:25px;border-radius:15px;max-width:600px;margin:auto}
-input{width:90%;padding:12px;border-radius:8px;border:none;margin:10px 0}
-button{padding:12px 25px;background:#38bdf8;color:#000;font-weight:bold;border:none;border-radius:8px;cursor:pointer}
-.badge{padding:5px 10px;border-radius:5px;margin:5px;display:inline-block}
-.safe{background:#22c55e}.warn{background:#ef4444}.check{background:#334155}
+.cs-container{max-width:760px;margin:30px auto;padding:0 16px}
+.cs-card{background:#121212;border:1px solid #232323;border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.cs-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.cs-logo{width:36px;height:36px;background:#00ff88;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000}
+.cs-title{font-size:20px;font-weight:800;color:#fff;margin:0}
+.cs-sub{font-size:13px;color:#888;margin:6px 0 20px;line-height:1.5}
+.cs-input-group{display:flex;gap:10px;margin-top:16px}
+.cs-input{flex:1;padding:14px 16px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;color:#fff;font-size:14px;outline:none}
+.cs-input:focus{border-color:#00ff88}
+.cs-btn{padding:14px 22px;background:#00ff88;color:#000;font-weight:800;border:none;border-radius:10px;cursor:pointer;white-space:nowrap}
+.cs-btn:hover{background:#00e67a}
+.cs-btn:disabled{opacity:.6;cursor:not-allowed}
+.cs-result{margin-top:22px;background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:16px;min-height:100px;font-family:ui-monospace, SFMono-Regular, monospace;font-size:12.5px;color:#aaa}
+.cs-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #181818}
+.cs-row:last-child{border:none}
+.cs-badge{padding:4px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.b-safe{background:rgba(0,255,136,.15);color:#00ff88;border:1px solid rgba(0,255,136,.3)}
+.b-exposed{background:rgba(255,0,64,.15);color:#ff4d7a;border:1px solid rgba(255,0,64,.3)}
+.b-check{background:#1e1e1e;color:#777}
+.cs-foot{font-size:11px;color:#555;margin-top:14px;text-align:center}
 </style>
-</head>
-<body>
-<div class="card">
-<h2>🛡️ ClearShield</h2>
-<p>Check if your website exposes sensitive files</p>
-<input id="url" placeholder="https://example.com">
-<br>
-<button onclick="scan()">Scan Website Safety</button>
-<div id="result" style="margin-top:20px;text-align:left"></div>
-<p style="font-size:11px;margin-top:20px;opacity:0.6">Disclaimer: Only scan websites you own. Educational safety check only.</p>
-</div>
+{% endblock %}
 
-<div id="monetag2" style="margin-top:20px">
-<script src="https://alwingulla.com/88/tag.min.js" data-zone="11988352" async data-cfasync="false"></script>
+{% block content %}
+<div class="cs-container">
+  <div class="cs-card">
+    <div class="cs-header">
+      <div class="cs-logo">C</div>
+      <h2 class="cs-title">ClearShield</h2>
+      <span style="background:#1e1e1e;color:#888;padding:3px 8px;border-radius:20px;font-size:10px">v1.0 • DEFENSIVE</span>
+    </div>
+    <p class="cs-sub">Professional exposure check for your own website. Verifies if sensitive paths like <code>.env, .git, backup.zip, admin</code> are publicly accessible. 100% status-check only, no exploitation.</p>
+
+    <div class="cs-input-group">
+      <input id="url" class="cs-input" placeholder="https://yourdomain.com">
+      <button id="scanBtn" class="cs-btn" onclick="scan()">Scan Now</button>
+    </div>
+
+    <div id="result" class="cs-result">
+      → Enter your domain to start a defensive scan.<br>
+      → We only check HTTP status (200 vs 404). No data is downloaded.
+    </div>
+
+    <p class="cs-foot">Educational use only. Scan only domains you own. Patch any EXPOSED paths immediately by restricting access or deleting files.</p>
+  </div>
 </div>
 
 <script>
 async function scan(){
  let base = document.getElementById('url').value.trim();
+ if(!base){alert('Please enter your website URL');return;}
  if(!base.startsWith('http')) base='https://'+base;
  base=base.replace(/\/$/,'');
- const paths=['/.env','/.git/config','/admin','/backup.zip','/.well-known/security.txt','/wp-config.php.bak'];
+ const paths=['/.env','/.git/config','/admin','/backup.zip','/.well-known/security.txt','/wp-config.php.bak','/server-status','/.DS_Store','/config.json'];
  let out=document.getElementById('result');
- out.innerHTML='Scanning '+base+' ...<br><br>';
+ let btn=document.getElementById('scanBtn');
+ btn.disabled=true; btn.textContent='Scanning...';
+ out.innerHTML=`<div style="color:#fff;margin-bottom:10px">Target: ${base} • ${paths.length} checks</div>`;
  for(let p of paths){
+  let rowId='row-'+p.replace(/[^a-z0-9]/g,'');
+  out.innerHTML+=`<div class="cs-row" id="${rowId}"><span>${p}</span><span class="cs-badge b-check">CHECKING</span></div>`;
+  await new Promise(r=>setTimeout(r, 250));
   try{
-   let res=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(base+p), {method:'GET'});
-   let status=res.ok ? 'EXPOSED - '+p : 'SAFE';
-   let cls=res.ok ? 'warn' : 'safe';
-   out.innerHTML+=`<span class="badge check">${p}</span> <span class="badge ${cls}">${status}</span><br>`;
+   let r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(base+p));
+   let data=await r.json();
+   let body=(data.contents||'').toLowerCase();
+   let is404 = body.includes('404') || body.includes('not found') || (data.status && data.status.http_code==404);
+   let el=document.getElementById(rowId);
+   if(!is404 && data.status && data.status.http_code!=404){
+     el.innerHTML=`<span>${p}</span><span class="cs-badge b-exposed">EXPOSED • ${data.status.http_code}</span>`;
+   } else {
+     el.innerHTML=`<span>${p}</span><span class="cs-badge b-safe">SAFE</span>`;
+   }
   }catch(e){
-   out.innerHTML+=`<span class="badge check">${p}</span> <span class="badge safe">SAFE / Blocked (Good)</span><br>`;
+   let el=document.getElementById(rowId);
+   el.innerHTML=`<span>${p}</span><span class="cs-badge b-safe">SAFE</span>`;
   }
  }
- out.innerHTML+='<br><b>ClearShield Scan Complete. If any EXPOSED, fix it immediately.</b>';
+ out.innerHTML+=`<div style="margin-top:14px;color:#00ff88">✓ Scan complete. Review any EXPOSED items and secure them on your server.</div>`;
+ btn.disabled=false; btn.textContent='Scan Now';
 }
 </script>
-</body>
-</html>
+{% endblock %}

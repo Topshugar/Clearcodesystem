@@ -1,5 +1,19 @@
-{% extends "base.html" %} {% block content %}
-ClearCode System - Tools for {{ country_name }}
-receipt checker {% for tool in tools %} {% if tool!= 'receipt_checker' %} {{ display_names.get(tool, tool.replace("_", " ").lower()) }} {% endif %} {% endfor %}
-© 2026 CLEARCODE SYSTEM 
+{% extends "base.html" %}
+{% block content %}
+<div class="h">tools for {{ country_name }}</div>
+<div style="color:#666;font-size:12px;margin-bottom:14px">detected: {{ detected_country }} • {{ total_tools }} tools available</div>
+
+<div class="grid">
+<a href="/receipt" class="card">
+<span>receipt checker</span>
+</a>
+
+{% for tool in tools %}
+{% if tool!= 'receipt_checker' %}
+<a href="/tools/{{ tool }}" class="card">
+<span>{{ display_names.get(tool, tool.replace("_", " ").lower()) }}</span>
+</a>
+{% endif %}
+{% endfor %}
+</div>
 {% endblock %}

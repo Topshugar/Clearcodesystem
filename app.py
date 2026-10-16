@@ -13,14 +13,16 @@ ADMIN_IPS = os.environ.get("ADMIN_IPS", "")  # comma-separated whitelist, empty 
 EXCLUDE = {"base.html", "index.html", "tool.html", "builder.html", "clear_shell.html", "ruler_terminal.html", "unlock.html", "marketwatch_demo.html", "receipt_checker.html"}
 
 COUNTRY_TOOLS = {
-    "BH": ["bahrain", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
-    "AE": ["uae", "emirates", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
-    "QA": ["qatar", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
-    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "tournament", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
-    "OM": ["oman", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
-    "KW": ["kuwait", "kuwait_traffic_fines", "hijri_calculator", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic"],
+    "BH": ["bahrain", "gulf", "gold_bahrain", "salary_bahrain", "rent_bahrain", "bahrain_gold_price", "bahrain_rent", "bahrain_cpr_check", "bahrain_traffic_fines", "bahrain_gratuity", "bahrain_overtime", "gosi", "hijri", "fake_whatsapp", "stylish_arabic", "gulf_bahrain"],
+    "AE": ["uae", "emirates", "gulf", "uae_gold_price", "uae_salary", "uae_rent_splitter", "uae_gratuity", "uae_overtime", "uae_traffic_fines", "hijri", "gulf"],
+    "QA": ["qatar", "gulf", "qatar_gold_price", "qatar_rent_splitter", "qatar_overtime", "hijri", "gulf"],
+    "SA": ["sa", "salary_sa", "zatca_qr", "iqama_expiry", "gulf", "tournament", "hijri", "gulf_salary", "gulf_zatca", "gulf_iqama"],
+    "OM": ["oman", "gulf", "oman_gold_price", "oman_rent", "oman_civil_check", "oman_gratuity", "oman_overtime", "oman_traffic_fines", "hijri", "gulf"],
+    "KW": ["kuwait", "gulf", "kuwait_traffic_fines", "hijri", "gulf"],
     "GB": ["uk", "uk_paycheck", "uk_rent_splitter", "uk_tip_calculator", "uk_vat_calculator"],
-    "US": ["usa", "paycheck", "usa_paycheck", "usa_take_home", "usa_background_check", "usa_notify"],
+    "US": ["usa", "paycheck", "usa_paycheck", "usa_take_home", "usa_background_check", "usa_notify", "usa_fake_text", "usa_tip_calculator"],
+    "NG": ["nigeria", "paye", "cac", "nin", "fuel", "pos", "jamb", "waec", "lagos", "land"],
+    "GLOBAL": ["global", "worldwide", "universal"],
 }
 
 GOLD_PRICES = {
@@ -39,6 +41,13 @@ TOOL_DISPLAY_NAMES = {
     "paycheck": "usa take-home pay calculator",
     "usa_paycheck": "usa take-home pay calculator",
     "paye_calculator": "nigeria paye calculator",
+    "global_ivr_builder": "global ivr builder",
+    "global_ivr_software": "global ivr software",
+    "global_ruler_terminal": "global ruler terminal",
+    "global_whatsapp_broadcast": "global whatsapp broadcast",
+    "gulf_bahrain_arabic_stylish_name": "gulf bahrain arabic stylish name",
+    "gulf_civil_check": "gulf civil check",
+
 }
 
 DB_PATH = os.path.join(app.root_path, "records.db")
@@ -94,11 +103,18 @@ def get_all_tools():
     return sorted(set(files))
 
 def filter_tools_by_country(tools, country):
+    # Global tools show everywhere
+    GLOBAL_KEYWORDS = ["global", "worldwide", "universal", "all_countries"]
+    
     if country == "NG":
         blocked = ["hijri", "fake_whatsapp", "fake_text", "fake_excuse", "stylish_arabic", "fake", "stylish", "arabic", "excuse", "zatca", "tournament", "gosi", "iqama", "uk_", "usa_", "usa_take_home", "paycheck", "bahrain", "uae", "emirates", "qatar", "oman", "kuwait"]
         clean = []
         for t in tools:
             if t == "receipt_checker":
+                clean.append(t)
+                continue
+            # Global always allowed for NG
+            if any(g in t.lower() for g in GLOBAL_KEYWORDS):
                 clean.append(t)
                 continue
             if any(b in t.lower() for b in blocked):
@@ -112,12 +128,20 @@ def filter_tools_by_country(tools, country):
     for t in tools:
         if t == "receipt_checker":
             continue
+        # Global tools always included
+        if any(g in t.lower() for g in GLOBAL_KEYWORDS):
+            filtered.append(t)
+            continue
         for kw in keywords:
             if kw in t.lower():
                 filtered.append(t)
                 break
     if len(filtered) < 3:
         return tools
+    # Always add global tools to any country result
+    for t in tools:
+        if any(g in t.lower() for g in GLOBAL_KEYWORDS) and t not in filtered:
+            filtered.append(t)
     return sorted(set(filtered))
 
 @app.route('/')

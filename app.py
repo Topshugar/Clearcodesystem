@@ -36,6 +36,7 @@ TOOL_DISPLAY_NAMES = {
     "global_ivr_software": "global ivr software",
     "global_ruler_terminal": "global ruler terminal",
     "global_whatsapp_broadcast": "global whatsapp broadcast",
+    "global_clear_shield": "ClearShield", # <-- NEW - fixes button name
 }
 
 DB_PATH = os.path.join(app.root_path, "records.db")
@@ -90,9 +91,8 @@ def get_all_tools():
 
 def get_grouped_tools(tools, country):
     tools_lower = [t.lower() for t in tools]
-    # Map lower -> original
     lower_to_orig = {t.lower(): t for t in tools}
-    
+
     gulf_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("gulf")]
     global_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("global")]
     nigeria_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("nigeria") or t in ["receipt_checker", "gpa_calculator", "nigeria_receipt_checker"]]
@@ -100,55 +100,33 @@ def get_grouped_tools(tools, country):
     uk_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("uk_")]
     bahrain_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("bahrain_")]
     uae_tools = [lower_to_orig[t] for t in tools_lower if t.startswith("uae_") or t.startswith("emirates_")]
-    
+
+    # FIXED: Always return all keys to avoid Jinja crash, global always included
+    base = {
+        "global": sorted(set(global_tools)),
+        "gulf": [],
+        "nigeria": [],
+        "usa": [],
+        "uk": [],
+        "bahrain": [],
+        "uae": [],
+        "country_specific": []
+    }
+
     if country == "NG":
-        # NG sees ONLY Nigeria + Global, NO Gulf
-        return {
-            "nigeria": sorted(set(nigeria_tools)),
-            "global": sorted(set(global_tools)),
-            "gulf": [],
-            "usa": [],
-            "uk": [],
-            "bahrain": [],
-            "uae": [],
-            "country_specific": []
-        }
+        base["nigeria"] = sorted(set(nigeria_tools))
     elif country in GULF_COUNTRIES:
-        # Gulf countries see ONLY Gulf + Global + their own specific
-        country_specific = []
+        base["gulf"] = sorted(set(gulf_tools))
         if country == "BH":
-            country_specific = bahrain_tools
+            base["country_specific"] = bahrain_tools
         elif country == "AE":
-            country_specific = uae_tools
-        
-        return {
-            "gulf": sorted(set(gulf_tools)),
-            "global": sorted(set(global_tools)),
-            "nigeria": [],
-            "usa": [],
-            "uk": [],
-            "country_specific": sorted(set(country_specific))
-        }
+            base["country_specific"] = uae_tools
     elif country == "US":
-        return {
-            "usa": sorted(set(usa_tools)),
-            "global": sorted(set(global_tools)),
-            "gulf": [],
-            "nigeria": [],
-        }
+        base["usa"] = sorted(set(usa_tools))
     elif country == "GB":
-        return {
-            "uk": sorted(set(uk_tools)),
-            "global": sorted(set(global_tools)),
-            "gulf": [],
-            "nigeria": [],
-        }
-    else:
-        return {
-            "global": sorted(set(global_tools)),
-            "gulf": [],
-            "nigeria": [],
-        }
+        base["uk"] = sorted(set(uk_tools))
+
+    return base
 
 @app.route('/')
 def home():
@@ -157,22 +135,21 @@ def home():
     grouped = get_grouped_tools(all_tools, country)
     data = GOLD_PRICES.get(country, GOLD_PRICES["NG"])
     country_display = data["name"]
-    
-    # Title is tools for [Detected Country]
+
     if country in GULF_COUNTRIES:
         title_country = f"{country_display} - Gulf (GCC)"
     else:
         title_country = country_display
-    
-    return render_template('index.html', 
-        seo_title=f'ClearCode System - Tools for {data["name"]}', 
+
+    return render_template('index.html',
+        seo_title=f'ClearCode System - Tools for {data["name"]}',
         seo_desc=f'Professional tools for {data["name"]} built with Flask.',
         grouped=grouped,
-        display_names=TOOL_DISPLAY_NAMES, 
-        country_code=data["code"], 
+        display_names=TOOL_DISPLAY_NAMES,
+        country_code=data["code"],
         country_name=country_display,
         title_country=title_country,
-        detected_country=country, 
+        detected_country=country,
         is_gulf=country in GULF_COUNTRIES,
         total_tools=len(all_tools))
 
